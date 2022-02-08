@@ -9,13 +9,16 @@ import { Dot } from './Colors';
 
 function App() {
 
-  const [colors, setColors] = useState();
+  const [students, setStudents] = useState();
 
-  console.log(colors);
+  console.log(students);
+
   useEffect(() =>
-    onSnapshot(collection(db, "Colors"), (snapshot) => 
-      setColors(snapshot.docs.map({...doc => doc.data(), id: doc.id}))) 
-      ,[]);
+  onSnapshot(collection(db, "students"), (snapshot) => 
+      setStudents(
+        snapshot.docs.map((doc) => ({...doc.data(), id: doc.id}))
+        ))
+        ,[]);
 
   return (<div>
       <LoginPage />

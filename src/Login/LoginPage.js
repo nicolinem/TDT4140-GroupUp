@@ -6,6 +6,7 @@ export const LoginPage = () => {
     const passwordRef = useRef();
 
     async function handleSignUp() {
+        console.log("check");
         await signUp(emailRef.current.value, passwordRef.current.value);
     }
 
