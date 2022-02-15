@@ -5,7 +5,6 @@ import SendIcon from '@mui/icons-material/Send';
 import Collapse from '@mui/material/Collapse';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
-import GroupsIcon from '@mui/icons-material/Groups';
 import BlenderIcon from '@mui/icons-material/Blender';
 import CheckroomIcon from '@mui/icons-material/Checkroom';
 
