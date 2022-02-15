@@ -1,19 +1,20 @@
 
-import { Box, InputBase, Stack } from '@mui/material';
+import { Avatar, Box, InputBase, Stack } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 import { AppBar, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import React from 'react';
+import image from './Bilde1.png';
 
 export const Header = () => {
 
     const Search = styled('div')(({ theme }) => ({
       position: 'relative',
   
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: alpha(theme.palette.common.white, 0.15),
+      borderRadius: 28,
+      backgroundColor: alpha(theme.palette.common.white, 1),
       '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
       },
@@ -37,7 +38,7 @@ export const Header = () => {
     }));
   
     const StyledInputBase = styled(InputBase)(({ theme }) => ({
-      color: 'inherit',
+      color: 'primary',
       '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
@@ -56,13 +57,13 @@ export const Header = () => {
             position="static" 
             alignItems='center' 
             justifyContent='center' 
-            style={{ background: '#2E3B55' }}>
-          <Toolbar color="secondary">
+            style={{ background: '#9aca7c' }}>
+          <Toolbar>
           <IconButton
                 size="large"
               color="inherit"
               sx={{ mr: 1 }}>
-            <MenuIcon />
+            <Avatar alt="Remy Sharp" src={image} />
           </IconButton>
           <Typography
             variant="h6"
@@ -75,7 +76,7 @@ export const Header = () => {
        
           <Search>
             <SearchIconWrapper>
-            <SearchIcon />
+            <SearchIcon color="disabled"/>
             </SearchIconWrapper>
             <StyledInputBase 
             placeholder="Search…"
