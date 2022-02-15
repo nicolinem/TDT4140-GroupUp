@@ -7,6 +7,8 @@ import db from "./firebase";
 import React, { useEffect, useState } from 'react';
 import { onSnapshot, collection, doc } from 'firebase/firestore';
 import { Box } from '@mui/material';
+import { Route, Routes, } from "react-router-dom";
+import { Feed } from './Dashboard/Feed';
 
 function App() {
 
@@ -21,9 +23,18 @@ function App() {
         ))
         ,[]);
 
-  return (<Box sx={{ maxWidth: '100%' }}>
-      <MainPage />
-      </Box>);
+  return (
+  
+  <Box sx={{ maxWidth: '100%' }}>
+    <Routes>
+      <Route path="/" element={<MainPage />}>
+        <Route index element={<Feed />} />
+        <Route path="LoginPage" element={<LoginPage />} />
+
+      </Route>
+    </Routes>
+  </Box>
+  );
 }
 
 export default App;
