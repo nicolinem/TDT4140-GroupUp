@@ -1,11 +1,21 @@
 import React, { useRef } from 'react';
-import { signUp } from '../firebase';
 import { Button, Container, Box } from '@mui/material';
 import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import nbLocale from 'date-fns/locale/nb';
 
 
 export const RegistrationPage = () => {
 
+    const localeMap = {
+        nb: nbLocale,
+      };
+      
+
+    const [value, setValue] = React.useState(null);
+    const [locale, setLocale] = React.useState('nb');
     
     return (
         <Container>
@@ -36,18 +46,20 @@ export const RegistrationPage = () => {
                     fullWidth
                 />
 
-                <TextField id="outlined-basic"
-                    margin="normal"
-                    helperText="Date of birth"
-                    label="dd.mm.yyyy"
-                    type="password"
-                    variant="outlined"
-                    color='success'
-                    fullWidth
-                />
+
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={localeMap[locale]}>
+                    <DatePicker
+                        label="Date of birth"
+                        value={value}
+                        color='success'
+                        onChange={(newValue) => {
+                        setValue(newValue);
+                        }}
+                        renderInput={(params) => <TextField margin='normal' color='success' fullWidth {...params} />}
+                    />
+                </LocalizationProvider>
 
                 <TextField
-
                     margin="normal"
                     id="filled-basic"
                     label="Email"
