@@ -24,9 +24,7 @@ export const  MainPage = () => {
       
       <Box sx={{ display: 'flex', minWidth: 140}}>
       
-        <Box sx={{ display: 'flex', minWidth: 250, mt: 6, ml: 3}}>
-          <Sidebar />
-        </Box>
+        
         <Box sx={{ px:5, py: 4 }}>
           <Outlet />
         </Box>
