@@ -14,12 +14,6 @@ export const LoginPage = () => {
         await signUp(emailRef.current.value, passwordRef.current.value);
     }
 
-    // const theme = createTheme({
-    //     typography: {
-    //         fontFamily: 'Raleway, Arial, Courier New, Monospace',
-    //       },
-    //   });
-
     return (
         <Container maxWidth='xs'>
             <Box sx={{
@@ -27,7 +21,6 @@ export const LoginPage = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                
                 padding: 5
                 
             }}
@@ -35,10 +28,6 @@ export const LoginPage = () => {
             <Box maxHeight='xs' margin='normal'> 
             <img src={Bilde1} width="170" />
             </Box>
-             
-                {/* <Typography component="h1" variant="h5" >
-                        Sign in
-                </Typography> */}
 
                 <Box component='form'  sx={{ mt: 1}}>
 
@@ -81,28 +70,3 @@ export const LoginPage = () => {
         </Container>
     );
 }
-
-
-
-// import React, { useRef } from 'react';
-// import { signUp } from '../firebase';
-
-// export const LoginPage = () => {
-//     const emailRef = useRef();
-//     const passwordRef = useRef();
-
-//     async function handleSignUp() {
-//         console.log("check");
-//         await signUp(emailRef.current.value, passwordRef.current.value);
-//     }
-
-//     return (
-//         <div>
-//         <div>
-//             <input ref={emailRef} placeholder='Email' />
-//             <input ref={passwordRef} type="password" placeholder='Password' />
-//         </div>
-//         <button onClick={handleSignUp}>Sign up</button>
-//         </div>
-//     );
-// }

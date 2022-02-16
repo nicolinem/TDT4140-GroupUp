@@ -19,21 +19,18 @@ export const Sidebar = () => {
 
   return (
     <List
-    sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper' }}
+      sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper' }}
       component="nav"
       aria-labelledby="nested-list-subheader"
-      // subheader={
-        // <ListSubheader component="div" id="nested-list-subheader">
-        //   Things
-        // </ListSubheader>
-        // }
-        >
-        <ListItemButton sx={{borderRadius: 8}}>
-        <ListItemIcon>
-          <BlenderIcon />
-        </ListItemIcon>
-        <ListItemText primary="Sent mail" />
-      </ListItemButton>
+      >
+        <ListItemButton component="button"
+          href="/LoginPage"
+          sx={{borderRadius: 8}}>
+            <ListItemIcon>
+             <BlenderIcon />
+            </ListItemIcon>
+          <ListItemText primary="Mixer" />
+        </ListItemButton>
 
       <ListItemButton onClick={handleClick} sx={{borderRadius: 8}}>
         <ListItemIcon>
@@ -43,20 +40,24 @@ export const Sidebar = () => {
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
+         <List component="div" disablePadding> {/* TODO: Legge til slik at den oppdateres basert på brukerens grupper */}
           <ListItemButton sx={{ pl: 4 }}>
             <ListItemIcon>
-              <StarBorder />
+              <GroupsIcon />
             </ListItemIcon>
-            <ListItemText primary="Starred" />
+            <ListItemText primary="FuckFriends" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <GroupsIcon />
+            </ListItemIcon>
+            <ListItemText primary="FuckFriendsVol2" />
           </ListItemButton>
         </List>
       </Collapse>
-      
 
     </List>
 
-
-      );
+    );
 
 }
