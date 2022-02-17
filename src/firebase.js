@@ -1,9 +1,15 @@
 // Import the functions you need from the SDKs you need
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,16 +22,16 @@ const firebaseConfig = {
   storageBucket: "groupup-f68f4.appspot.com",
   messagingSenderId: "600044995945",
   appId: "1:600044995945:web:9f236708da6e2d7f8f69f8",
-  measurementId: "G-C5269RJY74"
+  measurementId: "G-C5269RJY74",
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 
 export function signUp(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  return createUserWithEmailAndPassword(auth, email, password);
 }
 
 export function login(email, password) {
@@ -38,14 +44,18 @@ export function logout() {
 
 // Custom Hook
 export function useAuth() {
-  const [ currentUser, setCurrentUser ] = useState();
+  const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, user => setCurrentUser(user));
+    const unsub = onAuthStateChanged(auth, (user) => setCurrentUser(user));
     return unsub;
-  }, [])
+  }, []);
 
   return currentUser;
 }
+
+export const useAuthState = () => {
+  return { ...auth, isAuthenticated: auth.user != null };
+};
 
 export default getFirestore();
