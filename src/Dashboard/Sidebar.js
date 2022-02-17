@@ -37,7 +37,14 @@ export const Sidebar = () => {
         <ListItemIcon>
           <BlenderIcon />
         </ListItemIcon>
-        <ListItemText primary="Mixer" />
+        <ListItemText primary="My group" />
+      </ListItemButton>
+
+      <ListItemButton component="button" href="/" sx={{ borderRadius: 8 }}>
+        <ListItemIcon>
+          <BlenderIcon />
+        </ListItemIcon>
+        <ListItemText primary="Main page" />
       </ListItemButton>
 
       <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
