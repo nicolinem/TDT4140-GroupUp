@@ -1,53 +1,40 @@
 import React, { useRef, useState } from "react";
-import { signUp, login, logout, useAuth } from "../firebase";
+import { login, useAuth } from "../firebase";
 import TextField from "@mui/material/TextField";
-import { Button, Container, Box } from "@mui/material";
+import { Button, Container, Box, Typography, Link } from "@mui/material";
 import Bilde1 from "./Bilde1.png";
 import { MainPage } from "../Dashboard/MainPage";
+import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const LoginPage = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-
+  const navigate = useNavigate();
+  const auth = getAuth();
   const [loading, setloading] = useState(false);
   const currentUser = useAuth();
 
-  async function handleSignUp() {
-    setloading(true);
-    console.log("check");
-    try {
-      await signUp(emailRef.current.value, passwordRef.current.value);
-    } catch {
-      alert("Something is wrong with your signup");
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      navigate("/");
+    } else {
     }
-    setloading(false);
-  }
+  });
 
-  async function handleLogin() {
+  function handleLogin(e) {
     setloading(true);
     try {
-      await login(emailRef.current.value, passwordRef.current.value);
+      login(emailRef.current.value, passwordRef.current.value);
     } catch {
       alert("Something is wrong with your login");
     }
     setloading(false);
   }
 
-  async function handleLogout() {
-    setloading(true);
-    try {
-      await logout();
-    } catch {
-      alert("Something is wrong with your logout");
-    }
-    setloading(false);
-  }
-
-  // const theme = createTheme({
-  //     typography: {
-  //         fontFamily: 'Raleway, Arial, Courier New, Monospace',
-  //       },
-  //   });
 
   return (
     <Container maxWidth="xs">
@@ -65,9 +52,6 @@ export const LoginPage = () => {
           <img src={Bilde1} width="170" />
         </Box>
 
-        {/* <Typography component="h1" variant="h5" >
-                        Sign in
-                </Typography> */}
 
         <Box component="form" sx={{ mt: 1 }}>
           <TextField
@@ -103,7 +87,7 @@ export const LoginPage = () => {
           >
             Sign in
           </Button>
-          <Button
+          {/* <Button
             disabled={loading || !currentUser}
             onClick={handleLogout}
             variant="contained"
@@ -112,36 +96,13 @@ export const LoginPage = () => {
             sx={{ mt: 3, mb: 2 }}
           >
             Sign out
-          </Button>
+          </Button> */}
         </Box>
 
-        <div>
-          <button onClick={handleSignUp}>First time? Create an account</button>
-        </div>
+        <Link href="/registration" variant="body2">
+          {"Don't have an account? Sign Up"}
+        </Link>
       </Box>
     </Container>
   );
 };
-
-// import React, { useRef } from 'react';
-// import { signUp } from '../firebase';
-
-// export const LoginPage = () => {
-//     const emailRef = useRef();
-//     const passwordRef = useRef();
-
-//     async function handleSignUp() {
-//         console.log("check");
-//         await signUp(emailRef.current.value, passwordRef.current.value);
-//     }
-
-//     return (
-//         <div>
-//         <div>
-//             <input ref={emailRef} placeholder='Email' />
-//             <input ref={passwordRef} type="password" placeholder='Password' />
-//         </div>
-//         <button onClick={handleSignUp}>Sign up</button>
-//         </div>
-//     );
-// }
