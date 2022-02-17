@@ -3,6 +3,8 @@ import { signUp } from '../firebase';
 import TextField from '@mui/material/TextField';
 import { Button, Container, Box } from '@mui/material';
 import Bilde1 from './Bilde1.png';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import db from "../firebase";
 
 
 export const LoginPage = () => {
@@ -12,13 +14,15 @@ export const LoginPage = () => {
     async function handleSignUp() {
         console.log("check");
         await signUp(emailRef.current.value, passwordRef.current.value);
+        
+        const usersRef = collection(db, "Users");
+        return addDoc(usersRef, {
+        created: serverTimestamp(),
+        name: "username",
+    });
     }
 
-    // const theme = createTheme({
-    //     typography: {
-    //         fontFamily: 'Raleway, Arial, Courier New, Monospace',
-    //       },
-    //   });
+
 
     return (
         <Container maxWidth='xs'>
@@ -47,7 +51,7 @@ export const LoginPage = () => {
                             
                             margin="normal"
                             id="filled-basic" 
-                            inputRefef={emailRef} 
+                            inputRef={emailRef} 
                             label="Email" 
                             type="email" 
                             variant="outlined" 
@@ -59,7 +63,7 @@ export const LoginPage = () => {
                     
                         <TextField id="outlined-basic" 
                             margin="normal"
-                            inputRefef={passwordRef} 
+                            inputRef={passwordRef} 
                             label="Password" 
                             type="password" 
                             variant="outlined" 
@@ -69,7 +73,7 @@ export const LoginPage = () => {
 
 
                         
-                    <Button variant="contained" fullWidth color="success" sx={{ mt: 3, mb: 2,}}>Sign in</Button>
+                    <Button variant="contained" fullWidth color="success" onClick={handleSignUp} sx={{ mt: 3, mb: 2,}}>Sign in</Button>
                     </Box> 
                     
                     <footer>

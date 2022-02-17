@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, addDoc, Teams } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,8 +23,17 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 
+// function registerGroup() {
+//     addDoc(Teams(db, "users"), {
+//         first: "Alan",
+//         middle: "Mathison",
+//         last: "Turing",
+//         born: 1912
+//       });
+// }
+
 export function signUp(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
 }
 
-export default getFirestore();
+export default getFirestore(app);
