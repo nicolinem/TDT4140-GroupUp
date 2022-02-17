@@ -31,7 +31,7 @@ export const Sidebar = () => {
     >
       <ListItemButton
         component="button"
-        href="/LoginPage"
+        href="/GroupPage"
         sx={{ borderRadius: 8 }}
       >
         <ListItemIcon>

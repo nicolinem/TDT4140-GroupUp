@@ -20,7 +20,6 @@ import Paper from '@mui/material/Paper';
 export const GroupPage = () => {
     return (
         <Box sx={{ flexGrow: 1, }}>
-            <Header />
             <Box sx={{ display: 'flex', minWidth: 140 }}>
 
                 <Box sx={{ display: 'flex', minWidth: 250, mt: 5, ml: 3 }}>
