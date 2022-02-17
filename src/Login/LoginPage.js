@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { signUp } from '../firebase';
+import React, { useRef, useState } from 'react';
+import { signUp, login, logout, useAuth } from '../firebase';
 import TextField from '@mui/material/TextField';
 import { Button, Container, Box } from '@mui/material';
 import Bilde1 from './Bilde1.png';
@@ -10,13 +10,38 @@ export const LoginPage = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
 
+    const [loading, setloading] = useState(false);
+    const currentUser = useAuth();
+
     async function handleSignUp() {
+        setloading(true);
         console.log("check");
         try {
             await signUp(emailRef.current.value, passwordRef.current.value);
         } catch {
             alert("Something is wrong with your signup")
         }
+        setloading(false);
+    }
+
+    async function handleLogin() {
+        setloading(true);
+        try {
+            await login(emailRef.current.value, passwordRef.current.value);
+        } catch {
+            alert("Something is wrong with your login")
+        }
+        setloading(false);
+    }
+
+    async function handleLogout() {
+        setloading(true);
+        try {
+            await logout();
+        } catch {
+            alert("Something is wrong with your logout");
+        }
+        setloading(false);
     }
 
     // const theme = createTheme({
@@ -72,12 +97,14 @@ export const LoginPage = () => {
                             fullWidth
                             />
                         
-                    <Button variant="contained" fullWidth color="success" sx={{ mt: 3, mb: 2,}}>Sign in</Button>
+                    <Button disabled={loading || currentUser} onClick={handleLogin} variant="contained" fullWidth color="success" sx={{ mt: 3, mb: 2,}}>Sign in</Button>
+                    <Button disabled={loading || !currentUser} onClick={handleLogout} variant="contained" fullWidth color="success" sx={{ mt: 3, mb: 2,}}>Sign out</Button>
                     </Box> 
                     
                     <div>
-                            <button onClick={handleSignUp} >First time? Create an account</button>
+                        <button onClick={handleSignUp} >First time? Create an account</button>
                     </div>
+                    
             </Box>
         </Container>
     );
