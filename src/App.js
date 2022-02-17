@@ -1,8 +1,12 @@
+
+import './App.css';
+
+import { RegistrationPage } from './Registration/RegistrationPage.js'
 import logo from "./logo.svg";
 import "./App.css";
 import { LoginPage } from "./Login/LoginPage";
 import { MainPage } from "./Dashboard/MainPage";
-import { GroupPage } from "./Dashboard/GroupPage";
+
 
 import db from "./firebase";
 import React, { useEffect, useState } from "react";
