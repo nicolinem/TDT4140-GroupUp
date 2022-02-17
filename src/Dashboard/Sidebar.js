@@ -1,15 +1,20 @@
-import React from 'react';
-import { Button, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
-import { Stack } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
-import GroupsIcon from '@mui/icons-material/Groups';
-import BlenderIcon from '@mui/icons-material/Blender';
-import CheckroomIcon from '@mui/icons-material/Checkroom';
-
-
+import React from "react";
+import {
+  Button,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+} from "@mui/material";
+import { Stack } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import Collapse from "@mui/material/Collapse";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import BlenderIcon from "@mui/icons-material/Blender";
+import CheckroomIcon from "@mui/icons-material/Checkroom";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 export const Sidebar = () => {
   const [open, setOpen] = React.useState(true);
@@ -20,23 +25,29 @@ export const Sidebar = () => {
 
   return (
     <List
-    sx={{ width: '100%', maxWidth: 500, bgcolor: 'background.paper' }}
+      sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}
       component="nav"
       aria-labelledby="nested-list-subheader"
-      // subheader={
-        // <ListSubheader component="div" id="nested-list-subheader">
-        //   Things
-        // </ListSubheader>
-        // }
-        >
-        <ListItemButton sx={{borderRadius: 8}}>
+    >
+      <ListItemButton
+        component="button"
+        href="/GroupPage"
+        sx={{ borderRadius: 8 }}
+      >
         <ListItemIcon>
           <BlenderIcon />
         </ListItemIcon>
-        <ListItemText primary="Sent mail" />
+        <ListItemText primary="My group" />
       </ListItemButton>
 
-      <ListItemButton onClick={handleClick} sx={{borderRadius: 8}}>
+      <ListItemButton component="button" href="/" sx={{ borderRadius: 8 }}>
+        <ListItemIcon>
+          <BlenderIcon />
+        </ListItemIcon>
+        <ListItemText primary="Main page" />
+      </ListItemButton>
+
+      <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
         <ListItemIcon>
           <CheckroomIcon />
         </ListItemIcon>
@@ -45,19 +56,22 @@ export const Sidebar = () => {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
+          {" "}
+          {/* TODO: Legge til slik at den oppdateres basert på brukerens grupper */}
           <ListItemButton sx={{ pl: 4 }}>
             <ListItemIcon>
-              <StarBorder />
+              <GroupsIcon />
             </ListItemIcon>
-            <ListItemText primary="Starred" />
+            <ListItemText primary="FuckFriends" />
+          </ListItemButton>
+          <ListItemButton sx={{ pl: 4 }}>
+            <ListItemIcon>
+              <GroupsIcon />
+            </ListItemIcon>
+            <ListItemText primary="FuckFriendsVol2" />
           </ListItemButton>
         </List>
       </Collapse>
-      
-
     </List>
-
-
-      );
-
-}
+  );
+};

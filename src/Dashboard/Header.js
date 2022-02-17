@@ -60,11 +60,13 @@ export const Header = () => {
             style={{ background: '#9aca7c' }}>
           <Toolbar>
           <IconButton
-                size="large"
+              href="/LoginPage"
+              size="large"
               color="inherit"
               sx={{ mr: 1 }}>
             <Avatar alt="Remy Sharp" src={image} />
           </IconButton>
+
           <Typography
             variant="h6"
             noWrap
