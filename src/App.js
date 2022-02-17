@@ -1,16 +1,15 @@
+import "./App.css";
 
-import './App.css';
+import { RegistrationPage } from "./Registration/RegistrationPage.js";
 
-import { RegistrationPage } from './Registration/RegistrationPage.js'
-import logo from "./logo.svg";
 import "./App.css";
 import { LoginPage } from "./Login/LoginPage";
 import { MainPage } from "./Dashboard/MainPage";
-
+import { GroupPage } from "./Dashboard/GroupPage";
 
 import db from "./firebase";
 import React, { useEffect, useState } from "react";
-import { onSnapshot, collection, doc } from "firebase/firestore";
+import { onSnapshot, collection } from "firebase/firestore";
 import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { Feed } from "./Dashboard/Feed";
@@ -33,14 +32,15 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />}>
           <Route index element={<Feed />} />
-          <Route path="LoginPage" element={<LoginPage />} />
+
           <Route path="GroupPage" element={<GroupPage />} />
         </Route>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="registration" element={<RegistrationPage />} />
       </Routes>
     </Box>
   );
 }
 //<MainPage />
-
 
 export default App;
