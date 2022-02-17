@@ -22,8 +22,11 @@ function App() {
         ,[]);
 
   return (<Box sx={{ maxWidth: '100%' }}>
+      <LoginPage />
       <MainPage />
       </Box>);
 }
+//<MainPage />
+
 
 export default App;
