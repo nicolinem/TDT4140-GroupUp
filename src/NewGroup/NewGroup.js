@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Box, Container, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useRef } from "react";
-import db from "../firebase";
+import { default as db, auth, useAuth } from "../firebase";
 import {
   addDoc,
   collection,
@@ -13,29 +13,29 @@ import {
 
 export const NewGroup = () => {
   const groupRef = useRef();
+  const currentUser = useAuth();
 
-  const handleClick = (e) => {
-    const groupDocRef = collection(db, "Teams");
-    const docRef = addDoc(groupDocRef, {
+  const handleClick = async () => {
+    const groupCollRef = collection(db, "Teams");
+    const documentref = await addDoc(groupCollRef, {
       name: groupRef.current.value,
     });
 
-    addDoc(collection(db, "Teams", docRef, "Memberships"), {
-      created: serverTimestamp(),
-      name: groupRef.current.value,
+    const ref = documentref.id;
+    const memberDocument = doc(
+      db,
+      "Teams",
+      ref,
+      "Memberships",
+      currentUser.uid
+    );
+
+    await setDoc(memberDocument, {
+      name: "Hi I am a Member",
     });
+
     console.log("check");
   };
-
-  const addGroup = () => {
-    // const teamsRef = collection(db, "Teams");
-  };
-
-  const addmember = () => {};
-  // const docRef = addDoc(teamsRef, {
-  //   created: serverTimestamp(),
-  //   name: groupRef.current.value,
-  // });
 
   return (
     <Container maxWidth="xs">
