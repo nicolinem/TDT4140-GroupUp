@@ -6,8 +6,20 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
+import db from "../firebase";
+
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 export const RegistrationPage = () => {
+  const firstName = useRef();
+  const lastName = useRef();
+
   const localeMap = {
     nb: nbLocale,
   };
@@ -17,11 +29,17 @@ export const RegistrationPage = () => {
   const [locale, setLocale] = React.useState("nb");
   const [loading, setloading] = useState(false);
 
-  function handleSignUp() {
+  const handleSignUp = async () => {
     setloading(true);
     console.log("check");
     try {
       signUp(emailRef.current.value, passwordRef.current.value);
+      const userCollRef = collection(db, "Users");
+      await addDoc(userCollRef, {
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
+      });
+
     } catch {
       alert("Something is wrong with your login");
     }
@@ -44,6 +62,7 @@ export const RegistrationPage = () => {
           id="outlined-basic"
           margin="normal"
           label="First Name"
+          inputRef={firstName}
           variant="outlined"
           color="success"
           fullWidth
@@ -52,6 +71,7 @@ export const RegistrationPage = () => {
           id="outlined-basic"
           margin="normal"
           label="Last Name"
+          inputRef={lastName}
           variant="outlined"
           color="success"
           fullWidth
