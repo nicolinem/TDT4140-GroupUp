@@ -6,6 +6,8 @@ import "./App.css";
 import { LoginPage } from "./Login/LoginPage";
 import { MainPage } from "./Dashboard/MainPage";
 import { GroupPage } from "./Dashboard/GroupPage";
+import { NewGroup } from "./NewGroup/NewGroup";
+
 
 import db from "./firebase";
 import React, { useEffect, useState } from "react";
@@ -37,6 +39,8 @@ function App() {
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="registration" element={<RegistrationPage />} />
+        <Route path="newgroup" element={<NewGroup />} />
+
       </Routes>
     </Box>
   );
