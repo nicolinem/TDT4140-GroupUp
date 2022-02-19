@@ -29,6 +29,12 @@ export const Sidebar = () => {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
+      <ListItemButton component="button" href="/" sx={{ borderRadius: 8 }}>
+        <ListItemIcon>
+          <BlenderIcon />
+        </ListItemIcon>
+        <ListItemText primary="Main page" />
+      </ListItemButton>
       <ListItemButton
         component="button"
         href="/GroupPage"
@@ -40,11 +46,15 @@ export const Sidebar = () => {
         <ListItemText primary="My group" />
       </ListItemButton>
 
-      <ListItemButton component="button" href="/" sx={{ borderRadius: 8 }}>
+      <ListItemButton
+        component="button"
+        href="/newgroup"
+        sx={{ borderRadius: 8 }}
+      >
         <ListItemIcon>
           <BlenderIcon />
         </ListItemIcon>
-        <ListItemText primary="Main page" />
+        <ListItemText primary="Add a group" />
       </ListItemButton>
 
       <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
