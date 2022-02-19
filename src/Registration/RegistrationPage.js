@@ -15,6 +15,8 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export const RegistrationPage = () => {
   const firstName = useRef();
@@ -28,6 +30,16 @@ export const RegistrationPage = () => {
   const [value, setValue] = React.useState(null);
   const [locale, setLocale] = React.useState("nb");
   const [loading, setloading] = useState(false);
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      navigate("/");
+    } else {
+    }
+  });
 
   const handleSignUp = async () => {
     setloading(true);
@@ -39,12 +51,11 @@ export const RegistrationPage = () => {
         firstName: firstName.current.value,
         lastName: lastName.current.value,
       });
-
     } catch {
       alert("Something is wrong with your login");
     }
     setloading(false);
-  }
+  };
 
   return (
     <Container maxWidth="xs">
