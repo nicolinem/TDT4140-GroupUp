@@ -10,6 +10,7 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import { Sidebar } from "../Dashboard/Sidebar";
 
 export const NewGroup = () => {
   const groupRef = useRef();
@@ -38,39 +39,51 @@ export const NewGroup = () => {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Box sx={{ display: "flex", flexGrow: 1 }}>
+      <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
+        <Sidebar />
+      </Box>
       <Box
         sx={{
-          marginTop: 10,
           display: "flex",
-          flexDirection: "column",
+          flexGrow: 1,
           alignItems: "center",
-          maxWidth: "xs",
-          padding: 5,
+          justifyContent: "center",
         }}
       >
-        <Typography>Create a new group!</Typography>
-
-        <TextField
-          id="outlined-basic"
-          inputRef={groupRef}
-          margin="normal"
-          label="Group Name"
-          variant="outlined"
-          color="success"
-          fullWidth
-        />
-
-        <Button
-          variant="contained"
-          fullWidth
-          color="success"
-          onClick={handleClick}
-          sx={{ mt: 3, mb: 2 }}
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            maxWidth: "xs",
+            padding: 5,
+          }}
         >
-          Register
-        </Button>
+          <Typography>Create a new group!</Typography>
+
+          <TextField
+            id="outlined-basic"
+            inputRef={groupRef}
+            margin="normal"
+            label="Group Name"
+            variant="outlined"
+            color="success"
+            fullWidth
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            color="success"
+            onClick={handleClick}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Register
+          </Button>
+        </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
