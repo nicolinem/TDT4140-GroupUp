@@ -62,13 +62,13 @@ export const Sidebar = () => {
             <ListItemIcon>
               <GroupsIcon />
             </ListItemIcon>
-            <ListItemText primary="FuckFriends" />
+            <ListItemText primary="Group1" />
           </ListItemButton>
           <ListItemButton sx={{ pl: 4 }}>
             <ListItemIcon>
               <GroupsIcon />
             </ListItemIcon>
-            <ListItemText primary="FuckFriendsVol2" />
+            <ListItemText primary="Group2" />
           </ListItemButton>
         </List>
       </Collapse>
