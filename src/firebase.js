@@ -30,6 +30,15 @@ export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 
+// function registerGroup() {
+//     addDoc(Teams(db, "users"), {
+//         first: "Alan",
+//         middle: "Mathison",
+//         last: "Turing",
+//         born: 1912
+//       });
+// }
+
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
