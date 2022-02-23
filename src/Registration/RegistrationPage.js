@@ -8,6 +8,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
 import db from "../firebase";
 
+
 import {
   addDoc,
   collection,
@@ -17,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { setDate } from "date-fns";
 
 export const RegistrationPage = () => {
   const firstName = useRef();
@@ -41,9 +43,81 @@ export const RegistrationPage = () => {
     }
   });
 
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [dateOfBirthError, setDateOfBirthError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+  const handleSignUpTest = () => {
+    setFirstNameError(false)
+    setLastNameError(false)
+    setDateOfBirthError(false)
+    setEmailError(false)
+    setPasswordError(false)
+    setConfirmPasswordError(false)
+
+    if (firstNameError == '') {
+      setFirstNameError(true)
+    }
+    if (lastNameError == '') {
+      setLastNameError(true)
+    }
+    if (dateOfBirthError == '') {
+      setDateOfBirthError(true)
+    }
+    if (emailError == '') {
+      setEmailError(true)
+    }
+    if (passwordError == '') {
+      setPasswordError(true)
+    }
+    if (confirmPasswordError == '') {
+      setConfirmPasswordError(true)
+    }
+    else if (passwordError != confirmPasswordError) {
+      setPasswordError(true)
+      setConfirmPasswordError(true)
+    }
+
+  }
+
   const handleSignUp = async () => {
     setloading(true);
     console.log("check");
+
+    setFirstNameError(false)
+    setLastNameError(false)
+    setDateOfBirthError(false)
+    setEmailError(false)
+    setPasswordError(false)
+    setConfirmPasswordError(false)
+
+    if (firstNameError == '') {
+      setFirstNameError(true)
+    }
+    if (lastNameError == '') {
+      setLastNameError(true)
+    }
+    if (dateOfBirthError == '') {
+      setDateOfBirthError(true)
+    }
+    if (emailError == '') {
+      setEmailError(true)
+    }
+    if (passwordError == '') {
+      setPasswordError(true)
+    }
+    if (confirmPasswordError == '') {
+      setConfirmPasswordError(true)
+    }
+    else if (passwordError != confirmPasswordError) {
+      setPasswordError(true)
+      setConfirmPasswordError(true)
+    }
+
+
     try {
       signUp(emailRef.current.value, passwordRef.current.value);
       const userCollRef = collection(db, "Users");
@@ -56,7 +130,7 @@ export const RegistrationPage = () => {
     }
     setloading(false);
   };
-
+  
   return (
     <Container maxWidth="xs">
       <Box
@@ -70,6 +144,7 @@ export const RegistrationPage = () => {
         }}
       >
         <TextField
+          onChange={(e) => setFirstNameError(e.target.value)}
           id="outlined-basic"
           margin="normal"
           label="First Name"
@@ -77,8 +152,11 @@ export const RegistrationPage = () => {
           variant="outlined"
           color="success"
           fullWidth
+          error={firstNameError}
+          
         />
         <TextField
+          onChange={(e) => setLastNameError(e.target.value)}
           id="outlined-basic"
           margin="normal"
           label="Last Name"
@@ -86,6 +164,7 @@ export const RegistrationPage = () => {
           variant="outlined"
           color="success"
           fullWidth
+          error={lastNameError}
         />
 
         <LocalizationProvider
@@ -101,9 +180,11 @@ export const RegistrationPage = () => {
             }}
             renderInput={(params) => (
               <TextField
+                onChange={(e) => setDateOfBirthError(e.target.value)}
                 margin="normal"
                 color="success"
                 fullWidth
+                error={dateOfBirthError}
                 {...params}
               />
             )}
@@ -111,6 +192,7 @@ export const RegistrationPage = () => {
         </LocalizationProvider>
 
         <TextField
+          onChange={(e) => setEmailError(e.target.value)}
           margin="normal"
           id="filled-basic"
           label="Email"
@@ -120,9 +202,11 @@ export const RegistrationPage = () => {
           autoFocus
           fullWidth
           color="success"
+          error={emailError}
         />
 
         <TextField
+          onChange={(e) => setPasswordError(e.target.value)}
           id="outlined-basic"
           margin="normal"
           label="Password"
@@ -130,9 +214,11 @@ export const RegistrationPage = () => {
           variant="outlined"
           color="success"
           fullWidth
+          error={passwordError}
         />
 
         <TextField //TODO: Create authentication that the two passwords match
+          onChange={(e) => setConfirmPasswordError(e.target.value)}
           id="outlined-basic"
           margin="normal"
           label="Confirm Password"
@@ -141,6 +227,8 @@ export const RegistrationPage = () => {
           inputRef={passwordRef}
           color="success"
           fullWidth
+          error={confirmPasswordError}
+          helperText={confirmPasswordError == true ? 'Passwords must match!': ''}
         />
 
         <Button
@@ -148,12 +236,13 @@ export const RegistrationPage = () => {
           fullWidth
           color="success"
           sx={{ mt: 3, mb: 2 }}
-          onClick={handleSignUp}
+          onClick={handleSignUpTest}
         >
           Register
         </Button>
+
         <Link href="/login" variant="body2">
-          {"Back to login"}
+          {"Already a user? Sign in"}
         </Link>
       </Box>
     </Container>
