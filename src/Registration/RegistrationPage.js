@@ -7,6 +7,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
 import db from "../firebase";
+import Bilde1 from "./Bilde1.png";
 
 
 import {
@@ -43,6 +44,15 @@ export const RegistrationPage = () => {
     }
   });
 
+  const [firstNameInput, setFirstName] = useState('');
+  const [lastNameInput, setLastName] = useState('');
+  const [emailInput, setEmail] = useState('');
+  const [dateOfBirthInput, setDateOfBirth] = useState('');
+  const [passwordInput, setPassword] = useState('');
+  const [confirmPasswordInput, setConfirmPassword] = useState('');
+
+  const [passwordMatch, setPasswordMatch] = useState(false);
+
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -50,73 +60,41 @@ export const RegistrationPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
-  const handleSignUpTest = () => {
-    setFirstNameError(false)
-    setLastNameError(false)
-    setDateOfBirthError(false)
-    setEmailError(false)
-    setPasswordError(false)
-    setConfirmPasswordError(false)
-
-    if (firstNameError == '') {
-      setFirstNameError(true)
-    }
-    if (lastNameError == '') {
-      setLastNameError(true)
-    }
-    if (dateOfBirthError == '') {
-      setDateOfBirthError(true)
-    }
-    if (emailError == '') {
-      setEmailError(true)
-    }
-    if (passwordError == '') {
-      setPasswordError(true)
-    }
-    if (confirmPasswordError == '') {
-      setConfirmPasswordError(true)
-    }
-    else if (passwordError != confirmPasswordError) {
-      setPasswordError(true)
-      setConfirmPasswordError(true)
-    }
-
-  }
 
   const handleSignUp = async () => {
     setloading(true);
     console.log("check");
 
+    setPasswordMatch(false)
     setFirstNameError(false)
     setLastNameError(false)
-    setDateOfBirthError(false)
     setEmailError(false)
+    setDateOfBirthError(false)
     setPasswordError(false)
     setConfirmPasswordError(false)
-
-    if (firstNameError == '') {
+    
+    if (firstNameInput == '') {
       setFirstNameError(true)
     }
-    if (lastNameError == '') {
+    if (lastNameInput == '') {
       setLastNameError(true)
-    }
-    if (dateOfBirthError == '') {
-      setDateOfBirthError(true)
-    }
-    if (emailError == '') {
+    } 
+    if (emailInput == '') {
       setEmailError(true)
-    }
-    if (passwordError == '') {
-      setPasswordError(true)
-    }
-    if (confirmPasswordError == '') {
-      setConfirmPasswordError(true)
-    }
-    else if (passwordError != confirmPasswordError) {
+    } 
+    if (dateOfBirthInput == '') {
+      setDateOfBirthError(true)
+    } 
+    if (passwordInput == ''  || confirmPasswordInput == '') {
       setPasswordError(true)
       setConfirmPasswordError(true)
+    } else {
+      if (passwordInput != confirmPasswordInput) {
+        setPasswordError(true)
+        setConfirmPasswordError(true)
+        setPasswordMatch(true)
+      }
     }
-
 
     try {
       signUp(emailRef.current.value, passwordRef.current.value);
@@ -132,6 +110,7 @@ export const RegistrationPage = () => {
   };
   
   return (
+    
     <Container maxWidth="xs">
       <Box
         sx={{
@@ -142,105 +121,109 @@ export const RegistrationPage = () => {
 
           padding: 5,
         }}
-      >
+      > 
+        <Box maxHeight="xs" margin="normal">
+          <img src={Bilde1} width="170" />
+        </Box>
+        
         <TextField
-          onChange={(e) => setFirstNameError(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="First Name"
-          inputRef={firstName}
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={firstNameError}
-          
-        />
-        <TextField
-          onChange={(e) => setLastNameError(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Last Name"
-          inputRef={lastName}
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={lastNameError}
-        />
-
-        <LocalizationProvider
-          dateAdapter={AdapterDateFns}
-          locale={localeMap[locale]}
-        >
-          <DatePicker
-            label="Date of birth"
-            value={value}
+            onChange={(e) => setFirstName(e.target.value)}
+            id="outlined-basic"s
+            margin="normal"
+            label="First Name"
+            inputRef={firstName}
+            variant="outlined"
             color="success"
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                onChange={(e) => setDateOfBirthError(e.target.value)}
-                margin="normal"
-                color="success"
-                fullWidth
-                error={dateOfBirthError}
-                {...params}
-              />
-            )}
+            fullWidth
+            error={firstNameError}
+          
+            
           />
-        </LocalizationProvider>
+          <TextField
+            onChange={(e) => setLastName(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Last Name"
+            inputRef={lastName}
+            variant="outlined"
+            color="success"
+            fullWidth
+            error={lastNameError}
+          />
 
-        <TextField
-          onChange={(e) => setEmailError(e.target.value)}
-          margin="normal"
-          id="filled-basic"
-          label="Email"
-          type="email"
-          variant="outlined"
-          inputRef={emailRef}
-          autoFocus
-          fullWidth
-          color="success"
-          error={emailError}
-        />
+          <LocalizationProvider
+            dateAdapter={AdapterDateFns}
+            locale={localeMap[locale]}
+          >
+            <DatePicker
+              label="Date of birth"
+              value={value}
+              color="success"
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  onChange={(e) => setDateOfBirth(e.target.value)}
+                  margin="normal"
+                  color="success"
+                  fullWidth
+                  {...params}
+                />
+              )}
+            />
+          </LocalizationProvider>
 
-        <TextField
-          onChange={(e) => setPasswordError(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Password"
-          type="password"
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={passwordError}
-        />
+          <TextField
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+            id="filled-basic"
+            label="Email"
+            type="email"
+            variant="outlined"
+            inputRef={emailRef}
+            autoFocus
+            fullWidth
+            color="success"
+            error={emailError}
+          />
 
-        <TextField //TODO: Create authentication that the two passwords match
-          onChange={(e) => setConfirmPasswordError(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Confirm Password"
-          type="password"
-          variant="outlined"
-          inputRef={passwordRef}
-          color="success"
-          fullWidth
-          error={confirmPasswordError}
-          helperText={confirmPasswordError == true ? 'Passwords must match!': ''}
-        />
+          <TextField
+            onChange={(e) => setPassword(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Password"
+            type="password"
+            variant="outlined"
+            color="success"
+            fullWidth
+            error={passwordError}
+          />
 
-        <Button
-          variant="contained"
-          fullWidth
-          color="success"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={handleSignUpTest}
-        >
-          Register
-        </Button>
+          <TextField //TODO: Create authentication that the two passwords match
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Confirm Password"
+            type="password"
+            variant="outlined"
+            inputRef={passwordRef}
+            color="success"
+            fullWidth
+            error={confirmPasswordError}
+            helperText={passwordMatch ? 'Passwords must match!': ''}
+          />
 
+          <Button
+            variant="contained"
+            fullWidth
+            color="success"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={handleSignUp}
+          >
+            Register
+          </Button>
+      
         <Link href="/login" variant="body2">
           {"Already a user? Sign in"}
         </Link>
