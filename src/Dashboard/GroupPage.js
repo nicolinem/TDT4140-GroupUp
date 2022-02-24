@@ -20,12 +20,20 @@ import React from "react";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
+import { useLocation } from "react-router-dom";
 
 export const GroupPage = () => {
+  const { state } = useLocation();
+  const { name, id } = state;
+  // const [groupName, setGroupName] = useState();
+
+  // useEffect(() => {
+
+  // })
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Box sx={{ display: "flex", minWidth: 140 }}>
-
         <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
           <Sidebar />
         </Box>
@@ -42,7 +50,7 @@ export const GroupPage = () => {
             component="div"
             fontWeight="bold"
           >
-            Gruppenavn
+            {(name)}
           </Typography>
 
           <Box sx={{ mt: 10, ml: -23 }}>
