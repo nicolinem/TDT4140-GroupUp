@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
 import { Header } from "./Header";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collectionGroup, query, where, getDocs, collection } from "firebase/firestore";
+ 
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Outlet, useNavigate, } from "react-router-dom";
 
@@ -10,6 +12,7 @@ import { Outlet, useNavigate, } from "react-router-dom";
 export const MainPage = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const uid = user.uid;
@@ -22,6 +25,7 @@ export const MainPage = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header />
+      
 
       <Box sx={{ display: "flex", minWidth: 140 }}>
         <Box sx={{ px: 5, py: 4 }}>

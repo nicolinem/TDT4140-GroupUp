@@ -6,6 +6,7 @@ import Bilde1 from "./Bilde1.png";
 import { MainPage } from "../Dashboard/MainPage";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { NewGroup } from "../NewGroup/NewGroup";
 
 export const LoginPage = () => {
   const emailRef = useRef();
@@ -76,6 +77,7 @@ export const LoginPage = () => {
           />
 
           <Button
+            loading={loading}
             disabled={loading || currentUser}
             onClick={handleLogin}
             variant="contained"
