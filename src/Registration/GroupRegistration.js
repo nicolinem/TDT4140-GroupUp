@@ -55,6 +55,7 @@ export const GroupRegistration = () => {
         console.log("hey");
         console.log(user.id + ": " + user.firstName);
         setMembers(prevMembers => [...prevMembers, user.id]);
+        console.log(members);
     };
 
 
@@ -140,7 +141,7 @@ export const GroupRegistration = () => {
         <ul style={{
   listStyleType: 'none',
 }}>
-            {members.filter(user => user.firstName && user.email.includes(userSearchRef.current.value)).map(user =>
+            {members.filter(user => user.firstName && user.firstName.includes(userSearchRef.current.value)).map(user =>
             <li style={{marginBottom: '10px'}}>
                 <Card variant="outlined">
                     <React.Fragment>
