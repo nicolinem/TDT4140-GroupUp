@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Box,
-  InputBase,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@mui/material";
+import { Avatar, Box, InputBase, Menu, MenuItem, Tooltip } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
@@ -80,8 +73,8 @@ export const Header = () => {
     <Box>
       <AppBar
         position="static"
-        alignItems="center"
-        justifyContent="center"
+        alignitems="center"
+        justifycontent="center"
         style={{ background: "#9aca7c" }}
       >
         <Toolbar>
@@ -132,7 +125,6 @@ export const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-
               <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
