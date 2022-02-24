@@ -6,14 +6,22 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
-import db from "../firebase";
+import { default as db} from "../firebase";
+import { firebase } from '@firebase/app';
+import '@firebase/firestore';
+
+import { useEffect } from "react";
 
 import {
   addDoc,
   collection,
+  collectionGroup,
   doc,
   serverTimestamp,
   setDoc,
+  where, 
+  getDocs,
+  query
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -31,11 +39,21 @@ export const RegistrationPage = () => {
   const [locale, setLocale] = React.useState("nb");
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
-  const auth = getAuth();
+  const currentUser = getAuth();
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(currentUser, (user) => {
     if (user) {
-      const uid = user.uid;
+    console.log(user.uid);
+    console.log({
+      firstName: firstName.current.value,
+      lastName: lastName.current.value,
+    });
+
+    setDoc(doc(db, "Users", user.uid), {
+      firstName: firstName.current.value,
+      lastName: lastName.current.value,
+      invites: [],
+    });
       navigate("/");
     } else {
     }
@@ -46,16 +64,17 @@ export const RegistrationPage = () => {
     console.log("check");
     try {
       signUp(emailRef.current.value, passwordRef.current.value);
-      const userCollRef = collection(db, "Users");
-      await addDoc(userCollRef, {
+      /* const userCollRef = collection(db, "Users");
+      await setDoc(userCollRef, {
         firstName: firstName.current.value,
         lastName: lastName.current.value,
-      });
+      }); */
     } catch {
       alert("Something is wrong with your login");
     }
     setloading(false);
   };
+
 
   return (
     <Container maxWidth="xs">
