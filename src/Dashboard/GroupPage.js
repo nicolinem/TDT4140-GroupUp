@@ -24,7 +24,7 @@ import { useLocation } from "react-router-dom";
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id } = state;
+  const { name, id, members } = state;
   // const [groupName, setGroupName] = useState();
 
   // useEffect(() => {
@@ -50,7 +50,7 @@ export const GroupPage = () => {
             component="div"
             fontWeight="bold"
           >
-            {(name)}
+            {name}
           </Typography>
 
           <Box sx={{ mt: 10, ml: -23 }}>

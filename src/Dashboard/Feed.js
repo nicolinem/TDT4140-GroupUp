@@ -19,7 +19,7 @@ export const Feed = () => {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Teams"));
+      const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -36,14 +36,10 @@ export const Feed = () => {
     };
     getgroups();
 
-    // return () => {
-    //   setGroups([]);
-    // };
+
   });
 
   const getGroupCard = (groupObj) => {
-    // const { data } = groupObj;
-    // console.log(id);
     return (
       <Grid item sm={3} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
