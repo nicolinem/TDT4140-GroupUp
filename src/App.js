@@ -1,6 +1,7 @@
 import "./App.css";
 
 import { RegistrationPage } from "./Registration/RegistrationPage.js";
+import { GroupRegistration } from "./Registration/GroupRegistration.js";
 
 import "./App.css";
 import { LoginPage } from "./Login/LoginPage";
@@ -34,7 +35,7 @@ function App() {
         <Route path="/" element={<MainPage />}>
           <Route index element={<Feed />} />
           <Route path="GroupPage" element={<GroupPage />} />
-          <Route path="newgroup" element={<NewGroup />} />
+          <Route path="newgroup" element={<GroupRegistration />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="registration" element={<RegistrationPage />} />
