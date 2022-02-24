@@ -10,6 +10,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import styles from "./GroupRegistration.module.css";
+import CloseIcon from '@mui/icons-material/Close';
 
 export const GroupRegistration = () => {
 
@@ -59,6 +60,11 @@ export const GroupRegistration = () => {
         console.log(members);
     };
 
+    const uninviteUser = (user) => {
+        console.log(user);
+        setMembers(prevMembers => prevMembers.filter(member => member !== user.id));
+    };
+
 
     return (
 
@@ -67,7 +73,9 @@ export const GroupRegistration = () => {
         <Sidebar />
       </Box>
       <div className={styles.container}>
+        
       <Container>
+      
             <Box sx={{
                 marginTop: 10,
                 display: 'flex',
@@ -75,6 +83,7 @@ export const GroupRegistration = () => {
                 alignItems: 'flex-start',
 
             }}>
+                <Typography size={'h1'} >Group Information</Typography>
                 <TextField
                     margin="normal"
                     id="filled-basic"
@@ -137,10 +146,13 @@ export const GroupRegistration = () => {
             }}>
             </Box>
         </Container>
-        <div style={{marginTop: '95px',}}>
+        <div style={{marginTop: '75px',}}>
+        <Typography marginBottom={2} size={'h1'} >Add Members</Typography>
         <TextField id="outlined-search" label="Search field" type="search" onChange={handleSearch} inputRef={userSearchRef} />
         <ul style={{
   listStyleType: 'none',
+  marginLeft: 0,
+  paddingLeft: 0,
 }}>
             {users.filter(user => user.firstName && user.firstName.includes(userSearchRef.current.value)).map(user =>
             <li style={{marginBottom: '10px'}}>
@@ -160,6 +172,12 @@ export const GroupRegistration = () => {
                 
                 </Card></li>)}
         </ul>
+        </div>
+
+        <div style={{marginTop: '95px',}}>
+            {users.filter(user => members.includes(user.id)).map(member => 
+                <Button endIcon={<CloseIcon></CloseIcon>} onClick={() => uninviteUser(member)}>{member.firstName}</Button>
+            )}
         </div>
         </div>
       

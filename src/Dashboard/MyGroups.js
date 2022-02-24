@@ -1,11 +1,12 @@
 import { default as db} from "../firebase";
 import React, { useEffect, useState } from "react";
-import { onSnapshot, collection } from "firebase/firestore";
+import { onSnapshot, collection, doc, updateDoc } from "firebase/firestore";
 import { Box, Card, Typography, CardContent, CardActions, Button } from "@mui/material";
 import { Sidebar } from "./Sidebar";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from "./MyGroups.module.css";
+import CloseIcon from '@mui/icons-material/Close';
 
 export const MyGroups = () => {
 
@@ -20,6 +21,16 @@ export const MyGroups = () => {
           ,
         []
       );
+
+
+      const leaveGroup = async (group) => {
+        const groupRef = doc(db, "Teams-beta", group.id);
+
+        await updateDoc(groupRef, {
+        members: group.members.filter(member => member != auth.currentUser.uid),
+        });
+          
+      };
 
       console.log(groups);
     return (
@@ -45,12 +56,11 @@ export const MyGroups = () => {
                </Typography>
              </CardContent>
              <CardActions>
-               <Button  endIcon={<ArrowForwardIosIcon ></ArrowForwardIosIcon>} size="small">Details</Button>
+             <Button onClick={() => leaveGroup(group)}  endIcon={<CloseIcon></CloseIcon>} size="small">Leave</Button>
+               <Button  endIcon={<ArrowForwardIosIcon ></ArrowForwardIosIcon>} size="small">Go to group</Button>
              </CardActions>
            </Card>
          )}
-    
-         
         </div>
       </Box>
         
