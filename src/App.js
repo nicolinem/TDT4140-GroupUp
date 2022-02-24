@@ -1,7 +1,6 @@
 import "./App.css";
 
 import { RegistrationPage } from "./Registration/RegistrationPage.js";
-import { GroupRegistration } from "./Registration/GroupRegistration.js";
 
 import "./App.css";
 import { LoginPage } from "./Login/LoginPage";

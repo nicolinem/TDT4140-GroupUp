@@ -17,21 +17,10 @@ const GroupCard = (props) => {
   // const [group, setGroup] = React.useState([]);
   console.log("test: ", name, id);
 
-  // console.log("test2: ", group);
-  // const { name } = doc.data();
-  // const { idi } = id;
+
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const getgroups = async () => {
-  //     const docRef = doc(db, "Teams", groupID);
-
-  //     const group = await getDoc(docRef);
-  //     setGroup(group.data());
-  //     console.log("THIIIISSSS", group.id, " => ", group.data());
-  //   };
-  //   getgroups();
-  // }, []);
+ 
 
   function run() {
     navigate("/GroupPage", { state: { name, id } });
@@ -67,7 +56,7 @@ const GroupCard = (props) => {
         <Box
           sx={{
             maxHeight: 350,
-            bgcolor: "#e3f0d3",
+            // bgcolor: "#e3f0d3",
             "&:hover": {
               backgroundColor: "#c5e1a5",
               opacity: [0.9, 0.8, 0.7],
