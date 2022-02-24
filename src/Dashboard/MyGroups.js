@@ -21,6 +21,7 @@ export const MyGroups = () => {
         []
       );
 
+      console.log(groups);
     return (
         <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
@@ -41,7 +42,6 @@ export const MyGroups = () => {
                </Typography>
                <Typography variant="body2">
                  {group.description}
-                 
                </Typography>
              </CardContent>
              <CardActions>

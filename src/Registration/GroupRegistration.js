@@ -13,14 +13,15 @@ import styles from "./GroupRegistration.module.css";
 
 export const GroupRegistration = () => {
 
+    const [users, setUsers] = useState([]);
     const [members, setMembers] = useState([]);
     const userSearchRef = useRef();
     const [, setChange] = useState();
 
     useEffect(
         () =>
-          onSnapshot(collection(db, "Users"), (snapshot) =>
-            setMembers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+          onSnapshot(collection(db, "Users"), (snapshot) => 
+            setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
           ),
         []
       );
@@ -141,7 +142,7 @@ export const GroupRegistration = () => {
         <ul style={{
   listStyleType: 'none',
 }}>
-            {members.filter(user => user.firstName && user.firstName.includes(userSearchRef.current.value)).map(user =>
+            {users.filter(user => user.firstName && user.firstName.includes(userSearchRef.current.value)).map(user =>
             <li style={{marginBottom: '10px'}}>
                 <Card variant="outlined">
                     <React.Fragment>
