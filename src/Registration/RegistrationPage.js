@@ -7,7 +7,6 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
 import db from "../firebase";
-import Bilde1 from "./Bilde1.png";
 
 
 import {
@@ -96,18 +95,20 @@ export const RegistrationPage = () => {
       }
     }
 
-    try {
-      signUp(emailRef.current.value, passwordRef.current.value);
-      const userCollRef = collection(db, "Users");
-      await addDoc(userCollRef, {
-        firstName: firstName.current.value,
-        lastName: lastName.current.value,
-      });
-    } catch {
-      alert("Something is wrong with your login");
+    if (firstNameError == false && lastNameError == false && emailError == false && passwordError == false && confirmPasswordError == false) {
+      try {
+        signUp(emailRef.current.value, passwordRef.current.value);
+        const userCollRef = collection(db, "Users");
+        await addDoc(userCollRef, {
+          firstName: firstName.current.value,
+          lastName: lastName.current.value,
+        });
+      } catch {
+        alert("Something is wrong with your login");
+      }
+      setloading(false);
+    };
     }
-    setloading(false);
-  };
   
   return (
     
@@ -122,10 +123,6 @@ export const RegistrationPage = () => {
           padding: 5,
         }}
       > 
-        <Box maxHeight="xs" margin="normal">
-          <img src={Bilde1} width="170" />
-        </Box>
-        
         <TextField
             onChange={(e) => setFirstName(e.target.value)}
             id="outlined-basic"s
