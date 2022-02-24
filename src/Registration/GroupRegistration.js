@@ -13,14 +13,14 @@ import styles from "./GroupRegistration.module.css";
 
 export const GroupRegistration = () => {
 
-    const [users, setUsers] = useState([]);
+    const [members, setMembers] = useState([]);
     const userSearchRef = useRef();
-    const [change, setChange] = useState();
+    const [, setChange] = useState();
 
     useEffect(
         () =>
           onSnapshot(collection(db, "Users"), (snapshot) =>
-            setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            setMembers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
           ),
         []
       );
@@ -42,7 +42,7 @@ export const GroupRegistration = () => {
             name: groupNameRef.current.value,
             description: groupDescriptionRef.current.value,
             interests: interestsRef.current.value,
-            members: [currentUser?.uid],
+            members: [...members, currentUser?.uid],
             created: serverTimestamp(),
         });
     };
@@ -51,8 +51,10 @@ export const GroupRegistration = () => {
         setChange(prevValue => !prevValue);
     };
 
-    const inviteUser = (id) => {
-
+    const inviteUser = (user) => {
+        console.log("hey");
+        console.log(user.id + ": " + user.firstName);
+        setMembers(prevMembers => [...prevMembers, user.id]);
     };
 
 
@@ -138,7 +140,7 @@ export const GroupRegistration = () => {
         <ul style={{
   listStyleType: 'none',
 }}>
-            {users.filter(user => user.firstName && user.firstName.includes(userSearchRef.current.value)).map(user =>
+            {members.filter(user => user.firstName && user.email.includes(userSearchRef.current.value)).map(user =>
             <li style={{marginBottom: '10px'}}>
                 <Card variant="outlined">
                     <React.Fragment>
@@ -149,7 +151,7 @@ export const GroupRegistration = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={inviteUser(user.id)}>Invite</Button>
+            <Button size="small" onClick={() => inviteUser(user)}>{"Invite"}</Button>
           </CardActions>
           </div>
         </React.Fragment>
