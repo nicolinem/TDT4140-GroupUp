@@ -15,16 +15,16 @@ import { onSnapshot, collection } from "firebase/firestore";
 import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { Feed } from "./Dashboard/Feed";
+import{ MyGroups } from "./Dashboard/MyGroups";
+import { GroupRegistration } from "./Registration/GroupRegistration";
+import { AddMembers } from "./Dashboard/AddMembers";
 
 function App() {
-  const [students, setStudents] = useState();
-
-  console.log(students);
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "students"), (snapshot) =>
-        setStudents(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      onSnapshot(collection(db, "Users"), (snapshot) =>
+        console.log(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       ),
     []
   );
@@ -36,9 +36,11 @@ function App() {
           <Route index element={<Feed />} />
           <Route path="GroupPage" element={<GroupPage />} />
           <Route path="newgroup" element={<GroupRegistration />} />
+          <Route path="MyGroups" element={<MyGroups />} />
+          <Route path="AddMembers" element={<AddMembers />}></Route>
         </Route>
         <Route path="login" element={<LoginPage />} />
-        <Route path="registration" element={<RegistrationPage />} />
+        <Route exact path="registration" element={<RegistrationPage />} />
       </Routes>
     </Box>
   );

@@ -17,12 +17,15 @@ export const NewGroup = () => {
   const currentUser = useAuth();
 
   const handleClick = async () => {
-    const groupCollRef = collection(db, "Teams");
-    const documentref = await addDoc(groupCollRef, {
-      name: groupRef.current.value,
-    });
+    console.log(currentUser?.uid);
 
-    const ref = documentref.id;
+     console.log(typeof currentUser?.uid);
+    const groupCollRef = collection(db, "Teams-beta");
+    const documentref = await addDoc(groupCollRef, {
+      members: [{userID: currentUser?.uid, role: "admin"}],
+    }); 
+
+    /* const ref = documentref.id;
     const memberDocument = doc(
       db,
       "Teams",
@@ -35,7 +38,7 @@ export const NewGroup = () => {
       name: "Hi I am a Member",
     });
 
-    console.log("check");
+    console.log("check"); */
   };
 
   return (
