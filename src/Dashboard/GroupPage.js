@@ -24,7 +24,7 @@ import { useLocation } from "react-router-dom";
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members } = state;
+  const { name, id, members, } = state;
   // const [groupName, setGroupName] = useState();
 
   // useEffect(() => {

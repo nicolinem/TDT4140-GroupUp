@@ -8,11 +8,17 @@ import { ListItemButton, ListItemIcon, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { default as db } from "../firebase";
+import { useLocation } from "react-router-dom";
+
+
+
 
 export function GroupOverView() {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = React.useState([]);
   const [groupsID, setGroupsID] = React.useState([]);
+
+
 
   // const getID = (idi) => {
   //   const { id } = idi;
@@ -21,7 +27,7 @@ export function GroupOverView() {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Users"), where );
+      const q = query(collection(db, "Users"), where);
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
