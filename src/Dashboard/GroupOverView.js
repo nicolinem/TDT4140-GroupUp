@@ -7,35 +7,60 @@ import { ListItemButton, ListItemIcon, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { default as db } from "../firebase";
+import { default as db, storage } from "../firebase";
+import PersonIcon from "@mui/icons-material/Person";
 
-export function GroupOverView() {
+export const GroupOverView = (props) => {
+  const { users, id } = props;
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = React.useState([]);
+  const [usersList, setUsersList] = React.useState([]);
   const [groupsID, setGroupsID] = React.useState([]);
 
   // const getID = (idi) => {
   //   const { id } = idi;
   //   return id;
   // };
+  //   console.log(users);
 
-  useEffect(() => {
-    const getgroups = async () => {
-      const q = query(collection(db, "Users"), where );
+  //   useEffect(() => {
+  //     const getgroups = async () => {
+  //       const q = query(
+  //         collection(db, "Users"),
+  //         where("groups", "array-contains", id)
+  //       );
 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        users.push(doc.data());
-        console.log(doc.id, " => ", doc.data());
-      });
+  //       const querySnapshot = await getDocs(q);
+  //       querySnapshot.forEach((doc) => {
+  //         usersList.push(doc.data());
+  //         console.log("hello", doc.id, " => ", doc.data());
+  //       });
 
-      setLoading(false);
-    };
-    getgroups();
-  });
+  //       setLoading(false);
+  //     };
+  //     getgroups();
+  //   }, []);
+
+  const getGroupMember = (member) => {
+    console.log("member: ", member);
+    if (member.firstName != "") {
+      return (
+        <ListItemButton sx={{ pl: 4 }}>
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary={member.firstName} />
+        </ListItemButton>
+      );
+    }
+  };
+
   return (
-    <List component="div" disablePadding>
-      {" "}
+    <List
+      component="div"
+      disablePadding
+      sx={{ height: 250, width: 250, mt: 6, ml: -3, overflow: "scroll" }}
+    >
+      {users.map((user) => getGroupMember(user))};
       {/* {groups
           .filter((group) => group.members.includes(auth.currentUser.uid))
           .map((group) => (
@@ -44,41 +69,10 @@ export function GroupOverView() {
               <ListItemText primary={group.name} />
             </ListItemButton>
           ))} */}
-      <ListItemButton sx={{ pl: 4 }}>
-        <ListItemIcon></ListItemIcon>
-        <ListItemText primary="Group1" />
-      </ListItemButton>
-      <ListItemButton sx={{ pl: 4 }}>
+      {/* <ListItemButton sx={{ pl: 4 }}>
         <ListItemIcon></ListItemIcon>
         <ListItemText primary="Group2" />
-      </ListItemButton>
+      </ListItemButton> */}
     </List>
-
-    // <List sx={{ width: '100%', maxWidth: 400, bgcolor: 'background.paper' }}>
-    //     <ListItem>
-    //         <ListItemAvatar>
-    //             <Avatar alt="Remy Sharp" src={image} sx={{ width: 40, height: 40 }} />
-    //         </ListItemAvatar>
-    //         <ListItemText primary="Gruppemedlem1" />
-    //     </ListItem>
-    //     <ListItem>
-    //         <ListItemAvatar>
-    //             <Avatar alt="Remy Sharp" src={image} sx={{ width: 40, height: 40 }} />
-    //         </ListItemAvatar>
-    //         <ListItemText primary="Gruppemedlem2" />
-    //     </ListItem>
-    //     <ListItem>
-    //         <ListItemAvatar>
-    //             <Avatar alt="Remy Sharp" src={image} sx={{ width: 40, height: 40 }} />
-    //         </ListItemAvatar>
-    //         <ListItemText primary="Gruppemedlem3" />
-    //     </ListItem>
-    //     <ListItem>
-    //         <ListItemAvatar>
-    //             <Avatar alt="Remy Sharp" src={image} sx={{ width: 40, height: 40 }} />
-    //         </ListItemAvatar>
-    //         <ListItemText primary="Gruppemedlem4" />
-    //     </ListItem>
-    // </List>
   );
-}
+};

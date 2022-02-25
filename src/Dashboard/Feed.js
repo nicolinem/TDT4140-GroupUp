@@ -25,7 +25,7 @@ export const Feed = () => {
       querySnapshot.forEach((doc) => {
         // const id = getID(doc.id);
 
-        groups.push(doc.data());
+        groups.push({ ...doc.data(), id: doc.id });
         groupsID.push(doc.id);
         console.log(doc.id, " => ", doc.data());
         // console.log(doc);
@@ -35,8 +35,6 @@ export const Feed = () => {
       console.log(groups);
     };
     getgroups();
-
-
   });
 
   const getGroupCard = (groupObj) => {

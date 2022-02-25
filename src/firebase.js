@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -29,7 +30,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
-
+export const storage = getStorage();
+export const storageRef = ref(storage);
 // function registerGroup() {
 //     addDoc(Teams(db, "users"), {
 //         first: "Alan",
