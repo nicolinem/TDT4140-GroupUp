@@ -16,29 +16,6 @@ export const GroupOverView = (props) => {
   const [usersList, setUsersList] = React.useState([]);
   const [groupsID, setGroupsID] = React.useState([]);
 
-  // const getID = (idi) => {
-  //   const { id } = idi;
-  //   return id;
-  // };
-  //   console.log(users);
-
-  //   useEffect(() => {
-  //     const getgroups = async () => {
-  //       const q = query(
-  //         collection(db, "Users"),
-  //         where("groups", "array-contains", id)
-  //       );
-
-  //       const querySnapshot = await getDocs(q);
-  //       querySnapshot.forEach((doc) => {
-  //         usersList.push(doc.data());
-  //         console.log("hello", doc.id, " => ", doc.data());
-  //       });
-
-  //       setLoading(false);
-  //     };
-  //     getgroups();
-  //   }, []);
 
   const getGroupMember = (member) => {
     console.log("member: ", member);
@@ -61,18 +38,6 @@ export const GroupOverView = (props) => {
       sx={{ height: 250, width: 250, mt: 6, ml: -3, overflow: "scroll" }}
     >
       {users.map((user) => getGroupMember(user))};
-      {/* {groups
-          .filter((group) => group.members.includes(auth.currentUser.uid))
-          .map((group) => (
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary={group.name} />
-            </ListItemButton>
-          ))} */}
-      {/* <ListItemButton sx={{ pl: 4 }}>
-        <ListItemIcon></ListItemIcon>
-        <ListItemText primary="Group2" />
-      </ListItemButton> */}
     </List>
   );
 };

@@ -16,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export function GroupInformation() {
   const { state } = useLocation();
-  const { name, id, description } = state;
+  const { interests, description, /*time,*/ /*place*/ } = state;
 
   return (
     <Box sx={{ width: "100%", ml: -15 }}>
@@ -53,8 +53,10 @@ export function GroupInformation() {
                 paddingTop: 3,
               }}
             >
-              Gå på tur Vors Drikke vin
+              {(interests)}
+
             </Typography>
+            console.log(interests)
           </Box>
         </Grid>
         <Grid item xs={1}>
@@ -90,7 +92,7 @@ export function GroupInformation() {
               }}
             >
               {(description)}
-              
+
             </Typography>
           </Box>
         </Grid>
@@ -115,7 +117,7 @@ export function GroupInformation() {
                 color: "#fafafa",
               }}
             >
-              Våre planer
+              Tidspunkt
             </Typography>
 
             <Typography
@@ -126,7 +128,9 @@ export function GroupInformation() {
                 paddingTop: 3,
               }}
             >
-              Hva: Når:
+              Når: time
+              Hvor: place
+
             </Typography>
           </Box>
         </Grid>

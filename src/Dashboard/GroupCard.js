@@ -12,14 +12,16 @@ import { doc, getDoc } from "firebase/firestore";
 import { default as db } from "../firebase";
 
 const GroupCard = (props) => {
-  const { name, id, description } = props;
+  const { name, id, description, interests, members } = props;
 
-  console.log("test: ", name, id, description);
+  console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
 
   function run() {
-    navigate("/GroupPage", { state: { name, id, description } });
+    navigate("/GroupPage", {
+      state: { name, id, description, interests, members },
+    });
     console.log("hello");
   }
 

@@ -37,7 +37,6 @@ export const GroupPage = () => {
         <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
           <Sidebar />
         </Box>
-        <Box sx={{ px: 5, py: 4 }}></Box>
 
         <Box sx={{ display: "flex", mt: 7, ml: 5 }}>
           <img src={image} height={350} width={500} />
@@ -54,7 +53,7 @@ export const GroupPage = () => {
           </Typography>
 
           <Box sx={{ mt: 10, ml: -23 }}>
-            <GroupOverView />
+            <GroupOverView users={members} />
           </Box>
         </Box>
 

@@ -59,7 +59,6 @@ export const Feed = () => {
           justifyContent: "center",
         }}
       >
-        {/* <CircularProgress /> */}
         <CircularProgress />
       </Box>
     </Box>
