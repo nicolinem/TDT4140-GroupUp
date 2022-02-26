@@ -12,36 +12,21 @@ import { doc, getDoc } from "firebase/firestore";
 import { default as db } from "../firebase";
 
 const GroupCard = (props) => {
-  const { name, id } = props;
+  const { name, id, description, interests, members } = props;
 
-  // const [group, setGroup] = React.useState([]);
-  console.log("test: ", name, id);
-
+  console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
 
- 
-
   function run() {
-    navigate("/GroupPage", { state: { name, id } });
+    navigate("/GroupPage", {
+      state: { name, id, description, interests, members },
+    });
     console.log("hello");
   }
 
   return (
-    <Card
-      alignItems="center"
-      justify="center"
-      sx={
-        {
-          // maxWidth: 300,
-          // maxHeight: 350,
-          // display: "flex",
-          // flexDirection: "column",
-          // borderTopRightRadius: "20%",
-          // borderTopLeftRadius: "20%",
-        }
-      }
-    >
+    <Card alignItems="center" justify="center" sx={{}}>
       <CardActionArea
         onClick={run}
         sx={{
@@ -49,8 +34,6 @@ const GroupCard = (props) => {
           maxHeight: 350,
           display: "flex",
           flexDirection: "column",
-          // borderTopRightRadius: "20%",
-          // borderTopLeftRadius: "20%",
         }}
       >
         <Box
@@ -82,9 +65,6 @@ const GroupCard = (props) => {
                 display: "flex",
                 m: 0,
                 flexDirection: "column",
-                // borderTopRightRadius: "60%",
-                // borderTopLeftRadius: "60%",
-                // bgcolor: "white",
               }}
             >
               <Avatar
@@ -97,8 +77,7 @@ const GroupCard = (props) => {
                 {name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species
+                {description}
               </Typography>
             </Box>
           </CardContent>
