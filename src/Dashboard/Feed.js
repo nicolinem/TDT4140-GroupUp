@@ -19,7 +19,7 @@ export const Feed = () => {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Teams"));
+      const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
