@@ -31,10 +31,7 @@ import { setDate } from "date-fns";
 export const RegistrationPage = () => {
   const firstName = useRef();
   const lastName = useRef();
-
-  const localeMap = {
-    nb: nbLocale,
-  };
+  const dateOfBirth = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [value, setValue] = React.useState(null);
@@ -42,6 +39,9 @@ export const RegistrationPage = () => {
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const currentUser = getAuth();
+  const localeMap = {
+    nb: nbLocale,
+  };
 
   onAuthStateChanged(currentUser, (user) => {
     if (user) {
@@ -49,11 +49,17 @@ export const RegistrationPage = () => {
     console.log({
       firstName: firstName.current.value,
       lastName: lastName.current.value,
+      email: emailRef.current.value,
+      dateOfBirth: dateOfBirth.current.value,
+      password: passwordRef.current.value,
     });
 
     setDoc(doc(db, "Users", user.uid), {
       firstName: firstName.current.value,
       lastName: lastName.current.value,
+      email: emailRef.current.value,
+      dateOfBirth: dateOfBirth.current.value,
+      password: passwordRef.current.value,
       invites: [],
     });
       navigate("/");
@@ -120,6 +126,9 @@ export const RegistrationPage = () => {
         await addDoc(userCollRef, {
           firstName: firstName.current.value,
           lastName: lastName.current.value,
+          email: emailRef.current.value,
+          dateOfBirth: dateOfBirth.current.value,
+          password: passwordRef.current.value,
         });
       } catch {
         alert("Something is wrong with your login");
@@ -175,11 +184,12 @@ export const RegistrationPage = () => {
               value={value}
               color="success"
               onChange={(newValue) => {
-                setValue(newValue);
+                setValue(newValue) ;
               }}
+              helperText={dateOfBirthError ? 'Enter date of birth!': ''}
+              inputRef={dateOfBirth}
               renderInput={(params) => (
                 <TextField
-                  onChange={(e) => setDateOfBirth(e.target.value)}
                   margin="normal"
                   color="success"
                   fullWidth
@@ -210,19 +220,19 @@ export const RegistrationPage = () => {
             label="Password"
             type="password"
             variant="outlined"
+            inputRef={passwordRef}
             color="success"
             fullWidth
             error={passwordError}
           />
 
-          <TextField //TODO: Create authentication that the two passwords match
+          <TextField
             onChange={(e) => setConfirmPassword(e.target.value)}
             id="outlined-basic"
             margin="normal"
             label="Confirm Password"
             type="password"
             variant="outlined"
-            inputRef={passwordRef}
             color="success"
             fullWidth
             error={confirmPasswordError}
