@@ -12,7 +12,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { default as db } from "../firebase";
 
 const GroupCard = (props) => {
-  const { name, id, description, interests, members } = props;
+  const { name, id, description, interests, members, imageReference } = props;
 
   console.log("test: ", name, id, description, interests);
 
@@ -20,7 +20,7 @@ const GroupCard = (props) => {
 
   function run() {
     navigate("/GroupPage", {
-      state: { name, id, description, interests, members },
+      state: { name, id, description, interests, members, imageReference },
     });
     console.log("hello");
   }

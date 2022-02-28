@@ -16,20 +16,37 @@ import {
   FolderIcon,
 } from "@mui/material";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase";
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members } = state;
-  // const [groupName, setGroupName] = useState();
+  const { name, id, members, imageReference } = state;
+  const [url, setUrl] = useState(null);
 
-  // useEffect(() => {
+  useEffect(() => {
+    const getImage = async () => {
+      console.log(imageReference);
+      getDownloadURL(ref(storage, imageReference)).then((url) => {
+        console.log(url);
+        const img = React.createElement(
+          "img",
+          {
+            src: url,
+          },
+          null
+        );
 
-  // })
+        setUrl(url);
+      });
+    };
+    getImage();
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -39,7 +56,7 @@ export const GroupPage = () => {
         </Box>
 
         <Box sx={{ display: "flex", mt: 7, ml: 5 }}>
-          <img src={image} height={350} width={500} />
+          <img src={url} height={350} width={500} />
         </Box>
 
         <Box sx={{ display: "flex", height: 250, width: 360, mt: 6, ml: -3 }}>
