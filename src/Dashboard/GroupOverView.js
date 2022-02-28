@@ -3,12 +3,13 @@ import image from "./DSC06122-kopi.jpg";
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
-import { ListItemButton, ListItemIcon, Typography } from "@mui/material";
+import { Avatar, ListItemButton, ListItemIcon, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { default as db, storage } from "../firebase";
 import PersonIcon from "@mui/icons-material/Person";
+
 
 export const GroupOverView = (props) => {
   const { users, id } = props;
@@ -23,7 +24,11 @@ export const GroupOverView = (props) => {
       return (
         <ListItemButton sx={{ pl: 4 }}>
           <ListItemIcon>
-            <PersonIcon />
+            <Avatar
+              alt="Remy Sharp"
+              src={image}
+              sx={{ width: 45, height: 45 }}
+            />
           </ListItemIcon>
           <ListItemText primary={member.firstName} />
         </ListItemButton>
@@ -35,9 +40,9 @@ export const GroupOverView = (props) => {
     <List
       component="div"
       disablePadding
-      sx={{ height: 250, width: 250, mt: 6, ml: -3, overflow: "scroll" }}
+      sx={{ height: 250, width: 250, mt: 6, ml: -5, overflow: "scroll", overflowX: "hidden", }}
     >
       {users.map((user) => getGroupMember(user))};
-    </List>
+    </List >
   );
 };

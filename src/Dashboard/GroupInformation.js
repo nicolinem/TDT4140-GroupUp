@@ -19,51 +19,15 @@ export function GroupInformation() {
   const { interests, description, /*time,*/ /*place*/ } = state;
 
   return (
-    <Box sx={{ width: "100%", ml: -15 }}>
-      <Grid container spacing={36}>
+    <Box sx={{ width: "100%", ml: -35 }}>
+      <Grid container spacing={55}>
         <Grid item xs={1}>
-          <Box
-            sx={{
-              width: 250,
-              height: 400,
-              mt: 3,
-              ml: 10,
-              backgroundColor: "#dcedc8",
-              border: 6,
-              borderColor: "#9aca7c",
-            }}
-          >
-            <Typography
-              variant="h8"
-              component="h2"
-              sx={{
-                padding: 1,
-                backgroundColor: "#9aca7c",
-                color: "#fafafa",
-              }}
-            >
-              Interesser
-            </Typography>
-
-            <Typography
-              variant="h10"
-              component="h10"
-              sx={{
-                padding: 1,
-                paddingTop: 3,
-              }}
-            >
-              {(interests)}
-
-            </Typography>
-            console.log(interests)
-          </Box>
         </Grid>
         <Grid item xs={1}>
           <Box
             sx={{
-              width: 250,
-              height: 400,
+              width: 400,
+              height: 200,
               mt: 3,
               ml: 10,
               backgroundColor: "#dcedc8",
@@ -99,8 +63,8 @@ export function GroupInformation() {
         <Grid item xs={1}>
           <Box
             sx={{
-              width: 250,
-              height: 400,
+              width: 400,
+              height: 200,
               mt: 3,
               ml: 10,
               backgroundColor: "#dcedc8",
@@ -128,8 +92,7 @@ export function GroupInformation() {
                 paddingTop: 3,
               }}
             >
-              Når: time
-              Hvor: place
+
 
             </Typography>
           </Box>

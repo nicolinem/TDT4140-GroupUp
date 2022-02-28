@@ -26,7 +26,9 @@ const GroupCard = (props) => {
   }
 
   return (
-    <Card alignItems="center" justify="center" sx={{}}>
+    <Card alignItems="center" justify="center" sx={{
+      minHeight: 200, maxHeight: 200,
+    }}>
       <CardActionArea
         onClick={run}
         sx={{
@@ -34,16 +36,18 @@ const GroupCard = (props) => {
           maxHeight: 350,
           display: "flex",
           flexDirection: "column",
+          "&:hover": {
+            backgroundColor: "#c5e1a5",
+            opacity: [0.9, 0.8, 0.7],
+          },
         }}
       >
         <Box
           sx={{
-            maxHeight: 350,
+            maxHeight: 400,
+            width: 300,
             // bgcolor: "#e3f0d3",
-            "&:hover": {
-              backgroundColor: "#c5e1a5",
-              opacity: [0.9, 0.8, 0.7],
-            },
+
             borderBottomRightRadius: "60%",
             borderBottomLeftRadius: "60%",
           }}
