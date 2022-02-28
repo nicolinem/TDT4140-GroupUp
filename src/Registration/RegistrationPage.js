@@ -5,7 +5,6 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import nbLocale from "date-fns/locale/nb";
 import { default as db} from "../firebase";
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
@@ -26,7 +25,7 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { setDate } from "date-fns";
+
 
 export const RegistrationPage = () => {
   const firstName = useRef();
@@ -35,13 +34,9 @@ export const RegistrationPage = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [value, setValue] = React.useState(null);
-  const [locale, setLocale] = React.useState("nb");
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const currentUser = getAuth();
-  const localeMap = {
-    nb: nbLocale,
-  };
 
   onAuthStateChanged(currentUser, (user) => {
     if (user) {
@@ -73,8 +68,10 @@ export const RegistrationPage = () => {
   const [dateOfBirthInput, setDateOfBirth] = useState('');
   const [passwordInput, setPassword] = useState('');
   const [confirmPasswordInput, setConfirmPassword] = useState('');
-
+  const [passwordLengthNotValid, setPasswordLengthNotValid] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [emailNotValid, setEmailNotValid] = useState(false);
+  const emailRegex = /\S+@\S+\.\S+/;
 
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
@@ -83,11 +80,11 @@ export const RegistrationPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
+  function validate() {
 
-  const handleSignUp = async () => {
-    setloading(true);
-    console.log("check");
+    var status = false;
 
+    setPasswordLengthNotValid(false)
     setPasswordMatch(false)
     setFirstNameError(false)
     setLastNameError(false)
@@ -96,30 +93,54 @@ export const RegistrationPage = () => {
     setPasswordError(false)
     setConfirmPasswordError(false)
     
-    if (firstNameInput == '') {
+    if (firstNameInput === '') {
       setFirstNameError(true)
     }
-    if (lastNameInput == '') {
+    if (lastNameInput === '') {
       setLastNameError(true)
     } 
-    if (emailInput == '') {
+    if (emailInput === '') {
       setEmailError(true)
-    } 
-    if (dateOfBirthInput == '') {
+    } else {
+      if (emailRegex.test(emailInput)) {
+        setEmailNotValid(false);
+      } else {
+          setEmailNotValid(true);
+          setEmailError(true);
+      }
+    }
+    if (dateOfBirthInput === '') {
       setDateOfBirthError(true)
     } 
-    if (passwordInput == ''  || confirmPasswordInput == '') {
+    if (passwordInput === ''  || confirmPasswordInput === '') {
       setPasswordError(true)
       setConfirmPasswordError(true)
     } else {
-      if (passwordInput != confirmPasswordInput) {
-        setPasswordError(true)
-        setConfirmPasswordError(true)
-        setPasswordMatch(true)
+        if (passwordInput.length < 6 ) {
+          setPasswordLengthNotValid(true)
+          setPasswordError(true)
+        }
+        if (passwordInput !== confirmPasswordInput) {
+          setPasswordError(true)
+          setConfirmPasswordError(true)
+          setPasswordMatch(true)
+        }
       }
-    }
+    if (firstNameInput !== '' && lastNameInput !== '' && emailInput !== '' && passwordInput !== '' && confirmPasswordInput !== '') {
+      if ((passwordInput === confirmPasswordInput) && emailNotValid === false) {
+        status = true;
+      }
+    } 
+    return status;
+  }
 
-    if (firstNameError == false && lastNameError == false && emailError == false && passwordError == false && confirmPasswordError == false) {
+  const handleSignUp = async () => {
+    setloading(true);
+    console.log("check");
+    console.log(validate());
+    console.log(dateOfBirth);
+
+    if (validate()) {
       try {
         signUp(emailRef.current.value, passwordRef.current.value);
         const userCollRef = collection(db, "Users");
@@ -160,9 +181,7 @@ export const RegistrationPage = () => {
             color="success"
             fullWidth
             error={firstNameError}
-          
-            
-          />
+            />
           <TextField
             onChange={(e) => setLastName(e.target.value)}
             id="outlined-basic"
@@ -175,22 +194,19 @@ export const RegistrationPage = () => {
             error={lastNameError}
           />
 
-          <LocalizationProvider
-            dateAdapter={AdapterDateFns}
-            locale={localeMap[locale]}
-          >
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
+              inputFormat="dd/mm/yyyy"
               label="Date of birth"
               value={value}
-              color="success"
               onChange={(newValue) => {
                 setValue(newValue) ;
               }}
-              helperText={dateOfBirthError ? 'Enter date of birth!': ''}
               inputRef={dateOfBirth}
               renderInput={(params) => (
                 <TextField
                   margin="normal"
+                  variant="outlined"
                   color="success"
                   fullWidth
                   {...params}
@@ -211,6 +227,7 @@ export const RegistrationPage = () => {
             fullWidth
             color="success"
             error={emailError}
+            helperText={emailNotValid ? 'Please enter a valid email!' : ''}
           />
 
           <TextField
@@ -224,6 +241,7 @@ export const RegistrationPage = () => {
             color="success"
             fullWidth
             error={passwordError}
+            helperText={passwordLengthNotValid ? 'Password must be six or more characters!': ''}
           />
 
           <TextField
