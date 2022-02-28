@@ -1,4 +1,4 @@
-import { default as db} from "../firebase";
+import { default as db } from "../firebase";
 import {
   Button,
   List,
@@ -18,23 +18,22 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import React, { useEffect, useState } from "react";
 import { onSnapshot, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import GroupIcon from '@mui/icons-material/Group';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
-
+import GroupIcon from "@mui/icons-material/Group";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [groups, setGroups] = useState([]);
   const auth = getAuth();
 
-    useEffect(
-        () =>
-          onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
-          setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))))
-          ,
-        []
-      );
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
+        setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      ),
+    []
+  );
 
   const handleClick = () => {
     setOpen(!open);
@@ -42,7 +41,12 @@ export const Sidebar = () => {
 
   return (
     <List
-      sx={{ width: "100%", maxWidth: 500, bgcolor: "background.paper" }}
+      sx={{
+        width: "100%",
+        maxWidth: 500,
+        bgcolor: "background.paper",
+        backgroundColor: "hsl(0, 0%, 98%)",
+      }}
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
@@ -53,7 +57,6 @@ export const Sidebar = () => {
         <ListItemText primary="Main page" />
       </ListItemButton>
 
-      
       <ListItemButton
         component="button"
         href="/GroupPage"
@@ -65,15 +68,13 @@ export const Sidebar = () => {
         <ListItemText primary="My group" />
       </ListItemButton>
 
-
-
       <ListItemButton
         component="button"
         href="/MyGroups"
         sx={{ borderRadius: 8 }}
       >
         <ListItemIcon>
-        <GroupIcon />
+          <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="My groups" />
       </ListItemButton>
@@ -84,12 +85,10 @@ export const Sidebar = () => {
         sx={{ borderRadius: 8 }}
       >
         <ListItemIcon>
-        <GroupIcon />
+          <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="Add members" />
       </ListItemButton>
-
-
 
       <ListItemButton
         component="button"
@@ -104,7 +103,7 @@ export const Sidebar = () => {
 
       <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
         <ListItemIcon>
-        <GroupsIcon />
+          <GroupsIcon />
         </ListItemIcon>
         <ListItemText primary="Mine grupper" />
         {open ? <ExpandLess /> : <ExpandMore />}
@@ -112,27 +111,22 @@ export const Sidebar = () => {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {" "}
-          {groups.filter(group => group.members.includes(auth.currentUser.uid)).map(group => (
-            <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-            </ListItemIcon>
-            <ListItemText primary={group.name} />
-          </ListItemButton>
-          ))}
-
+          {groups
+            .filter((group) => group.members.includes(auth.currentUser.uid))
+            .map((group) => (
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon></ListItemIcon>
+                <ListItemText primary={group.name} />
+              </ListItemButton>
+            ))}
           <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-            </ListItemIcon>
+            <ListItemIcon></ListItemIcon>
             <ListItemText primary="Group1" />
           </ListItemButton>
-
-
           <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-            </ListItemIcon>
+            <ListItemIcon></ListItemIcon>
             <ListItemText primary="Group2" />
           </ListItemButton>
-
         </List>
       </Collapse>
     </List>
