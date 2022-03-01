@@ -19,7 +19,7 @@ import {
   doc,
   serverTimestamp,
   setDoc,
-  where, 
+  where,
   getDocs,
   query
 } from "firebase/firestore";
@@ -92,8 +92,8 @@ export const RegistrationPage = () => {
     setDateOfBirthError(false)
     setPasswordError(false)
     setConfirmPasswordError(false)
-    
-    if (firstNameInput === '') {
+
+    if (firstNameInput == '') {
       setFirstNameError(true)
     }
     if (lastNameInput === '') {
@@ -148,10 +148,10 @@ export const RegistrationPage = () => {
       }
       setloading(false);
     };
-    }
-  
+  }
+
   return (
-    
+
     <Container maxWidth="xs">
       <Box
         sx={{
@@ -162,7 +162,7 @@ export const RegistrationPage = () => {
 
           padding: 5,
         }}
-      > 
+      >
         <TextField
             onChange={(e) => setFirstName(e.target.value)}
             id="outlined-basic"s
@@ -258,7 +258,7 @@ export const RegistrationPage = () => {
           >
             Register
           </Button>
-      
+
         <Link href="/login" variant="body2">
           {"Already a user? Sign in"}
         </Link>

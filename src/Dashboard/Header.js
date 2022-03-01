@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography } from "@mui/material";
 import { logout } from "../firebase";
 import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
-import image from "./Bilde1.png";
+import image from "./logo.png";
 import avatar from "./356-3562377_personal-user.png";
 
 export const Header = () => {
@@ -78,8 +78,8 @@ export const Header = () => {
         style={{ background: "#9aca7c" }}
       >
         <Toolbar>
-          <IconButton href="/login" size="large" color="inherit" sx={{ mr: 1 }}>
-            <Avatar alt="Remy Sharp" src={image} />
+          <IconButton href="/" size="large" color="inherit" sx={{ mr: 1 }}>
+            <Avatar alt="Remy Sharp" src={image} sx={{ width: 60, height: 40 }} />
           </IconButton>
 
           <Typography

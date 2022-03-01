@@ -10,7 +10,6 @@ import { default as db } from "../firebase";
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = React.useState([]);
-  const [groupsID, setGroupsID] = React.useState([]);
 
   // const getID = (idi) => {
   //   const { id } = idi;
@@ -19,33 +18,22 @@ export const Feed = () => {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Teams"));
+      const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        // const id = getID(doc.id);
-
-        groups.push(doc.data());
-        groupsID.push(doc.id);
+        groups.push({ ...doc.data(), id: doc.id });
         console.log(doc.id, " => ", doc.data());
-        // console.log(doc);
       });
 
       setLoading(false);
-      console.log(groups);
     };
     getgroups();
-
-    // return () => {
-    //   setGroups([]);
-    // };
   });
 
   const getGroupCard = (groupObj) => {
-    // const { data } = groupObj;
-    // console.log(id);
     return (
-      <Grid item sm={3} key={groupObj.name}>
+      <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
         <GroupCard {...groupObj} />
       </Grid>
@@ -65,8 +53,7 @@ export const Feed = () => {
           justifyContent: "center",
         }}
       >
-        {/* <CircularProgress /> */}
-        <CircularProgress />
+        <CircularProgress color="success" />
       </Box>
     </Box>
   ) : (
