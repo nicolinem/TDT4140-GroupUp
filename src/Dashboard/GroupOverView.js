@@ -37,12 +37,14 @@ export const GroupOverView = (props) => {
   };
 
   return (
-    <List
-      component="div"
-      disablePadding
-      sx={{ height: 250, width: 250, mt: 6, ml: -5, overflow: "scroll", overflowX: "hidden", }}
-    >
-      {users.map((user) => getGroupMember(user))};
-    </List >
+    <div style={{ marginTop: "1em", width: "100%", maxHeight: "19em" }}>
+      <List
+        component="div"
+        disablePadding
+        sx={{ overflow: "scroll", overflowX: "hidden", height: "60%", maxHeight: 445, minHeight: 300 }}
+      >
+        {users.map((user) => getGroupMember(user))}
+      </List>
+    </div>
   );
 };

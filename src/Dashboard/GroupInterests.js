@@ -16,13 +16,42 @@ export function GroupInterests() {
     const { state } = useLocation();
     const { interests, /*time,*/ /*place*/ } = state;
 
+    /*const interestList = ["Løpe", "Progge", "Trond", "Viggo", "Torgersen", "Netflix"];
+    const elementer = [];
+    interestList.forEach(element => {
+        elementer.push(
+            <Card alignItems="center" justify="center" sx={{
+                p: 1, pr: 2, pl: 2, ml: 1, mb: 1, backgroundColor: "#aed581", "&:hover": {
+                    backgroundColor: "#c5e1a5"
+                },
+            }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    {element}
+                </div>
+            </Card>
+        );
+    });*/
+
+
     return (
-        <Card alignItems="center" justify="center" sx={{
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap " }}>
+            {
+                <Card alignItems="center" justify="center" sx={{
+                    p: 1, pr: 2, pl: 2, ml: 1, mb: 1, backgroundColor: "#aed581", "&:hover": {
+                        backgroundColor: "#c5e1a5"
+                    },
+                }}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        {interests}
+                    </div>
+                </Card>
+            }
+            {/*<Card alignItems="center" justify="center" sx={{
             minHeight: 40, maxHeight: 40, width: 100, backgroundColor: "#aed581", "&:hover": {
                 backgroundColor: "#c5e1a5",
             },
         }}>
-            <div style={{ height: "100%", display: "grid", placeContent: "center", marginTop: "3px" }}>
+            <div style={{ height: "100%", display: "grid", placeContent: "center" }}>
                 <Typography gutterBottom component="div" textAlign="center" sx={{ verticalAlign: "middle" }}>
                     {interests}
                 </Typography>
@@ -35,7 +64,8 @@ export function GroupInterests() {
           <Button color="success" size="small">
             Get to know
           </Button>
-        </CardActions> */}
-        </Card>
+        </CardActions> *}
+        </Card>*/}
+        </div>
     );
 };

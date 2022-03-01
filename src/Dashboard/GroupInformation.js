@@ -14,12 +14,54 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const MaikenSinBoks = (props) => {
+  return (<Box
+    sx={{
+      width: 400,
+      height: 200,
+      mt: 3,
+      backgroundColor: "#dcedc8",
+      border: 6,
+      borderColor: "#9aca7c",
+    }}
+  >
+    <Typography
+      variant="h8"
+      component="h2"
+      sx={{
+        padding: 1,
+        backgroundColor: "#9aca7c",
+        color: "#fafafa",
+      }}
+    >
+      {props.title}
+    </Typography>
+
+    <Typography
+      variant="h10"
+      component="h10"
+      sx={{
+        padding: 1,
+        paddingTop: 3,
+      }}
+    >
+      {(props.description)}
+
+    </Typography>
+  </Box>);
+}
+
 export function GroupInformation() {
   const { state } = useLocation();
-  const { interests, description, /*time,*/ /*place*/ } = state;
+  const { description, /*time,*/ /*place*/ } = state;
 
   return (
-    <Box sx={{ width: "100%", ml: -35 }}>
+    <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+      <MaikenSinBoks title="Beskrivelse" description={description} />
+      <MaikenSinBoks title="Tidspunkt" description="12. mars" />
+
+      {/*
+    <Box sx={{}}>
       <Grid container spacing={55}>
         <Grid item xs={1}>
         </Grid>
@@ -98,6 +140,7 @@ export function GroupInformation() {
           </Box>
         </Grid>
       </Grid>
-    </Box>
+    </Box>*/}
+    </div>
   );
 }

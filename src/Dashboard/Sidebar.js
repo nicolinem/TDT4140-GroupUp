@@ -1,4 +1,4 @@
-import { default as db} from "../firebase";
+import { default as db } from "../firebase";
 import {
   Button,
   List,
@@ -28,13 +28,13 @@ export const Sidebar = () => {
   const [groups, setGroups] = useState([]);
   const auth = getAuth();
 
-    useEffect(
-        () =>
-          onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
-          setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))))
-          ,
-        []
-      );
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
+        setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))))
+    ,
+    []
+  );
 
   const handleClick = () => {
     setOpen(!open);
@@ -53,27 +53,13 @@ export const Sidebar = () => {
         <ListItemText primary="Main page" />
       </ListItemButton>
 
-      
-      <ListItemButton
-        component="button"
-        href="/GroupPage"
-        sx={{ borderRadius: 8 }}
-      >
-        <ListItemIcon>
-          <GroupIcon />
-        </ListItemIcon>
-        <ListItemText primary="My group" />
-      </ListItemButton>
-
-
-
       <ListItemButton
         component="button"
         href="/MyGroups"
         sx={{ borderRadius: 8 }}
       >
         <ListItemIcon>
-        <GroupIcon />
+          <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="My groups" />
       </ListItemButton>
@@ -84,7 +70,7 @@ export const Sidebar = () => {
         sx={{ borderRadius: 8 }}
       >
         <ListItemIcon>
-        <GroupIcon />
+          <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="Add members" />
       </ListItemButton>
@@ -104,7 +90,7 @@ export const Sidebar = () => {
 
       <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
         <ListItemIcon>
-        <GroupsIcon />
+          <GroupsIcon />
         </ListItemIcon>
         <ListItemText primary="Mine grupper" />
         {open ? <ExpandLess /> : <ExpandMore />}
@@ -114,10 +100,10 @@ export const Sidebar = () => {
           {" "}
           {groups.filter(group => group.members.includes(auth.currentUser.uid)).map(group => (
             <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-            </ListItemIcon>
-            <ListItemText primary={group.name} />
-          </ListItemButton>
+              <ListItemIcon>
+              </ListItemIcon>
+              <ListItemText primary={group.name} />
+            </ListItemButton>
           ))}
 
           <ListItemButton sx={{ pl: 4 }}>
