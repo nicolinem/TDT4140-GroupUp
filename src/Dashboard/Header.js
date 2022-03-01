@@ -79,19 +79,23 @@ export const Header = () => {
       >
         <Toolbar>
           <IconButton href="/" size="large" color="inherit" sx={{ mr: 1 }}>
-            <Avatar alt="Remy Sharp" src={image} sx={{ width: 60, height: 40 }} />
+            <Avatar
+              alt="Remy Sharp"
+              src={image}
+              sx={{ width: 60, height: 40 }}
+            />
           </IconButton>
 
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block", flexGrow: 1 } }}
           >
             GroupUp
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon color="disabled" />
@@ -101,7 +105,7 @@ export const Header = () => {
                 inputProps={{ "aria-label": "search" }}
               />
             </Search>
-          </Box>
+          </Box> */}
 
           <Box sx={{ flexGrow: 0, mr: 3 }}>
             <Tooltip title="Open settings">
@@ -125,8 +129,8 @@ export const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-              <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem>
+              {/* <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem> */}
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>

@@ -140,16 +140,6 @@ export const GroupRegistration = () => {
               color="success"
               inputRef={interestsRef}
             />
-
-            <TextField
-              margin="normal"
-              id="filled-basic"
-              label="Medlemmer"
-              variant="outlined"
-              autoFocus
-              width="200px"
-              color="success"
-            />
           </Box>
 
           <Box

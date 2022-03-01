@@ -9,6 +9,7 @@ import {
   CardActions,
   Button,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import { Sidebar } from "./Sidebar";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -24,8 +25,13 @@ export const MyGroups = () => {
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
-        setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      onSnapshot(
+        collection(db, "Teams-beta"),
+        (snapshot) =>
+          setGroups(
+            snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+          ),
+        setLoading(false)
       ),
     []
   );
@@ -49,7 +55,23 @@ export const MyGroups = () => {
 
   console.log(groups);
 
-  return (
+  return loading ? (
+    <Box sx={{ display: "flex", flexGrow: 1 }}>
+      <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
+        <Sidebar />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress color="success" />
+      </Box>
+    </Box>
+  ) : groups.length > 0 ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
@@ -61,6 +83,13 @@ export const MyGroups = () => {
             .map((groupsID) => getGroupCard(groupsID))}
         </Grid>
       </Box>
+    </Box>
+  ) : (
+    <Box sx={{ display: "flex", flexGrow: 1 }}>
+      <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
+        <Sidebar />
+      </Box>
+      <Box sx={{ px: 5, py: 4 }}>Ypu have no groups</Box>
     </Box>
   );
 };

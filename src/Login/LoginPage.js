@@ -2,11 +2,12 @@ import React, { useRef, useState } from "react";
 import { login, useAuth } from "../firebase";
 import TextField from "@mui/material/TextField";
 import { Button, Container, Box, Typography, Link } from "@mui/material";
-import Bilde1 from "./Bilde1.png";
+import logo from "./Bilde1.png";
 import { MainPage } from "../Dashboard/MainPage";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NewGroup } from "../NewGroup/NewGroup";
+import image from "../Dashboard/logo.png";
 
 export const LoginPage = () => {
   const emailRef = useRef();
@@ -34,7 +35,6 @@ export const LoginPage = () => {
     setloading(false);
   }
 
-
   return (
     <Container maxWidth="xs">
       <Box
@@ -48,9 +48,8 @@ export const LoginPage = () => {
         }}
       >
         <Box maxHeight="xs" margin="normal">
-          <img src={Bilde1} width="170" />
+          <img src={image} width="170" />
         </Box>
-
 
         <Box component="form" sx={{ mt: 1 }}>
           <TextField
