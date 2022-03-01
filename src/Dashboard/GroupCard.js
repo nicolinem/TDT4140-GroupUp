@@ -1,40 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import image from "./DSC06122-kopi.jpg";
-import { Avatar, Box, CardActionArea } from "@mui/material";
+import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
-import { default as db } from "../firebase";
+import { default as db, storage } from "../firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const GroupCard = (props) => {
-  const { name, id, description, interests, members } = props;
+  const { name, id, description, interests, members, imageReference } = props;
 
   console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
 
-  function run() {
+  const [url, setUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getImage = async () => {
+      console.log(imageReference);
+      getDownloadURL(ref(storage, imageReference)).then((url) => {
+        console.log(url);
+        const img = React.createElement(
+          "img",
+          {
+            src: url,
+          },
+          null
+        );
+
+        setUrl(url);
+        setLoading(false);
+      });
+    };
+    getImage();
+  }, []);
+
+  function handleClick() {
     navigate("/GroupPage", {
-      state: { name, id, description, interests, members },
+      state: { name, id, description, interests, members, imageReference },
     });
     console.log("hello");
   }
 
-  return (
-    <Card alignItems="center" justify="center" sx={{
-      minHeight: 200, maxHeight: 200,
-    }}>
+  return loading ? (
+    <Card
+      alignItems="center"
+      justify="center"
+      sx={{ display: "flex", padding: 0 }}
+    >
       <CardActionArea
-        onClick={run}
+        onClick={handleClick}
         sx={{
-          maxWidth: 300,
-          maxHeight: 350,
           display: "flex",
+          flexgrow: 1,
+          maxHeight: 350,
+          padding: 0,
           flexDirection: "column",
           "&:hover": {
             backgroundColor: "#c5e1a5",
@@ -44,21 +71,26 @@ const GroupCard = (props) => {
       >
         <Box
           sx={{
-            maxHeight: 400,
-            width: 300,
+            width: 1,
+            display: "flex",
+            flexgrow: 1,
+            maxHeight: 350,
+            padding: 0,
             // bgcolor: "#e3f0d3",
-
-            borderBottomRightRadius: "60%",
-            borderBottomLeftRadius: "60%",
+            "&:hover": {
+              // backgroundColor: "#e3f0d3",
+              opacity: [0.9, 0.8, 0.7],
+            },
           }}
         >
           <CardContent
             sx={{
               display: "flex",
-              mt: 1,
+              width: "90%",
+              padding: 0,
               flexDirection: "column",
-              borderTopRightRadius: 30,
-              borderTopLeftRadius: 30,
+              width: 1,
+              borderRadius: 10,
               bgcolor: "white",
             }}
           >
@@ -67,17 +99,18 @@ const GroupCard = (props) => {
               justify="center"
               sx={{
                 display: "flex",
-                m: 0,
                 flexDirection: "column",
               }}
             >
-              <Avatar
-                alt="Remy Sharp"
-                src={image}
-                sx={{ width: 75, height: 75 }}
-              />
-
-              <Typography gutterBottom variant="h5" component="div">
+              <Box flexrgrow="1" padding="0">
+                <CircularProgress color="success" />
+              </Box>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                sx={{ fontFamily: "Avenir" }}
+              >
                 {name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -86,15 +119,79 @@ const GroupCard = (props) => {
             </Box>
           </CardContent>
         </Box>
-        {/* <CardActions
-          alignItems="center"
-          justifyContent="center"
-          sx={{ display: "flex" }}
+      </CardActionArea>
+    </Card>
+  ) : (
+    <Card
+      alignItems="center"
+      justify="center"
+      sx={{ display: "flex", padding: 0 }}
+    >
+      <CardActionArea
+        onClick={handleClick}
+        sx={{
+          display: "flex",
+          flexgrow: 1,
+          maxHeight: 350,
+          padding: 0,
+          flexDirection: "column",
+        }}
+      >
+        <Box
+          sx={{
+            width: 1,
+            display: "flex",
+            flexgrow: 1,
+            maxHeight: 350,
+            padding: 0,
+            // bgcolor: "#e3f0d3",
+            "&:hover": {
+              // backgroundColor: "#e3f0d3",
+              opacity: [0.9, 0.8, 0.7],
+            },
+          }}
         >
-          <Button color="success" size="small">
-            Get to know
-          </Button>
-        </CardActions> */}
+          <CardContent
+            sx={{
+              display: "flex",
+              width: "90%",
+              padding: 0,
+              flexDirection: "column",
+              width: 1,
+              borderRadius: 10,
+              bgcolor: "white",
+            }}
+          >
+            <Box
+              alignItems="center"
+              justify="center"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Box
+                flexrgrow="1"
+                padding="0"
+                overflow="hidden"
+                maxHeight="220px"
+              >
+                <img src={url} width="100%" />
+              </Box>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                sx={{ fontFamily: "Avenir" }}
+              >
+                {name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {description}
+              </Typography>
+            </Box>
+          </CardContent>
+        </Box>
       </CardActionArea>
     </Card>
   );

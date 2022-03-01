@@ -17,32 +17,48 @@ import {
   FolderIcon,
 } from "@mui/material";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
 import { height } from "@mui/system";
 
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../firebase";
+
 
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members } = state;
+  const { name, id, members, imageReference } = state;
 
   const antallMedlemmer = members.length;
   console.log(antallMedlemmer);
 
   // const [groupName, setGroupName] = useState();
 
-  // useEffect(() => {
 
-  // })
-  /*const antallPersoner = (members) = {
-    return (
-      members
-    )
-  }*/
+  const [url, setUrl] = useState(null);
+
+  useEffect(() => {
+    const getImage = async () => {
+      console.log(imageReference);
+      getDownloadURL(ref(storage, imageReference)).then((url) => {
+        console.log(url);
+        const img = React.createElement(
+          "img",
+          {
+            src: url,
+          },
+          null
+        );
+
+        setUrl(url);
+      });
+    };
+    getImage();
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -65,7 +81,7 @@ export const GroupPage = () => {
                 <Avatar
                   variant="rounded"
                   alt="Remy Sharp"
-                  src={image}
+                  src={url}
                   sx={{
                     width: 400, height: 350, boxShadow: 1
                   }} />

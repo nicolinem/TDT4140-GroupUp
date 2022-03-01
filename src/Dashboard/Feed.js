@@ -10,7 +10,6 @@ import { default as db } from "../firebase";
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = React.useState([]);
-  const [groupsID, setGroupsID] = React.useState([]);
 
   // const getID = (idi) => {
   //   const { id } = idi;
@@ -23,23 +22,18 @@ export const Feed = () => {
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        // const id = getID(doc.id);
-
         groups.push({ ...doc.data(), id: doc.id });
-        groupsID.push(doc.id);
         console.log(doc.id, " => ", doc.data());
-        // console.log(doc);
       });
 
       setLoading(false);
-      console.log(groups);
     };
     getgroups();
   });
 
   const getGroupCard = (groupObj) => {
     return (
-      <Grid item sm={3} key={groupObj.name}>
+      <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
         <GroupCard {...groupObj} />
       </Grid>
@@ -59,7 +53,7 @@ export const Feed = () => {
           justifyContent: "center",
         }}
       >
-        <CircularProgress />
+        <CircularProgress color="success" />
       </Box>
     </Box>
   ) : (
