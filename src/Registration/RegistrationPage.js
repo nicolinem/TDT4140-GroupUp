@@ -5,8 +5,7 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import nbLocale from "date-fns/locale/nb";
-import { default as db } from "../firebase";
+import { default as db} from "../firebase";
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 
@@ -26,36 +25,38 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { setDate } from "date-fns";
+
 
 export const RegistrationPage = () => {
   const firstName = useRef();
   const lastName = useRef();
-
-  const localeMap = {
-    nb: nbLocale,
-  };
+  const dateOfBirth = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [value, setValue] = React.useState(null);
-  const [locale, setLocale] = React.useState("nb");
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const currentUser = getAuth();
 
   onAuthStateChanged(currentUser, (user) => {
     if (user) {
-      console.log(user.uid);
-      console.log({
-        firstName: firstName.current.value,
-        lastName: lastName.current.value,
-      });
+    console.log(user.uid);
+    console.log({
+      firstName: firstName.current.value,
+      lastName: lastName.current.value,
+      email: emailRef.current.value,
+      dateOfBirth: dateOfBirth.current.value,
+      password: passwordRef.current.value,
+    });
 
-      setDoc(doc(db, "Users", user.uid), {
-        firstName: firstName.current.value,
-        lastName: lastName.current.value,
-        invites: [],
-      });
+    setDoc(doc(db, "Users", user.uid), {
+      firstName: firstName.current.value,
+      lastName: lastName.current.value,
+      email: emailRef.current.value,
+      dateOfBirth: dateOfBirth.current.value,
+      password: passwordRef.current.value,
+      invites: [],
+    });
       navigate("/");
     } else {
     }
@@ -67,8 +68,10 @@ export const RegistrationPage = () => {
   const [dateOfBirthInput, setDateOfBirth] = useState('');
   const [passwordInput, setPassword] = useState('');
   const [confirmPasswordInput, setConfirmPassword] = useState('');
-
+  const [passwordLengthNotValid, setPasswordLengthNotValid] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [emailNotValid, setEmailNotValid] = useState(false);
+  const emailRegex = /\S+@\S+\.\S+/;
 
   const [firstNameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
@@ -77,11 +80,11 @@ export const RegistrationPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
+  function validate() {
 
-  const handleSignUp = async () => {
-    setloading(true);
-    console.log("check");
+    var status = false;
 
+    setPasswordLengthNotValid(false)
     setPasswordMatch(false)
     setFirstNameError(false)
     setLastNameError(false)
@@ -93,34 +96,53 @@ export const RegistrationPage = () => {
     if (firstNameInput == '') {
       setFirstNameError(true)
     }
-    if (lastNameInput == '') {
+    if (lastNameInput === '') {
       setLastNameError(true)
-    }
-    if (emailInput == '') {
+    } 
+    if (emailInput === '') {
       setEmailError(true)
+    } else {
+      if (emailRegex.test(emailInput)) {
+        setEmailNotValid(false);
+      } else {
+          setEmailNotValid(true);
+          setEmailError(true);
+      }
     }
-    if (dateOfBirthInput == '') {
+    if (dateOfBirthInput === '') {
       setDateOfBirthError(true)
-    }
-    if (passwordInput == '' || confirmPasswordInput == '') {
+    } 
+    if (passwordInput === ''  || confirmPasswordInput === '') {
       setPasswordError(true)
       setConfirmPasswordError(true)
     } else {
-      if (passwordInput != confirmPasswordInput) {
-        setPasswordError(true)
-        setConfirmPasswordError(true)
-        setPasswordMatch(true)
+        if (passwordInput.length < 6 ) {
+          setPasswordLengthNotValid(true)
+          setPasswordError(true)
+        }
+        if (passwordInput !== confirmPasswordInput) {
+          setPasswordError(true)
+          setConfirmPasswordError(true)
+          setPasswordMatch(true)
+        }
       }
-    }
+    if (firstNameInput !== '' && lastNameInput !== '' && emailInput !== '' && passwordInput !== '' && confirmPasswordInput !== '') {
+      if ((passwordInput === confirmPasswordInput) && emailNotValid === false) {
+        status = true;
+      }
+    } 
+    return status;
+  }
 
-    if (firstNameError == false && lastNameError == false && emailError == false && passwordError == false && confirmPasswordError == false) {
+  const handleSignUp = async () => {
+    setloading(true);
+    console.log("check");
+    console.log(validate());
+    console.log(dateOfBirth);
+
+    if (validate()) {
       try {
         signUp(emailRef.current.value, passwordRef.current.value);
-        const userCollRef = collection(db, "Users");
-        await addDoc(userCollRef, {
-          firstName: firstName.current.value,
-          lastName: lastName.current.value,
-        });
       } catch {
         alert("Something is wrong with your login");
       }
@@ -142,102 +164,100 @@ export const RegistrationPage = () => {
         }}
       >
         <TextField
-          onChange={(e) => setFirstName(e.target.value)}
-          id="outlined-basic" s
-          margin="normal"
-          label="First Name"
-          inputRef={firstName}
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={firstNameError}
-
-
-        />
-        <TextField
-          onChange={(e) => setLastName(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Last Name"
-          inputRef={lastName}
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={lastNameError}
-        />
-
-        <LocalizationProvider
-          dateAdapter={AdapterDateFns}
-          locale={localeMap[locale]}
-        >
-          <DatePicker
-            label="Date of birth"
-            value={value}
+            onChange={(e) => setFirstName(e.target.value)}
+            id="outlined-basic"s
+            margin="normal"
+            label="First Name"
+            inputRef={firstName}
+            variant="outlined"
             color="success"
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                onChange={(e) => setDateOfBirth(e.target.value)}
-                margin="normal"
-                color="success"
-                fullWidth
-                {...params}
-              />
-            )}
+            fullWidth
+            error={firstNameError}
+            />
+          <TextField
+            onChange={(e) => setLastName(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Last Name"
+            inputRef={lastName}
+            variant="outlined"
+            color="success"
+            fullWidth
+            error={lastNameError}
           />
-        </LocalizationProvider>
 
-        <TextField
-          onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
-          id="filled-basic"
-          label="Email"
-          type="email"
-          variant="outlined"
-          inputRef={emailRef}
-          autoFocus
-          fullWidth
-          color="success"
-          error={emailError}
-        />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              inputFormat="dd/MM/yyyy"
+              label="Date of birth"
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue) ;
+              }}
+              inputRef={dateOfBirth}
+              renderInput={(params) => (
+                <TextField
+                  margin="normal"
+                  variant="outlined"
+                  color="success"
+                  fullWidth
+                  {...params}
+                />
+              )}
+            />
+          </LocalizationProvider>
 
-        <TextField
-          onChange={(e) => setPassword(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Password"
-          type="password"
-          variant="outlined"
-          color="success"
-          fullWidth
-          error={passwordError}
-        />
+          <TextField
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+            id="filled-basic"
+            label="Email"
+            type="email"
+            variant="outlined"
+            inputRef={emailRef}
+            autoFocus
+            fullWidth
+            color="success"
+            error={emailError}
+            helperText={emailNotValid ? 'Please enter a valid email!' : ''}
+          />
 
-        <TextField //TODO: Create authentication that the two passwords match
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          id="outlined-basic"
-          margin="normal"
-          label="Confirm Password"
-          type="password"
-          variant="outlined"
-          inputRef={passwordRef}
-          color="success"
-          fullWidth
-          error={confirmPasswordError}
-          helperText={passwordMatch ? 'Passwords must match!' : ''}
-        />
+          <TextField
+            onChange={(e) => setPassword(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Password"
+            type="password"
+            variant="outlined"
+            inputRef={passwordRef}
+            color="success"
+            fullWidth
+            error={passwordError}
+            helperText={passwordLengthNotValid ? 'Password must be six or more characters!': ''}
+          />
 
-        <Button
-          variant="contained"
-          fullWidth
-          color="success"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={handleSignUp}
-        >
-          Register
-        </Button>
+          <TextField
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            id="outlined-basic"
+            margin="normal"
+            label="Confirm Password"
+            type="password"
+            variant="outlined"
+            color="success"
+            fullWidth
+            error={confirmPasswordError}
+            helperText={passwordMatch ? 'Passwords must match!': ''}
+          />
+
+          <Button
+            variant="contained"
+            fullWidth
+            color="success"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={handleSignUp}
+          >
+            Register
+          </Button>
 
         <Link href="/login" variant="body2">
           {"Already a user? Sign in"}
