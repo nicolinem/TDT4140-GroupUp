@@ -143,14 +143,6 @@ export const RegistrationPage = () => {
     if (validate()) {
       try {
         signUp(emailRef.current.value, passwordRef.current.value);
-        const userCollRef = collection(db, "Users");
-        await addDoc(userCollRef, {
-          firstName: firstName.current.value,
-          lastName: lastName.current.value,
-          email: emailRef.current.value,
-          dateOfBirth: dateOfBirth.current.value,
-          password: passwordRef.current.value,
-        });
       } catch {
         alert("Something is wrong with your login");
       }
@@ -196,7 +188,7 @@ export const RegistrationPage = () => {
 
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
-              inputFormat="dd/mm/yyyy"
+              inputFormat="dd/MM/yyyy"
               label="Date of birth"
               value={value}
               onChange={(newValue) => {
