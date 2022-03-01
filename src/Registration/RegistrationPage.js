@@ -6,7 +6,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import nbLocale from "date-fns/locale/nb";
-import { default as db} from "../firebase";
+import { default as db } from "../firebase";
 import { firebase } from '@firebase/app';
 import '@firebase/firestore';
 
@@ -20,7 +20,7 @@ import {
   doc,
   serverTimestamp,
   setDoc,
-  where, 
+  where,
   getDocs,
   query
 } from "firebase/firestore";
@@ -45,17 +45,17 @@ export const RegistrationPage = () => {
 
   onAuthStateChanged(currentUser, (user) => {
     if (user) {
-    console.log(user.uid);
-    console.log({
-      firstName: firstName.current.value,
-      lastName: lastName.current.value,
-    });
+      console.log(user.uid);
+      console.log({
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
+      });
 
-    setDoc(doc(db, "Users", user.uid), {
-      firstName: firstName.current.value,
-      lastName: lastName.current.value,
-      invites: [],
-    });
+      setDoc(doc(db, "Users", user.uid), {
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
+        invites: [],
+      });
       navigate("/");
     } else {
     }
@@ -89,20 +89,20 @@ export const RegistrationPage = () => {
     setDateOfBirthError(false)
     setPasswordError(false)
     setConfirmPasswordError(false)
-    
+
     if (firstNameInput == '') {
       setFirstNameError(true)
     }
     if (lastNameInput == '') {
       setLastNameError(true)
-    } 
+    }
     if (emailInput == '') {
       setEmailError(true)
-    } 
+    }
     if (dateOfBirthInput == '') {
       setDateOfBirthError(true)
-    } 
-    if (passwordInput == ''  || confirmPasswordInput == '') {
+    }
+    if (passwordInput == '' || confirmPasswordInput == '') {
       setPasswordError(true)
       setConfirmPasswordError(true)
     } else {
@@ -126,10 +126,10 @@ export const RegistrationPage = () => {
       }
       setloading(false);
     };
-    }
-  
+  }
+
   return (
-    
+
     <Container maxWidth="xs">
       <Box
         sx={{
@@ -140,105 +140,105 @@ export const RegistrationPage = () => {
 
           padding: 5,
         }}
-      > 
+      >
         <TextField
-            onChange={(e) => setFirstName(e.target.value)}
-            id="outlined-basic"s
-            margin="normal"
-            label="First Name"
-            inputRef={firstName}
-            variant="outlined"
-            color="success"
-            fullWidth
-            error={firstNameError}
-          
-            
-          />
-          <TextField
-            onChange={(e) => setLastName(e.target.value)}
-            id="outlined-basic"
-            margin="normal"
-            label="Last Name"
-            inputRef={lastName}
-            variant="outlined"
-            color="success"
-            fullWidth
-            error={lastNameError}
-          />
+          onChange={(e) => setFirstName(e.target.value)}
+          id="outlined-basic" s
+          margin="normal"
+          label="First Name"
+          inputRef={firstName}
+          variant="outlined"
+          color="success"
+          fullWidth
+          error={firstNameError}
 
-          <LocalizationProvider
-            dateAdapter={AdapterDateFns}
-            locale={localeMap[locale]}
-          >
-            <DatePicker
-              label="Date of birth"
-              value={value}
-              color="success"
-              onChange={(newValue) => {
-                setValue(newValue);
-              }}
-              renderInput={(params) => (
-                <TextField
-                  onChange={(e) => setDateOfBirth(e.target.value)}
-                  margin="normal"
-                  color="success"
-                  fullWidth
-                  {...params}
-                />
-              )}
-            />
-          </LocalizationProvider>
 
-          <TextField
-            onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
-            id="filled-basic"
-            label="Email"
-            type="email"
-            variant="outlined"
-            inputRef={emailRef}
-            autoFocus
-            fullWidth
+        />
+        <TextField
+          onChange={(e) => setLastName(e.target.value)}
+          id="outlined-basic"
+          margin="normal"
+          label="Last Name"
+          inputRef={lastName}
+          variant="outlined"
+          color="success"
+          fullWidth
+          error={lastNameError}
+        />
+
+        <LocalizationProvider
+          dateAdapter={AdapterDateFns}
+          locale={localeMap[locale]}
+        >
+          <DatePicker
+            label="Date of birth"
+            value={value}
             color="success"
-            error={emailError}
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                margin="normal"
+                color="success"
+                fullWidth
+                {...params}
+              />
+            )}
           />
+        </LocalizationProvider>
 
-          <TextField
-            onChange={(e) => setPassword(e.target.value)}
-            id="outlined-basic"
-            margin="normal"
-            label="Password"
-            type="password"
-            variant="outlined"
-            color="success"
-            fullWidth
-            error={passwordError}
-          />
+        <TextField
+          onChange={(e) => setEmail(e.target.value)}
+          margin="normal"
+          id="filled-basic"
+          label="Email"
+          type="email"
+          variant="outlined"
+          inputRef={emailRef}
+          autoFocus
+          fullWidth
+          color="success"
+          error={emailError}
+        />
 
-          <TextField //TODO: Create authentication that the two passwords match
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            id="outlined-basic"
-            margin="normal"
-            label="Confirm Password"
-            type="password"
-            variant="outlined"
-            inputRef={passwordRef}
-            color="success"
-            fullWidth
-            error={confirmPasswordError}
-            helperText={passwordMatch ? 'Passwords must match!': ''}
-          />
+        <TextField
+          onChange={(e) => setPassword(e.target.value)}
+          id="outlined-basic"
+          margin="normal"
+          label="Password"
+          type="password"
+          variant="outlined"
+          color="success"
+          fullWidth
+          error={passwordError}
+        />
 
-          <Button
-            variant="contained"
-            fullWidth
-            color="success"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleSignUp}
-          >
-            Register
-          </Button>
-      
+        <TextField //TODO: Create authentication that the two passwords match
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          id="outlined-basic"
+          margin="normal"
+          label="Confirm Password"
+          type="password"
+          variant="outlined"
+          inputRef={passwordRef}
+          color="success"
+          fullWidth
+          error={confirmPasswordError}
+          helperText={passwordMatch ? 'Passwords must match!' : ''}
+        />
+
+        <Button
+          variant="contained"
+          fullWidth
+          color="success"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handleSignUp}
+        >
+          Register
+        </Button>
+
         <Link href="/login" variant="body2">
           {"Already a user? Sign in"}
         </Link>

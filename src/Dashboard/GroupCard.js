@@ -63,6 +63,10 @@ const GroupCard = (props) => {
           maxHeight: 350,
           padding: 0,
           flexDirection: "column",
+          "&:hover": {
+            backgroundColor: "#c5e1a5",
+            opacity: [0.9, 0.8, 0.7],
+          },
         }}
       >
         <Box

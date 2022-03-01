@@ -59,17 +59,6 @@ export const Sidebar = () => {
 
       <ListItemButton
         component="button"
-        href="/GroupPage"
-        sx={{ borderRadius: 8 }}
-      >
-        <ListItemIcon>
-          <GroupIcon />
-        </ListItemIcon>
-        <ListItemText primary="My group" />
-      </ListItemButton>
-
-      <ListItemButton
-        component="button"
         href="/MyGroups"
         sx={{ borderRadius: 8 }}
       >
