@@ -8,9 +8,10 @@ import image from "./DSC06122-kopi.jpg";
 import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
 import { default as db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const GroupCard = (props) => {
   const { name, id, description, interests, members, imageReference } = props;
@@ -21,6 +22,27 @@ const GroupCard = (props) => {
 
   const [url, setUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+  const auth = getAuth();
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "Users"), (snapshot) =>
+        setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      ),
+    []
+  );
+
+  console.log(users);
+
+  const leaveGroup = async () => {
+    const groupRef = doc(db, "Teams-beta", id);
+    await updateDoc(groupRef, {
+      members: members.filter((member) => member != auth.currentUser.uid),
+    });
+    navigate("/MyGroups");
+  };
+
 
   useEffect(() => {
     const getImage = async () => {
@@ -191,6 +213,7 @@ const GroupCard = (props) => {
               </Typography>
             </Box>
           </CardContent>
+          
         </Box>
       </CardActionArea>
     </Card>
