@@ -8,6 +8,7 @@ import {
   Typography,
   CardContent,
   CardActions,
+  Grid,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
@@ -104,12 +105,14 @@ export const GroupRegistration = () => {
   const upload = () => {};
 
   return (
+      
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
       </Box>
-      <div className={styles.container}>
-        <Container>
+      <Grid container spacing={2} flexGrow={1}>
+          <Grid item sm={3}>
+        <Container >
           <Box
             sx={{
               marginTop: 10,
@@ -172,6 +175,8 @@ export const GroupRegistration = () => {
             }}
           ></Box>
         </Container>
+        </Grid>
+        <Grid item sm={3}>
         <div style={{ marginTop: "75px" }}>
           <Typography marginBottom={2} size={"h1"}>
             Add Members
@@ -182,12 +187,15 @@ export const GroupRegistration = () => {
             type="search"
             onChange={handleSearch}
             inputRef={userSearchRef}
+            width={"100%"}
           />
           <ul
             style={{
               listStyleType: "none",
               marginLeft: 0,
               paddingLeft: 0,
+              flexDirection: "column",
+              maxWidth: 195,
             }}
           >
             {users
@@ -211,7 +219,7 @@ export const GroupRegistration = () => {
                           </Typography>
                         </CardContent>
                         <CardActions>
-                          <Button size="small" onClick={() => inviteUser(user)}>
+                          <Button size="small" maxWidth={195} onClick={() => inviteUser(user)}>
                             {"Invite"}
                           </Button>
                         </CardActions>
@@ -222,8 +230,12 @@ export const GroupRegistration = () => {
               ))}
           </ul>
         </div>
-
-        <div style={{ marginTop: "95px" }}>
+        </Grid>
+        <Grid item sm={3}>
+        <div style={{ marginTop: "70px" }}>
+        <Typography marginBottom={2} size={"h1"}>
+            Current Members
+          </Typography>
           {users
             .filter((user) => members.includes(user.id))
             .map((member) => (
@@ -235,7 +247,7 @@ export const GroupRegistration = () => {
               </Button>
             ))}
         </div>
-      </div>
+        </Grid>
       {/* <Button onClick={handleUpload}>Upload a file</Button>
       <input
         type="file"
@@ -243,13 +255,19 @@ export const GroupRegistration = () => {
         onChange={handleChange}
         style={{ display: "none" }}
       /> */}
+      <Grid item sm={3}>
+          <div style={{ marginTop: "75px" }}>
       <input
         type="file"
         onChange={(e) => {
           setImage(e.target.files[0]);
         }}
       />
+      </div>
       {/* <button onClick={upload}>Upload</button> */}
+      </Grid>
+      </Grid>
     </Box>
   );
 };
+
