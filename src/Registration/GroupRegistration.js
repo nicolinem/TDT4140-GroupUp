@@ -21,6 +21,7 @@ import {
 import styles from "./GroupRegistration.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { ref, uploadBytes } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 export const GroupRegistration = () => {
   const [users, setUsers] = useState([]);
@@ -28,6 +29,7 @@ export const GroupRegistration = () => {
   const userSearchRef = useRef();
   const [, setChange] = useState();
   const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(
     () =>
@@ -63,6 +65,22 @@ export const GroupRegistration = () => {
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
     });
+    const name = groupNameRef.current.value;
+    const description = groupDescriptionRef.current.value;
+    const interests = interestsRef.current.value;
+    setMembers([...members, currentUser]);
+    const imageReference = `/images/${image.name}`;
+    const id = documentref.id;
+    navigate("/GroupPage", {
+      state: {
+        name,
+        id,
+        description,
+        interests,
+        members,
+        imageReference,
+      },
+    });
   };
 
   const handleSearch = () => {
@@ -72,25 +90,18 @@ export const GroupRegistration = () => {
   const inviteUser = (user) => {
     console.log("hey");
     console.log(user.id + ": " + user.firstName);
-    setMembers((prevMembers) => [...prevMembers, user.id]);
+    setMembers((prevMembers) => [...prevMembers, user]);
     console.log(members);
   };
 
   const uninviteUser = (user) => {
     console.log(user);
     setMembers((prevMembers) =>
-      prevMembers.filter((member) => member !== user.id)
+      prevMembers.filter((member) => member.id !== user.id)
     );
   };
 
   const upload = () => {};
-
-  // const handleChange = (event) => {
-  //   uploadBytes(storageRef, imageRef).then((snapshot) => {
-  //     console.log("Uploaded a blob or file!");
-  //   });
-  //   console.log("testing");
-  // };
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>

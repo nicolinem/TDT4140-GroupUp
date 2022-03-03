@@ -1,6 +1,13 @@
 import { default as db } from "../firebase";
 import React, { useEffect, useState } from "react";
-import { onSnapshot, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  doc,
+  updateDoc,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import {
   Box,
   Card,
@@ -21,20 +28,23 @@ import GroupCard from "./GroupCard";
 export const MyGroups = () => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
+  const [hasGroups, setHasGroups] = useState(false);
   const auth = getAuth();
 
-  useEffect(
-    () =>
-      onSnapshot(
-        collection(db, "Teams-beta"),
-        (snapshot) =>
-          setGroups(
-            snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-          ),
-        setLoading(false)
-      ),
-    []
-  );
+  useEffect(() => {
+    const getgroups = async () => {
+      const q = query(collection(db, "Teams-beta"));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        groups.push({ ...doc.data(), id: doc.id });
+        console.log(doc.id, " => ", doc.data());
+      });
+      checkGroup();
+      setLoading(false);
+    };
+    getgroups();
+  });
 
   const leaveGroup = async (group) => {
     const groupRef = doc(db, "Teams-beta", group.id);
@@ -51,6 +61,15 @@ export const MyGroups = () => {
         <GroupCard {...groupObj} />
       </Grid>
     );
+  };
+
+  const checkGroup = () => {
+    const mygroups = groups.filter((group) =>
+      group.members.includes(auth.currentUser.uid)
+    );
+    if (mygroups.length) {
+      setHasGroups(true);
+    }
   };
 
   console.log(groups);
@@ -71,12 +90,12 @@ export const MyGroups = () => {
         <CircularProgress color="success" />
       </Box>
     </Box>
-  ) : groups.length > 0 ? (
+  ) : hasGroups ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
       </Box>
-      <Box sx={{ px: 5, py: 4 }}>
+      <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups
             .filter((group) => group.members.includes(auth.currentUser.uid))
@@ -89,7 +108,7 @@ export const MyGroups = () => {
       <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
       </Box>
-      <Box sx={{ px: 5, py: 4 }}>Ypu have no groups</Box>
+      <Box sx={{ px: 5, py: 4 }}>You have no groups</Box>
     </Box>
   );
 };
