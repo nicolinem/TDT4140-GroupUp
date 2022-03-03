@@ -42,7 +42,7 @@ export const Feed = () => {
 
   return loading ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
-      <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
+      <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3, flexgrow: 0 }}>
         <Sidebar />
       </Box>
       <Box
@@ -61,7 +61,7 @@ export const Feed = () => {
       <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
       </Box>
-      <Box sx={{ px: 5, py: 4 }}>
+      <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups.map((groupsID) => getGroupCard(groupsID))}
         </Grid>

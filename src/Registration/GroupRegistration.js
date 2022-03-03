@@ -22,6 +22,7 @@ import {
 import styles from "./GroupRegistration.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { ref, uploadBytes } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 export const GroupRegistration = () => {
   const [users, setUsers] = useState([]);
@@ -29,6 +30,7 @@ export const GroupRegistration = () => {
   const userSearchRef = useRef();
   const [, setChange] = useState();
   const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(
     () =>
@@ -64,6 +66,22 @@ export const GroupRegistration = () => {
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
     });
+    const name = groupNameRef.current.value;
+    const description = groupDescriptionRef.current.value;
+    const interests = interestsRef.current.value;
+    setMembers([...members, currentUser]);
+    const imageReference = `/images/${image.name}`;
+    const id = documentref.id;
+    navigate("/GroupPage", {
+      state: {
+        name,
+        id,
+        description,
+        interests,
+        members,
+        imageReference,
+      },
+    });
   };
 
   const handleSearch = () => {
@@ -73,190 +91,203 @@ export const GroupRegistration = () => {
   const inviteUser = (user) => {
     console.log("hey");
     console.log(user.id + ": " + user.firstName);
-    setMembers((prevMembers) => [...prevMembers, user.id]);
+    setMembers((prevMembers) => [...prevMembers, user]);
     console.log(members);
   };
 
   const uninviteUser = (user) => {
     console.log(user);
     setMembers((prevMembers) =>
-      prevMembers.filter((member) => member !== user.id)
+      prevMembers.filter((member) => member.id !== user.id)
     );
   };
 
   const upload = () => {};
 
-  // const handleChange = (event) => {
-  //   uploadBytes(storageRef, imageRef).then((snapshot) => {
-  //     console.log("Uploaded a blob or file!");
-  //   });
-  //   console.log("testing");
-  // };
-
   return (
-      
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
         <Sidebar />
       </Box>
       <Grid container spacing={2} flexGrow={1}>
-          <Grid item sm={3}>
-        <Container >
-          <Box
-            sx={{
-              marginTop: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <Typography size={"h1"}>Group Information</Typography>
-            <TextField
-              margin="normal"
-              id="filled-basic"
-              label="Gruppenavn"
-              variant="outlined"
-              autoFocus
-              width="200px"
-              color="success"
-              inputRef={groupNameRef}
-            />
-
-            <TextField
-              margin="normal"
-              id="filled-basic"
-              label="Gruppebeskrivelse"
-              variant="outlined"
-              autoFocus
-              width="200px"
-              color="success"
-              inputRef={groupDescriptionRef}
-            />
-
-            <TextField
-              margin="normal"
-              id="filled-basic"
-              label="Interesser"
-              variant="outlined"
-              autoFocus
-              width="200px"
-              color="success"
-              inputRef={interestsRef}
-            />
-          </Box>
-
-          <Box
-            sx={{
-              marginTop: 2,
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <Button variant="contained" color="success" onClick={handleClick}>
-              Opprett gruppe
-            </Button>
-          </Box>
-          <Box
-            sx={{
-              marginTop: 10,
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          ></Box>
-        </Container>
-        </Grid>
         <Grid item sm={3}>
-        <div style={{ marginTop: "75px" }}>
-          <Typography marginBottom={2} size={"h1"}>
-            Add Members
-          </Typography>
-          <TextField
-            id="outlined-search"
-            label="Search field"
-            type="search"
-            onChange={handleSearch}
-            inputRef={userSearchRef}
-            width={"100%"}
-          />
-          <ul
-            style={{
-              listStyleType: "none",
-              marginLeft: 0,
-              paddingLeft: 0,
-              flexDirection: "column",
-              maxWidth: 195,
-            }}
-          >
-            {users
-              .filter(
-                (user) =>
-                  user.firstName &&
-                  user.firstName.includes(userSearchRef.current.value)
-              )
-              .map((user) => (
-                <li style={{ marginBottom: "10px" }}>
-                  <Card variant="outlined">
-                    <React.Fragment>
-                      <div className={styles.userCard}>
-                        <CardContent>
-                          <Typography
-                            sx={{ fontSize: 14 }}
-                            color="text.secondary"
-                            gutterBottom
-                          >
-                            {user.firstName}
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          <Button size="small" maxWidth={195} onClick={() => inviteUser(user)}>
-                            {"Invite"}
-                          </Button>
-                        </CardActions>
-                      </div>
-                    </React.Fragment>
-                  </Card>
-                </li>
-              ))}
-          </ul>
-        </div>
-        </Grid>
-        <Grid item sm={3}>
-        <div style={{ marginTop: "70px" }}>
-        <Typography marginBottom={2} size={"h1"}>
-            Current Members
-          </Typography>
-          {users
-            .filter((user) => members.includes(user.id))
-            .map((member) => (
-              <Button
-                endIcon={<CloseIcon></CloseIcon>}
-                onClick={() => uninviteUser(member)}
-              >
-                {member.firstName}
+          <Container>
+            <Box
+              sx={{
+                marginTop: 10,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography size={"h1"}>Group Information</Typography>
+              <TextField
+                margin="normal"
+                id="filled-basic"
+                label="Gruppenavn"
+                variant="outlined"
+                autoFocus
+                width="200px"
+                color="success"
+                inputRef={groupNameRef}
+              />
+
+              <TextField
+                margin="normal"
+                id="filled-basic"
+                label="Gruppebeskrivelse"
+                variant="outlined"
+                autoFocus
+                width="200px"
+                color="success"
+                inputRef={groupDescriptionRef}
+              />
+
+              <TextField
+                margin="normal"
+                id="filled-basic"
+                label="Interesser"
+                variant="outlined"
+                autoFocus
+                width="200px"
+                color="success"
+                inputRef={interestsRef}
+              />
+            </Box>
+
+            <Typography marginBottom={2} marginTop={2} size={"h1"}>
+              Add image
+            </Typography>
+            <div style={{ marginTop: "5px" }}>
+              <input
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+            </div>
+
+            <Box
+              sx={{
+                marginTop: 2,
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
+              <Button variant="contained" color="success" onClick={handleClick}>
+                Opprett gruppe
               </Button>
-            ))}
-        </div>
+            </Box>
+            <Box
+              sx={{
+                marginTop: 10,
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            ></Box>
+          </Container>
         </Grid>
-      {/* <Button onClick={handleUpload}>Upload a file</Button>
+        <Grid item sm={3}>
+          <div style={{ marginTop: "75px" }}>
+            <Typography marginBottom={2} size={"h1"}>
+              Add Members
+            </Typography>
+            <TextField
+              id="outlined-search"
+              label="Search field"
+              type="search"
+              onChange={handleSearch}
+              inputRef={userSearchRef}
+              width={"100%"}
+            />
+            <ul
+              style={{
+                listStyleType: "none",
+                marginLeft: 0,
+                paddingLeft: 0,
+                flexDirection: "column",
+                maxWidth: 195,
+              }}
+            >
+              {users
+                .filter(
+                  (user) =>
+                    user.firstName &&
+                    user.firstName.includes(userSearchRef.current.value)
+                )
+                .map((user) => (
+                  <li style={{ marginBottom: "10px" }}>
+                    <Card variant="outlined">
+                      <React.Fragment>
+                        <div className={styles.userCard}>
+                          <CardContent>
+                            <Typography
+                              sx={{ fontSize: 14 }}
+                              color="text.secondary"
+                              gutterBottom
+                            >
+                              {user.firstName}
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              size="small"
+                              maxWidth={195}
+                              onClick={() => inviteUser(user)}
+                            >
+                              {"Invite"}
+                            </Button>
+                          </CardActions>
+                        </div>
+                      </React.Fragment>
+                    </Card>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </Grid>
+        <Grid item sm={3}>
+          <div style={{ marginTop: "70px" }}>
+            <Typography marginBottom={2} size={"h1"}>
+              Current Members
+            </Typography>
+            {users
+              .filter((user) => members.includes(user))
+              .map((member) => (
+                <Button
+                  endIcon={<CloseIcon></CloseIcon>}
+                  onClick={() => uninviteUser(member)}
+                >
+                  {member.firstName}
+                </Button>
+              ))}
+          </div>
+        </Grid>
+        {/* <Button onClick={handleUpload}>Upload a file</Button>
       <input
         type="file"
         ref={imageRef}
         onChange={handleChange}
         style={{ display: "none" }}
       /> */}
-      <Grid item sm={3}>
-          <div style={{ marginTop: "75px" }}>
-      <input
-        type="file"
-        onChange={(e) => {
-          setImage(e.target.files[0]);
-        }}
-      />
-      </div>
-      {/* <button onClick={upload}>Upload</button> */}
-      </Grid>
+        <Grid item sm={3}>
+          {/* <div style={{ marginTop: "70px" }}>
+            <Typography marginBottom={2} size={"h1"}>
+              Add image
+            </Typography>
+            <div style={{ marginTop: "5px" }}>
+              <input
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+            </div>
+          </div> */}
+
+          {/* <button onClick={upload}>Upload</button> */}
+        </Grid>
       </Grid>
     </Box>
   );
 };
-

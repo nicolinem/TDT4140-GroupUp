@@ -68,7 +68,7 @@ export const Sidebar = () => {
         <ListItemText primary="My groups" />
       </ListItemButton>
 
-      <ListItemButton
+      {/* <ListItemButton
         component="button"
         href="/AddMembers"
         sx={{ borderRadius: 8 }}
@@ -77,7 +77,7 @@ export const Sidebar = () => {
           <GroupIcon />
         </ListItemIcon>
         <ListItemText primary="Add members" />
-      </ListItemButton>
+      </ListItemButton> */}
 
       <ListItemButton
         component="button"
@@ -89,35 +89,6 @@ export const Sidebar = () => {
         </ListItemIcon>
         <ListItemText primary="Add a group" />
       </ListItemButton>
-
-      <ListItemButton onClick={handleClick} sx={{ borderRadius: 8 }}>
-        <ListItemIcon>
-          <GroupsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Mine grupper" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {" "}
-          {groups
-            .filter((group) => group.members.includes(auth.currentUser.uid))
-            .map((group) => (
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon></ListItemIcon>
-                <ListItemText primary={group.name} />
-              </ListItemButton>
-            ))}
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon></ListItemIcon>
-            <ListItemText primary="Group1" />
-          </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon></ListItemIcon>
-            <ListItemText primary="Group2" />
-          </ListItemButton>
-        </List>
-      </Collapse>
     </List>
   );
 };

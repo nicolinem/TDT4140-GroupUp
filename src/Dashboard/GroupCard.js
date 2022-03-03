@@ -75,7 +75,7 @@ const GroupCard = (props) => {
     <Card
       alignItems="center"
       justify="center"
-      sx={{ display: "flex", padding: 0 }}
+      sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
     >
       <CardActionArea
         onClick={handleClick}
@@ -127,6 +127,7 @@ const GroupCard = (props) => {
               <Box flexrgrow="1" padding="0">
                 <CircularProgress color="success" />
               </Box>
+
               <Typography
                 gutterBottom
                 variant="h5"
