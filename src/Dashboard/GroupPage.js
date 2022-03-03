@@ -6,6 +6,7 @@ import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
 import image from "./DSC06122-kopi.jpg";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
+import BasicModal from "./BasicModal";
 import {
   Demo,
   List,
@@ -34,6 +35,7 @@ export const GroupPage = () => {
   const { name, id, members, imageReference } = state;
 
   const antallMedlemmer = members.length;
+  
   console.log(antallMedlemmer);
 
   // const [groupName, setGroupName] = useState();
@@ -105,6 +107,7 @@ export const GroupPage = () => {
 
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
               <GroupOverView users={members} />
+              
 
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
                 <Card alignItems="center" justify="center" sx={{
@@ -117,6 +120,7 @@ export const GroupPage = () => {
                   </div>
                 </Card>
               </div>
+              
             </Box>
           </div>
 
