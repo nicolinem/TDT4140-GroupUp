@@ -22,24 +22,20 @@ import React, { useEffect, useState } from "react";
 
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import { useLocation } from "react-router-dom";
 import { height } from "@mui/system";
-
+import { Navigate, useLocation } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebase";
-
-
 
 export const GroupPage = () => {
   const { state } = useLocation();
   const { name, id, members, imageReference } = state;
 
   const antallMedlemmer = members.length;
-  
+
   console.log(antallMedlemmer);
 
   // const [groupName, setGroupName] = useState();
-
 
   const [url, setUrl] = useState(null);
 
@@ -62,10 +58,15 @@ export const GroupPage = () => {
     getImage();
   }, []);
 
+  function handleClick() {
+    Navigate("/chat", {
+      state: { id },
+    });
+    console.log("hello");
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-
-
       <Box sx={{ display: "flex", flexDirection: "row", minWidth: 140 }}>
         {/* Sidebar */}
         <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
@@ -73,20 +74,32 @@ export const GroupPage = () => {
         </Box>
 
         {/* Innhold */}
-        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        >
           {/* Toppbit */}
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", marginTop: "2em" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              marginTop: "2em",
+            }}
+          >
             <div style={{ display: "flex", flexDirection: "column" }}>
               {/* Bilde */}
-              <Box sx={{ display: "flex" }} >
+              <Box sx={{ display: "flex" }}>
                 <Avatar
                   variant="rounded"
                   alt="Remy Sharp"
                   src={url}
                   sx={{
-                    width: 400, height: 350, boxShadow: 1
-                  }} />
+                    width: 400,
+                    height: 350,
+                    boxShadow: 1,
+                  }}
+                />
               </Box>
 
               {/* Interessetags */}
@@ -95,7 +108,15 @@ export const GroupPage = () => {
               </div>
             </div>
 
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: 80, width: 360 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: 80,
+                width: 360,
+              }}
+            >
               <Typography
                 sx={{}}
                 variant="h5"
@@ -107,32 +128,36 @@ export const GroupPage = () => {
 
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
               <GroupOverView users={members} />
-              
 
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
-                <Card alignItems="center" justify="center" sx={{
-                  p: 1, pr: 2, pl: 2, ml: 1, mb: 1, backgroundColor: "#aed581", "&:hover": {
-                    backgroundColor: "#c5e1a5"
-                  },
-                }}>
+                <Card
+                  alignItems="center"
+                  justify="center"
+                  sx={{
+                    p: 1,
+                    pr: 2,
+                    pl: 2,
+                    ml: 1,
+                    mb: 1,
+                    backgroundColor: "#aed581",
+                    "&:hover": {
+                      backgroundColor: "#c5e1a5",
+                    },
+                  }}
+                >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     {antallMedlemmer}
                   </div>
                 </Card>
               </div>
-              
             </Box>
           </div>
-
-
-
-
-          {/* Bunn */}
-          <GroupInformation />
-
         </div>
-      </Box>
 
-    </Box >
+        {/* Bunn */}
+
+        <button onClick={handleClick}></button>
+      </Box>
+    </Box>
   );
 };
