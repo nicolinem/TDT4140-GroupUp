@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, } from "react";
+import { useTheme } from '@mui/material/styles';
 import {
   Card,
   Button,
@@ -9,6 +10,13 @@ import {
   CardContent,
   CardActions,
   Grid,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Chip,
+
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
@@ -40,9 +48,50 @@ export const GroupRegistration = () => {
     []
   );
 
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+  function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+  const interests = [
+    "Løpe",
+    "Gå tur",
+    "Vorse",
+    "Spille brettspill",
+    "Progge",
+  ]
+
+  const theme = useTheme();
+  const [groupInterests, setGroupInterests] = React.useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setGroupInterests(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+
+
+
   const groupNameRef = useRef();
   const groupDescriptionRef = useRef();
-  const interestsRef = useRef();
 
   const currentUser = useAuth();
 
@@ -61,14 +110,13 @@ export const GroupRegistration = () => {
     const documentref = await addDoc(groupCollRef, {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
-      interests: interestsRef.current.value,
+      interests: [...groupInterests],
       members: [...members, currentUser?.uid],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
-    const interests = interestsRef.current.value;
     setMembers([...members, currentUser]);
     const imageReference = `/images/${image.name}`;
     const id = documentref.id;
@@ -102,7 +150,11 @@ export const GroupRegistration = () => {
     );
   };
 
-  const upload = () => {};
+
+
+
+
+  const upload = () => { };
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -143,16 +195,7 @@ export const GroupRegistration = () => {
                 inputRef={groupDescriptionRef}
               />
 
-              <TextField
-                margin="normal"
-                id="filled-basic"
-                label="Interesser"
-                variant="outlined"
-                autoFocus
-                width="200px"
-                color="success"
-                inputRef={interestsRef}
-              />
+
             </Box>
 
             <Typography marginBottom={2} marginTop={2} size={"h1"}>
@@ -186,6 +229,50 @@ export const GroupRegistration = () => {
               }}
             ></Box>
           </Container>
+        </Grid>
+        <Grid item sm={3}>
+          <div style={{ marginTop: "75px" }}>
+
+            <Typography marginBottom={2} size={"h1"}>
+              Add interests
+            </Typography>
+
+            <FormControl sx={{ width: 190 }}
+              id="filled-basic"
+              label="Gruppebeskrivelse"
+              variant="outlined"
+              autoFocus
+              color="success"
+            >
+              <InputLabel id="demo-multiple-name-label">Interests</InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                multiple
+                value={groupInterests}
+                onChange={handleChange}
+                input={<OutlinedInput label="Interests" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {interests.map((interests) => (
+                  <MenuItem
+                    key={interests}
+                    value={interests}
+                    style={getStyles(interests, groupInterests, theme)}
+                  >
+                    {interests}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
         </Grid>
         <Grid item sm={3}>
           <div style={{ marginTop: "75px" }}>
@@ -263,6 +350,7 @@ export const GroupRegistration = () => {
               ))}
           </div>
         </Grid>
+
         {/* <Button onClick={handleUpload}>Upload a file</Button>
       <input
         type="file"
