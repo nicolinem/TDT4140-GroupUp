@@ -23,13 +23,14 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import { height } from "@mui/system";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebase";
 
 export const GroupPage = () => {
   const { state } = useLocation();
   const { name, id, members, imageReference } = state;
+  const navigate = useNavigate();
 
   const antallMedlemmer = members.length;
 
@@ -59,8 +60,9 @@ export const GroupPage = () => {
   }, []);
 
   function handleClick() {
-    Navigate("/chat", {
-      state: { id },
+    const otherGroupID = id;
+    navigate("/choosegroup", {
+      state: { otherGroupID },
     });
     console.log("hello");
   }
