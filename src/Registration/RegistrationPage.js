@@ -23,7 +23,7 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 export const RegistrationPage = () => {
@@ -55,6 +55,9 @@ export const RegistrationPage = () => {
         dateOfBirth: dateOfBirth.current.value,
         password: passwordRef.current.value,
         invites: [],
+      });
+      updateProfile(currentUser.currentUser, {
+        displayName: firstName.current.value,
       });
       navigate("/");
     } else {
