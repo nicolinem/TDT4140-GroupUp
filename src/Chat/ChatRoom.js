@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { default as db } from "../firebase";
 import "firebase/firestore";
 import { ChatMessage } from "./ChatMessage";
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 
 import {
   addDoc,
@@ -17,6 +19,9 @@ import { getAuth } from "firebase/auth";
 import { Box } from "@mui/system";
 import { Container } from "@mui/material";
 import { Sidebar } from "../Dashboard/Sidebar";
+import { TextField } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { InputAdornment } from "@mui/material";
 
 export const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
@@ -24,7 +29,7 @@ export const ChatRoom = () => {
   const { state } = useLocation();
   const [collectionReference, setCollectionReference] = useState();
   const currentUserGroupID = state.myGroupID;
-
+  const bottomListRef = useRef();
   const inputRef = useRef();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -39,10 +44,11 @@ export const ChatRoom = () => {
 
     setCollectionReference(reference);
 
-    const q = query(reference, orderBy("createdAt"), limit(40));
+    const q = query(reference, orderBy("createdAt"), limit(100));
 
     onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      bottomListRef.current.scrollIntoView({ behavior: "smooth" });
     });
   }, []);
 
@@ -86,7 +92,6 @@ export const ChatRoom = () => {
       setNewMessage("");
 
       // Scroll down to the bottom of the list
-      // bottomListRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -98,29 +103,71 @@ export const ChatRoom = () => {
           <Sidebar />
         </Box>
         <Container
+          flex={1}
           sx={{
             width: "50%",
             display: "flex",
             flexDirection: "column",
             alignSelf: "flex-start",
+
+            height: "80vh",
+            // overflowX: "hidden",
           }}
         >
-          {messages &&
-            messages.map((msg) => (
-              <ChatMessage
-                key={msg.id}
-                message={msg}
-                currentUserGroupID={currentUserGroupID}
-              ></ChatMessage>
-            ))}
-          <form onSubmit={handleOnSubmit}>
-            <input
-              ref={inputRef}
-              onChange={handleOnChange}
-              value={newMessage}
-            />
-            <button type="submit">Send message</button>
-          </form>
+          <Box sx={{ overflow: "scroll" }}>
+            {messages &&
+              messages.map((msg) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={msg}
+                  currentUserGroupID={currentUserGroupID}
+                ></ChatMessage>
+              ))}
+            <div ref={bottomListRef} />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <form onSubmit={handleOnSubmit} display="inline-block">
+              <TextField
+                inputRef={inputRef}
+                onChange={handleOnChange}
+                value={newMessage}
+                sx={{
+                  isplay: "block",
+                  width: "100% ",
+                  padding: ".5rem .8rem .5rem .8rem",
+                  margin: ".9vw 0 ",
+                  // border: 0,
+                  fontSize: "20px",
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton edge="end" type="submit">
+                        <DoubleArrowIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+              {/* <input
+                ref={inputRef}
+                onChange={handleOnChange}
+                value={newMessage}
+              /> */}
+
+              {/* <IconButton aria-label="delete" size="large">
+                <ArrowCircleUpIcon fontSize="large" verticalAlign="middle" />
+              </IconButton> */}
+              {/* <button type="submit">Send message</button> */}
+            </form>
+          </Box>
         </Container>
       </Box>
     </Box>
