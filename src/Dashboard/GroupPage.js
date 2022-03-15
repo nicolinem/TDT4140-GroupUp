@@ -26,17 +26,20 @@ import { height } from "@mui/system";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebase";
+import { Modal } from "@mui/material";
+import { ChooseGroups } from "../Chat/ChooseGroup";
 
 export const GroupPage = () => {
   const { state } = useLocation();
   const { name, id, members, imageReference } = state;
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const antallMedlemmer = members.length;
 
   console.log(antallMedlemmer);
-
-  // const [groupName, setGroupName] = useState();
 
   const [url, setUrl] = useState(null);
 
@@ -66,6 +69,19 @@ export const GroupPage = () => {
     });
     console.log("hello");
   }
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    // border: "2px solid #000",
+    borderRadius: "15px",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -158,7 +174,18 @@ export const GroupPage = () => {
 
         {/* Bunn */}
 
-        <button onClick={handleClick}></button>
+        <button onClick={handleOpen}></button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          // BackdropComponent={Backdrop}
+        >
+          <Box sx={style}>
+            <ChooseGroups otherGroupID={id} />
+          </Box>
+        </Modal>
       </Box>
     </Box>
   );
