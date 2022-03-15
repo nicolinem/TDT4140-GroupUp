@@ -1,5 +1,6 @@
 import { ListItemButton } from "@mui/material";
 import { ListItem } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { ListItemIcon } from "@mui/material";
 import { List } from "@mui/material";
@@ -8,12 +9,13 @@ import { getAuth } from "firebase/auth";
 import { collection, getDocs, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Sidebar } from "../Dashboard/Sidebar";
 import db from "../firebase";
 
-export const ChooseGroups = () => {
+export const ChooseGroups = (props) => {
+  const { otherGroupID } = props;
   const [groups, setGroups] = useState([]);
   const { state } = useLocation();
-  const { otherGroupID } = state;
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -29,16 +31,12 @@ export const ChooseGroups = () => {
         console.log(doc.id, " => ", doc.data());
       });
       setGroups(groupList);
-      console.log(groups);
     };
 
     getgroups();
-    console.log(groups);
   }, []);
 
   function handleClick(myGroupID, otherGroupID) {
-    console.log("HER", otherGroupID);
-    console.log(myGroupID);
     navigate("/chat", {
       state: { myGroupID, otherGroupID },
     });
@@ -54,8 +52,6 @@ export const ChooseGroups = () => {
   // };
 
   const getGroup = (group) => {
-    console.log("Group: ", group);
-
     return (
       <ListItemButton sx={{}}>
         <ListItemIcon></ListItemIcon>
@@ -68,27 +64,24 @@ export const ChooseGroups = () => {
   };
 
   return (
-    <Box>
-      <div>Choose Group:</div>
-      {/* <nav aria-label="secondary mailbox folders"> */}
+    <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "column" }}>
       <div>
-        <List
-          sx={
-            {
-              // overflow: "scroll",
-              // overflowX: "hidden",
-              // height: "60%",
-              // maxHeight: 445,
-              // minHeight: 300,
-            }
-          }
-        >
-          {groups
-            .filter((group) => group.members.includes(auth.currentUser.uid))
-            .map((group) => getGroup(group))}
-        </List>
+        <Typography>Choose group:</Typography>
       </div>
-      {/* </nav> */}
+      <nav aria-label="secondary mailbox folders">
+        <Box sx={{ flexgrow: 1 }}>
+          <List
+            sx={{
+              overflow: "scroll",
+              overflowX: "hidden",
+            }}
+          >
+            {groups
+              .filter((group) => group.members.includes(auth.currentUser.uid))
+              .map((group) => getGroup(group))}
+          </List>
+        </Box>
+      </nav>
     </Box>
   );
 };
