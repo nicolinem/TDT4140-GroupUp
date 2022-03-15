@@ -1,36 +1,37 @@
-import React, { Component, useEffect, useRef, useState } from "react";
-import { default as db, useAuth, storage } from "../firebase";
+import React, { useEffect, useRef, useState } from "react";
+import { default as db } from "../firebase";
 import "firebase/firestore";
+import { ChatMessage } from "./ChatMessage";
 
 import {
   addDoc,
   collection,
-  doc,
   limit,
   onSnapshot,
   orderBy,
   query,
   Timestamp,
-  updateDoc,
 } from "firebase/firestore";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
+import { Box } from "@mui/system";
+import { Container } from "@mui/material";
+import { Sidebar } from "../Dashboard/Sidebar";
 
-export const ChatRoom = (props) => {
+export const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const { state } = useLocation();
   const [collectionReference, setCollectionReference] = useState();
+  const currentUserGroupID = state.myGroupID;
 
   const inputRef = useRef();
   const auth = getAuth();
   const user = auth.currentUser;
-  const navigate = useNavigate();
 
-
-/**
- * Loads messages from database. Each message is a document in a collection. Each collection is a conversation. We listen to changes in the collection with onSnapchot to get updates on new messages.
- */
+  /**
+   * Loads messages from database. Each message is a document in a collection. Each collection is a conversation. We listen to changes in the collection with onSnapchot to get updates on new messages.
+   */
   useEffect(() => {
     const chatID = getGroupChatID();
 
@@ -57,15 +58,9 @@ export const ChatRoom = (props) => {
     return IDstring;
   }
 
-
-  function ChatMessage(props) {
-    const { text, uid } = props;
-    return <p>{text}</p>;
-  }
-
   /**
    * Updates the current new message when user types. When the send button is pushed, this message is sent to the database
-   * @param {character typed by user} e 
+   * @param {character typed by user} e
    */
   const handleOnChange = (e) => {
     setNewMessage(e.target.value);
@@ -74,16 +69,17 @@ export const ChatRoom = (props) => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    console.log(user.displayName);
     const trimmedMessage = newMessage.trim();
+    const { uid, photoURL, displayName } = auth.currentUser;
     if (trimmedMessage) {
       // Add new message in Firestore
       addDoc(collectionReference, {
         text: trimmedMessage,
         createdAt: Timestamp.now(),
-        uid: user.uid,
-        displayName: user.displayName,
-        // photoURL,
+        userGroupID: state.myGroupID,
+        uid,
+        displayName,
+        photoURL,
       });
 
       // Clear input field
@@ -95,15 +91,38 @@ export const ChatRoom = (props) => {
   };
 
   return (
-    <div>
-      {messages &&
-        messages.map((msg) => (
-          <ChatMessage key={msg.id} text={msg.text}></ChatMessage>
-        ))}
-      <form onSubmit={handleOnSubmit}>
-        <input ref={inputRef} onChange={handleOnChange} value={newMessage} />
-        <button type="submit">Send message</button>
-      </form>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ display: "flex", flexDirection: "row", minWidth: 140 }}>
+        {/* Sidebar */}
+        <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
+          <Sidebar />
+        </Box>
+        <Container
+          sx={{
+            width: "50%",
+            display: "flex",
+            flexDirection: "column",
+            alignSelf: "flex-start",
+          }}
+        >
+          {messages &&
+            messages.map((msg) => (
+              <ChatMessage
+                key={msg.id}
+                message={msg}
+                currentUserGroupID={currentUserGroupID}
+              ></ChatMessage>
+            ))}
+          <form onSubmit={handleOnSubmit}>
+            <input
+              ref={inputRef}
+              onChange={handleOnChange}
+              value={newMessage}
+            />
+            <button type="submit">Send message</button>
+          </form>
+        </Container>
+      </Box>
+    </Box>
   );
 };
