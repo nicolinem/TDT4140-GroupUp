@@ -28,11 +28,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 export const storage = getStorage();
 export const storageRef = ref(storage);
-
 
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
@@ -62,4 +62,4 @@ export const useAuthState = () => {
   return { ...auth, isAuthenticated: auth.user != null };
 };
 
-export default getFirestore();
+export default db;

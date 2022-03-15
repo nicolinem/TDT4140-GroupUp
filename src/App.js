@@ -7,6 +7,7 @@ import { LoginPage } from "./Login/LoginPage";
 import { MainPage } from "./Dashboard/MainPage";
 import { GroupPage } from "./Dashboard/GroupPage";
 import { NewGroup } from "./NewGroup/NewGroup";
+import { ChatRoom } from "./Chat/ChatRoom";
 
 import db from "./firebase";
 import React, { useEffect, useState } from "react";
@@ -14,12 +15,12 @@ import { onSnapshot, collection } from "firebase/firestore";
 import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import { Feed } from "./Dashboard/Feed";
-import{ MyGroups } from "./Dashboard/MyGroups";
+import { MyGroups } from "./Dashboard/MyGroups";
 import { GroupRegistration } from "./Registration/GroupRegistration";
 import { AddMembers } from "./Dashboard/AddMembers";
+import { ChooseGroups } from "./Chat/ChooseGroup";
 
 function App() {
-
   useEffect(
     () =>
       onSnapshot(collection(db, "Users"), (snapshot) =>
@@ -36,7 +37,9 @@ function App() {
           <Route path="GroupPage" element={<GroupPage />} />
           <Route path="newgroup" element={<GroupRegistration />} />
           <Route path="MyGroups" element={<MyGroups />} />
-          <Route path="AddMembers" element={<AddMembers />}></Route>
+          <Route path="AddMembers" element={<AddMembers />} />
+          <Route path="chat" element={<ChatRoom />} />
+          <Route path="choosegroup" element={<ChooseGroups />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route exact path="registration" element={<RegistrationPage />} />
