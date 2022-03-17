@@ -6,7 +6,7 @@ import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
 import image from "./DSC06122-kopi.jpg";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
-import BasicModal from "./BasicModal";
+import { Event } from "../Event/Event";
 import {
   Demo,
   List,
@@ -29,7 +29,7 @@ import { storage } from "../firebase";
 import { Modal } from "@mui/material";
 import { ChooseGroups } from "../Chat/ChooseGroup";
 
-export const GroupPage = () => {
+export const GroupPage = (props) => {
   const { state } = useLocation();
   const { name, id, members, imageReference } = state;
   const navigate = useNavigate();
@@ -147,6 +147,8 @@ export const GroupPage = () => {
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
               <GroupOverView users={members} />
 
+              <Event text='Velg dato for arrangement' />
+
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
                 <Card
                   alignItems="center"
@@ -180,7 +182,7 @@ export const GroupPage = () => {
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
-          // BackdropComponent={Backdrop}
+        // BackdropComponent={Backdrop}
         >
           <Box sx={style}>
             <ChooseGroups otherGroupID={id} />
