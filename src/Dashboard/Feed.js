@@ -29,7 +29,7 @@ export const Feed = () => {
       setLoading(false);
     };
     getgroups();
-  });
+  }, []);
 
   const getGroupCard = (groupObj) => {
     return (
