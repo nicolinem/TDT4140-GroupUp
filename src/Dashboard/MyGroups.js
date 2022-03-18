@@ -44,13 +44,15 @@ export const MyGroups = () => {
       setLoading(false);
     };
     getgroups();
-  });
+  }, []);
 
   const leaveGroup = async (group) => {
     const groupRef = doc(db, "Teams-beta", group.id);
 
     await updateDoc(groupRef, {
-      members: group.members.filter((member) => member != auth.currentUser.uid),
+      members: group.members.filter(
+        (member) => member.id != auth.currentUser.uid
+      ),
     });
   };
 
@@ -64,15 +66,18 @@ export const MyGroups = () => {
   };
 
   const checkGroup = () => {
+    console.log("GRPOUPS: ", groups);
     const mygroups = groups.filter((group) =>
-      group.members.includes(auth.currentUser.uid)
+      group.members.find((c) => c.id === auth.currentUser.uid)
     );
+    console.log(mygroups);
     if (mygroups.length) {
       setHasGroups(true);
     }
   };
 
   console.log(groups);
+  console.log(hasGroups);
 
   return loading ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -98,7 +103,9 @@ export const MyGroups = () => {
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups
-            .filter((group) => group.members.includes(auth.currentUser.uid))
+            .filter((group) =>
+              group.members.find((c) => c.id === auth.currentUser.uid)
+            )
             .map((groupsID) => getGroupCard(groupsID))}
         </Grid>
       </Box>
