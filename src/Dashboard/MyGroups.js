@@ -33,7 +33,7 @@ export const MyGroups = () => {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Teams-beta"));
+      const q = query(collection(db, "Teams"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -47,7 +47,7 @@ export const MyGroups = () => {
   });
 
   const leaveGroup = async (group) => {
-    const groupRef = doc(db, "Teams-beta", group.id);
+    const groupRef = doc(db, "Teams", group.id);
 
     await updateDoc(groupRef, {
       members: group.members.filter((member) => member != auth.currentUser.uid),
@@ -71,8 +71,6 @@ export const MyGroups = () => {
       setHasGroups(true);
     }
   };
-
-  console.log(groups);
 
   return loading ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -98,7 +96,7 @@ export const MyGroups = () => {
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups
-            .filter((group) => group.members.includes(auth.currentUser.uid))
+            .filter((group) => group.members.some(user => user.id == auth.currentUser.uid))
             .map((groupsID) => getGroupCard(groupsID))}
         </Grid>
       </Box>

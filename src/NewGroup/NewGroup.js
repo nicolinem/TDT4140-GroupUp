@@ -20,7 +20,7 @@ export const NewGroup = () => {
     console.log(currentUser?.uid);
 
      console.log(typeof currentUser?.uid);
-    const groupCollRef = collection(db, "Teams-beta");
+    const groupCollRef = collection(db, "Teams");
     const documentref = await addDoc(groupCollRef, {
       members: [{userID: currentUser?.uid, role: "admin"}],
     }); 

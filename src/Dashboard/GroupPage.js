@@ -32,9 +32,9 @@ import { storage } from "../firebase";
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members, imageReference } = state;
+  const { name, id, invitedUsers, imageReference, members } = state;
 
-  const antallMedlemmer = members.length;
+  const antallMedlemmer = invitedUsers.length;
   
   console.log(antallMedlemmer);
 
@@ -106,7 +106,7 @@ export const GroupPage = () => {
               </Typography>
 
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
-              <GroupOverView users={members} />
+              <GroupOverView users={invitedUsers} />
               
 
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
