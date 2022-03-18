@@ -10,7 +10,7 @@ import { collection, getDocs, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Sidebar } from "../Dashboard/Sidebar";
-import db from "../firebase";
+import { db } from "../firebase";
 
 export const ChooseGroups = (props) => {
   const { otherGroupID } = props;

@@ -5,7 +5,7 @@ import GroupCard from "./GroupCard";
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 
 export const Feed = () => {
   const [loading, setLoading] = useState(true);

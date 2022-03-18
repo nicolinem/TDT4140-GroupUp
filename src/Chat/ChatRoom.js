@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { default as db } from "../firebase";
+import { db } from "../firebase";
 import "firebase/firestore";
 import { ChatMessage } from "./ChatMessage";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
@@ -87,11 +87,14 @@ export const ChatRoom = () => {
     const groupList = [];
     const group1 = await getDoc(doc(db, "Teams-beta", currentUserGroupID));
 
-    console.log({ ...group1.data().members.id });
-    groupList.push({ ...group1.data().members.id });
+    console.log({ ...group1.data().members });
+    groupList = group1.members.map((member) => {
+      return member.id;
+    });
+    console.log(groupList);
+    // .push({ ...group1.data().members.id });
 
     const group2 = await getDoc(doc(db, "Teams-beta", state.otherGroupID));
-    console.log(group1.members);
     for (const member of group1.data().members) {
       console.log("Medlem: ", member.id);
     }

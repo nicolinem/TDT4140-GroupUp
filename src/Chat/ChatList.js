@@ -8,25 +8,32 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import db, { auth, useAuth, useAuthState } from "../firebase";
+import { db, useAuth, auth } from "../firebase";
 import { useDocument, useDocumentData } from "react-firebase-hooks/firestore";
-import { getAuth } from "firebase/auth";
 import { List } from "@mui/material";
 import { ListItemButton } from "@mui/material";
 import { ListItemText } from "@mui/material";
+import { getAuth } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const ChatList = () => {
-  console.log(auth);
+  // console.log(auth);
   // const uid = user.uid;
   const [chats, setChats] = useState();
 
-  useEffect(() => {
-    const getChats = async () => {
-      // console.log(uid);
+  const [user, loading, error] = useAuthState(auth);
+  // const user = auth.currentUser;
 
+  useEffect(() => {
+    if (loading) return;
+
+    console.log("notLoading:");
+    const getChats = async () => {
+      console.log(user.uid);
       const q = query(
-        collection(db, "Group-conversations"),
-        where("members", "array-contains", { id: auth.currentUser.uid })
+        collection(db, "Group-conversations")
+        // ,
+        // where("members", "array-contains", { id: user.uid })
       );
       const docSnap = await getDocs(q);
 
@@ -54,7 +61,7 @@ const ChatList = () => {
       // });
     };
     getChats();
-  }, []);
+  }, [user, loading]);
 
   //   if (!loading) {
   //     for (const key in value.chats) {
@@ -69,8 +76,6 @@ const ChatList = () => {
 
   //   console.log(value.getData());
   //   console.log(value);
-
-  console.log(chats);
 
   const getChat = (chat) => {
     return (

@@ -1,4 +1,4 @@
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 import React, { useEffect, useState } from "react";
 import {
   onSnapshot,

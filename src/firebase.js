@@ -30,7 +30,7 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
-export const auth = getAuth();
+const auth = getAuth();
 export const storage = getStorage();
 export const storageRef = ref(storage);
 
@@ -62,4 +62,4 @@ export const useAuthState = () => {
   return { ...auth, isAuthenticated: auth.user != null };
 };
 
-export default db;
+export { auth, db };

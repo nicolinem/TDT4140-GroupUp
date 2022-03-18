@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
-import { default as db, auth, useAuth, storage } from "../firebase";
+import {  db, auth, useAuth, storage } from "../firebase";
 import {
   addDoc,
   collection,

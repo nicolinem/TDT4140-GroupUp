@@ -1,4 +1,4 @@
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 import React, { useEffect, useState } from "react";
 import { onSnapshot, collection } from "firebase/firestore";
 import { Box, Card, Typography, CardContent, CardActions, Button, MenuItem, Menu } from "@mui/material";
