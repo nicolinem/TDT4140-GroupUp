@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import image from "./DSC06122-kopi.jpg";
@@ -20,10 +25,21 @@ const GroupCard = (props) => {
 
   const navigate = useNavigate();
 
+  const [liked, setLiked] = useState(false);
+  const handleIconClick = () => {
+          if (liked) {
+
+          } else 
+
+
+         setLiked(prev => !prev);
+  };
+
   const [url, setUrl] = useState(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const auth = getAuth();
+  
 
   useEffect(
     () =>
@@ -71,6 +87,7 @@ const GroupCard = (props) => {
     console.log("hello");
   }
 
+
   return loading ? (
     <Card
       alignItems="center"
@@ -116,6 +133,8 @@ const GroupCard = (props) => {
               bgcolor: "white",
             }}
           >
+            
+
             <Box
               alignItems="center"
               justify="center"
@@ -127,6 +146,7 @@ const GroupCard = (props) => {
               <Box flexrgrow="1" padding="0">
                 <CircularProgress color="success" />
               </Box>
+              
 
               <Typography
                 gutterBottom
@@ -139,10 +159,13 @@ const GroupCard = (props) => {
               <Typography variant="body2" color="text.secondary">
                 {description}
               </Typography>
+
             </Box>
           </CardContent>
-        </Box>
-      </CardActionArea>
+          
+          </Box>
+          
+        </CardActionArea>¨
     </Card>
   ) : (
     <Card
@@ -214,9 +237,13 @@ const GroupCard = (props) => {
               </Typography>
             </Box>
           </CardContent>
-          
         </Box>
       </CardActionArea>
+      <CardActions>
+              <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+                {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+              </IconButton>
+            </CardActions>
     </Card>
   );
 };

@@ -194,6 +194,44 @@ export const Feed = () => {
 
         <Grid container spacing={2} flexGrow={1}>
 
+        <FormControl sx={{ width: 500 }}
+                id="filled-basic"
+                label="Gruppebeskrivelse"
+                variant="outlined"
+                autoFocus
+                color="success"
+              >
+                <InputLabel id="demo-multiple-name-label">Current group</InputLabel>
+                <Select
+                  labelId="demo-multiple-name-label"
+                  id="demo-multiple-name"
+                  multiple
+                  value={groupInterests}
+                  onChange={handleChange}
+                  input={<OutlinedInput label="Interests" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {allInterests.map((allInterests) => (
+                    <MenuItem
+                      key={allInterests}
+                      value={allInterests}
+                      style={getStyles(allInterests, groupInterests, theme)}
+                    >
+
+
+                      {allInterests}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
           {/*VELG INTERESSER*/}
           <Grid item sm={6}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
