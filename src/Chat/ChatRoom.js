@@ -7,12 +7,17 @@ import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 
 import {
   addDoc,
+  arrayUnion,
   collection,
+  doc,
+  getDoc,
   limit,
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -25,6 +30,7 @@ import { InputAdornment } from "@mui/material";
 
 export const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
+  const [members, setMembers] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const { state } = useLocation();
   const [collectionReference, setCollectionReference] = useState();
@@ -33,25 +39,77 @@ export const ChatRoom = () => {
   const inputRef = useRef();
   const auth = getAuth();
   const user = auth.currentUser;
+  const [newChat, setNewChat] = useState(false);
+  const [chatReference, setChatReference] = useState();
 
   /**
    * Loads messages from database. Each message is a document in a collection. Each collection is a conversation. We listen to changes in the collection with onSnapchot to get updates on new messages.
    */
   useEffect(() => {
-    const chatID = getGroupChatID();
+    const getChatRoom = async () => {
+      const chatID = getGroupChatID();
 
-    const reference = collection(db, "Group-conversations", chatID, "Message");
+      const reference = collection(
+        db,
+        "Group-conversations",
+        chatID,
+        "Message"
+      );
 
-    setCollectionReference(reference);
+      setChatReference(doc(db, "Group-conversations", chatID));
+      setCollectionReference(reference);
 
-    const q = query(reference, orderBy("createdAt"), limit(100));
+      const q = query(reference, orderBy("createdAt"), limit(100));
 
-    onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      bottomListRef.current.scrollIntoView({ behavior: "smooth" });
-    });
+      onSnapshot(q, (snapshot) => {
+        console.log(snapshot.docs.length);
+
+        if (snapshot.docs.length === 0) {
+          setNewChat(true);
+          console.log("New chat set");
+          console.log();
+          updateDocument(doc(db, "Group-conversations", chatID));
+        }
+
+        setMessages(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+        bottomListRef.current.scrollIntoView({ behavior: "smooth" });
+      });
+    };
+    getChatRoom();
+    console.log(newChat);
   }, []);
 
+  const updateDocument = async (reference) => {
+    console.log(reference);
+    console.log(chatReference);
+    const groupList = [];
+    const group1 = await getDoc(doc(db, "Teams-beta", currentUserGroupID));
+
+    console.log({ ...group1.data().members.id });
+    groupList.push({ ...group1.data().members.id });
+
+    const group2 = await getDoc(doc(db, "Teams-beta", state.otherGroupID));
+    console.log(group1.members);
+    for (const member of group1.data().members) {
+      console.log("Medlem: ", member.id);
+    }
+
+    // console.log("GRUPPER: ", group1.data());
+    console.log("GRUPPER: ", group2.data());
+
+    setMembers(groupList);
+    // const users = [...group1.members.id, ...group2.members.id];
+    setDoc(reference, {
+      members: groupList,
+    });
+    updateDoc(doc(db, "Users", "nsD74cX5IbX2lxawNQ3jUmbMMbo1"), {
+      chats: arrayUnion(reference.path),
+    });
+  };
+
+  console.log(newChat);
   /**
    * Gets the ID for the group chat. It combines the two IDs of the group into one string, sorting them alphabetically
    * To be used to query the group chat
@@ -138,14 +196,7 @@ export const ChatRoom = () => {
                 inputRef={inputRef}
                 onChange={handleOnChange}
                 value={newMessage}
-                sx={{
-                  isplay: "block",
-                  width: "100% ",
-                  padding: ".5rem .8rem .5rem .8rem",
-                  margin: ".9vw 0 ",
-                  // border: 0,
-                  fontSize: "20px",
-                }}
+                color="primary"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -156,16 +207,6 @@ export const ChatRoom = () => {
                   ),
                 }}
               ></TextField>
-              {/* <input
-                ref={inputRef}
-                onChange={handleOnChange}
-                value={newMessage}
-              /> */}
-
-              {/* <IconButton aria-label="delete" size="large">
-                <ArrowCircleUpIcon fontSize="large" verticalAlign="middle" />
-              </IconButton> */}
-              {/* <button type="submit">Send message</button> */}
             </form>
           </Box>
         </Container>

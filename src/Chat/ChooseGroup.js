@@ -77,7 +77,9 @@ export const ChooseGroups = (props) => {
             }}
           >
             {groups
-              .filter((group) => group.members.includes(auth.currentUser.uid))
+              .filter((group) =>
+                group.members.find((c) => c.id === auth.currentUser.uid)
+              )
               .map((group) => getGroup(group))}
           </List>
         </Box>
