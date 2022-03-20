@@ -84,11 +84,11 @@ export const ChatRoom = () => {
   const updateDocument = async (reference) => {
     console.log(reference);
     console.log(chatReference);
-    const groupList = [];
+    // const groupList = [];
     const group1 = await getDoc(doc(db, "Teams-beta", currentUserGroupID));
 
     console.log({ ...group1.data().members });
-    groupList = group1.members.map((member) => {
+    const groupList = group1.data().members.map((member) => {
       return member.id;
     });
     console.log(groupList);
@@ -105,9 +105,10 @@ export const ChatRoom = () => {
     setMembers(groupList);
     // const users = [...group1.members.id, ...group2.members.id];
     setDoc(reference, {
+      chatName: `${group1.data().name} + ${group2.data().name}`,
       members: groupList,
     });
-    updateDoc(doc(db, "Users", "nsD74cX5IbX2lxawNQ3jUmbMMbo1"), {
+    updateDoc(doc(db, "Users", user.uid), {
       chats: arrayUnion(reference.path),
     });
   };
