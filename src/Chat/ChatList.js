@@ -79,10 +79,10 @@ const ChatList = () => {
 
   const getChat = (chat) => {
     return (
-      <ListItemButton sx={{}}>
+      <ListItemButton key={chat.id} sx={{}}>
         {/* <ListItemIcon></ListItemIcon> */}
         <ListItemText
-          primary={chat.id}
+          primary={"Testing chat"}
           // onClick={() => handleClick(group.id, otherGroupID)}
         />
       </ListItemButton>
@@ -99,7 +99,14 @@ const ChatList = () => {
       >
         {/* {error && <strong>Error: {JSON.stringify(error)}</strong>}
         {loading && <span>Document: Loading...</span>} */}
-        {chats && <> {chats.map((chat) => getChat(chat))}</>}
+        {chats && (
+          <>
+            {" "}
+            {chats
+              .filter((chats) => chats.members.includes(user.uid))
+              .map((chat) => getChat(chat))}
+          </>
+        )}
       </List>
     </div>
   );
