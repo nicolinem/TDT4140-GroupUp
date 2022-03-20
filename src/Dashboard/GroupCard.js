@@ -27,9 +27,9 @@ const GroupCard = (props) => {
 
   const [liked, setLiked] = useState(false);
   const handleIconClick = () => {
-          if (liked) {
+          /* if (liked) {
 
-          } else 
+          } else  */
 
 
          setLiked(prev => !prev);
@@ -173,6 +173,17 @@ const GroupCard = (props) => {
       justify="center"
       sx={{ display: "flex", padding: 0 }}
     >
+    <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+      {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+    </IconButton>
+    <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          // BackdropComponent={Backdrop}
+        >
+        </Modal>
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -239,11 +250,6 @@ const GroupCard = (props) => {
           </CardContent>
         </Box>
       </CardActionArea>
-      <CardActions>
-              <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-                {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-              </IconButton>
-            </CardActions>
     </Card>
   );
 };
