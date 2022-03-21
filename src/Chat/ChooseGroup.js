@@ -29,6 +29,7 @@ export const ChooseGroups = (props) => {
       querySnapshot.forEach((doc) => {
         groupList.push({ ...doc.data(), id: doc.id });
         console.log(doc.id, " => ", doc.data());
+        console.log("TEST");
       });
       setGroups(groupList);
     };
@@ -37,6 +38,7 @@ export const ChooseGroups = (props) => {
   }, []);
 
   function handleClick(myGroupID, otherGroupID) {
+    console.log("TEST", myGroupID, otherGroupID);
     navigate("/chat", {
       state: { myGroupID, otherGroupID },
     });
