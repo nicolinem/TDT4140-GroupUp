@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {
-  getFirestore,
-  doc,
-  getDoc,
   getDocs,
   collection,
   query,
-  where,
 } from "firebase/firestore";
-import { db, useAuth, auth } from "../firebase";
-import { useDocument, useDocumentData } from "react-firebase-hooks/firestore";
+import { db, auth } from "../firebase";
 import { List } from "@mui/material";
 import { ListItemButton } from "@mui/material";
 import { ListItemText } from "@mui/material";
-import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import { Modal } from "@mui/material";
+import { Box } from "@mui/system";
+import { Sidebar } from "../Dashboard/Sidebar";
 
 const ChatList = () => {
-  // console.log(auth);
-  // const uid = user.uid;
-  const [chats, setChats] = useState();
+  const [open, setOpen] = React.useState(false);
+  const [group1Name, setGroup1Name] = useState("");
+  const [group2Name, setGroup2Name] = useState("");
+  const [group1ID, setGroup1ID] = useState("");
+  const [group2ID, setGroup2ID] = useState("");
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [chats, setChats] = useState([]);
+  const navigate = useNavigate();
 
   const [user, loading, error] = useAuthState(auth);
-  // const user = auth.currentUser;
 
   useEffect(() => {
     if (loading) return;
@@ -32,8 +35,6 @@ const ChatList = () => {
       console.log(user.uid);
       const q = query(
         collection(db, "Group-conversations")
-        // ,
-        // where("members", "array-contains", { id: user.uid })
       );
       const docSnap = await getDocs(q);
 
@@ -43,47 +44,81 @@ const ChatList = () => {
         console.log(doc.id, " => ", doc.data());
       });
       setChats(groupList);
-
-      // setChats(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-      //   for (c in docSnap.data().chats) {
-      //     const chats = await getDoc(c);
-      //     setChats(...chats, chats);
-      //   }
-
-      // const messages = await getDocs(
-      //   collection(docSnap.data().chats, "Message")
-      // );
-
-      // messages.forEach((doc) => {
-      //   // doc.data() is never undefined for query doc snapshots
-      //   console.log(doc.id, " => ", doc.data().text);
-      // });
     };
     getChats();
   }, [user, loading]);
 
-  //   if (!loading) {
-  //     for (const key in value.chats) {
-  //       console.log(key);
-  //     }
-  //     const [value, loading, error] = useDocumentData(
-  //       doc(db, "Users", "nsD74cX5IbX2lxawNQ3jUmbMMbo1")
-  //     );
-  //   }
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    // border: "2px solid #000",
+    borderRadius: "15px",
+    boxShadow: 24,
+    p: 4,
+  };
 
-  //   const [value2, loading2, error2] = useDocumentData(value.chats[0].path);
+  function handleClick(
+    group1ID,
+    group2ID,
+    group1Members,
+    group2Members,
+    group1Name,
+    group2Name
+  ) {
+    const nav = (myGroupID, otherGroupID) => {
+      console.log(myGroupID, otherGroupID);
+      navigate("/chat", {
+        state: { myGroupID, otherGroupID },
+      });
+    };
+    const ingroup1 = group1Members.includes(user.uid);
+    const ingroup2 = group2Members.includes(user.uid);
+    if (ingroup1 && ingroup2) {
+      setGroup1Name(group1Name);
+      setGroup2Name(group2Name);
+      setGroup1ID(group1ID);
+      setGroup2ID(group2ID);
+      handleOpen(true);
+      console.log(open);
+    } else if (ingroup1) {
+      const myGroupID = group1ID;
+      const otherGroupID = group2ID;
+      nav(myGroupID, otherGroupID);
+    } else if (ingroup2) {
+      const myGroupID = group2ID;
+      const otherGroupID = group1ID;
+      nav(myGroupID, otherGroupID);
+    }
+  }
 
-  //   console.log(value.getData());
-  //   console.log(value);
+  function handleModalClick(myGroupID, otherGroupID) {
+    navigate("/chat", {
+      state: { myGroupID, otherGroupID },
+    });
+  }
 
   const getChat = (chat) => {
     return (
-      <ListItemButton key={chat.id} sx={{}}>
-        {/* <ListItemIcon></ListItemIcon> */}
+      <ListItemButton
+        key={chat.id}
+        onClick={() =>
+          handleClick(
+            chat.group1ID,
+            chat.group2ID,
+            chat.membersgroup1,
+            chat.membersgroup2,
+            chat.group1Name,
+            chat.group2Name
+          )
+        }
+        sx={{}}
+      >
         <ListItemText
-          primary={"Testing chat"}
-          // onClick={() => handleClick(group.id, otherGroupID)}
+          primary={chat.chatName}
         />
       </ListItemButton>
     );
@@ -91,23 +126,58 @@ const ChatList = () => {
 
   return (
     <div>
-      <List
-        sx={{
-          overflow: "scroll",
-          overflowX: "hidden",
-        }}
-      >
-        {/* {error && <strong>Error: {JSON.stringify(error)}</strong>}
-        {loading && <span>Document: Loading...</span>} */}
-        {chats && (
-          <>
-            {" "}
-            {chats
-              .filter((chats) => chats.members.includes(user.uid))
-              .map((chat) => getChat(chat))}
-          </>
-        )}
-      </List>
+      <Box sx={{ display: "flex", flexDirection: "row", flexGrow: 1 }}>
+        <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
+          <Sidebar />
+        </Box>
+          <List
+            sx={{
+              overflow: "scroll",
+              overflowX: "hidden",
+            }}
+          >
+            {chats && (
+              <>
+                {" "}
+                {chats
+                  .filter(
+                    (chats) =>
+                      chats.membersgroup1.includes(user.uid) ||
+                      chats.membersgroup2.includes(user.uid)
+                  )
+                  .map((chat) => getChat(chat))}
+              </>
+            )}
+          </List>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Box>
+              <List>
+                <ListItemButton>
+                  {/* <ListItemIcon></ListItemIcon> */}
+                  <ListItemText
+                    primary={group1Name}
+                    onClick={() => handleModalClick(group1ID, group2ID)}
+                  />
+                </ListItemButton>
+                <ListItemButton>
+                  {/* <ListItemIcon></ListItemIcon> */}
+                  <ListItemText
+                    primary={group2Name}
+                    // onClick={}
+                    onClick={() => handleModalClick(group2ID, group1ID)}
+                  />
+                </ListItemButton>
+              </List>
+            </Box>
+          </Box>
+        </Modal>
+      </Box>
     </div>
   );
 };
