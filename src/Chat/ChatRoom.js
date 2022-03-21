@@ -35,7 +35,7 @@ export const ChatRoom = () => {
   const { state } = useLocation();
   const [collectionReference, setCollectionReference] = useState();
   const currentUserGroupID = state.myGroupID;
-  const bottomListRef = useRef();
+  const bottomListRef = useRef("");
   const inputRef = useRef();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -88,25 +88,38 @@ export const ChatRoom = () => {
     const group1 = await getDoc(doc(db, "Teams-beta", currentUserGroupID));
 
     console.log({ ...group1.data().members });
-    const groupList = group1.data().members.map((member) => {
+    const groupList1 = group1.data().members.map((member) => {
       return member.id;
     });
-    console.log(groupList);
     // .push({ ...group1.data().members.id });
 
     const group2 = await getDoc(doc(db, "Teams-beta", state.otherGroupID));
     for (const member of group1.data().members) {
       console.log("Medlem: ", member.id);
     }
+    const groupList2 = group2.data().members.map((member) => {
+      return member.id;
+    });
 
     // console.log("GRUPPER: ", group1.data());
     console.log("GRUPPER: ", group2.data());
 
-    setMembers(groupList);
+    setMembers(groupList1, groupList2);
     // const users = [...group1.members.id, ...group2.members.id];
+    console.log(currentUserGroupID);
+    console.log(state.otherGroupID);
+    console.log(`${group1.data().name} + ${group2.data().name}`);
+    console.log(groupList1);
+    console.log(groupList2);
+
     setDoc(reference, {
+      group1ID: currentUserGroupID,
+      group2ID: state.otherGroupID,
+      group1Name: group1.data().name,
+      group2Name: group2.data().name,
       chatName: `${group1.data().name} + ${group2.data().name}`,
-      members: groupList,
+      membersgroup1: groupList1,
+      membersgroup2: groupList2,
     });
     updateDoc(doc(db, "Users", user.uid), {
       chats: arrayUnion(reference.path),
