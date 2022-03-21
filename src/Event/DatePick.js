@@ -6,9 +6,8 @@ import DatePicker from "@mui/lab/DatePicker";
 import TextField from "@mui/material/TextField";
 
 
-export function DatePick() {
+export function DatePick({ value, setValue }) {
 
-    const [value, setValue] = useState();
     return (
         <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -17,6 +16,7 @@ export function DatePick() {
                     label="Date of event"
                     value={value}
                     onChange={(newValue) => {
+                        console.log(newValue);
                         setValue(newValue);
                     }}
                     renderInput={(params) => (

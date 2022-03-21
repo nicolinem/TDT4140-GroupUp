@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { DatePick } from "../Event/DatePick";
+import { format } from 'date-fns';
+
 
 export function Event(props) {
 
     const [popUp, setPopUp] = useState(false);
     const [dateExists, setDateExists] = useState(false);
-
+    const [date, setDate] = useState();
 
     function handlePopUp() {
         setPopUp(!popUp);
@@ -21,7 +23,7 @@ export function Event(props) {
             </button>
             <div>
                 {popUp && <div>
-                    <DatePick />
+                    <DatePick value={date} setValue={setDate} />
                     <button onClick={() => {
                         handleDateExists()
                     }}>
@@ -30,13 +32,11 @@ export function Event(props) {
                     <div>
                         {dateExists &&
                             <p>
-                                Arrangementet er {DatePick.value}
+                                Arrangementsdato {format(date, 'do MMMM Y')}
                             </p>}
                     </div>
                 </div>}
             </div>
-
-
         </div >
 
     )
