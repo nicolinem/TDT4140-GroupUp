@@ -147,7 +147,7 @@ export const GroupPage = (props) => {
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
               <GroupOverView users={members} />
 
-              <Event text='Velg dato for arrangement' />
+
 
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
                 <Card
@@ -170,7 +170,28 @@ export const GroupPage = (props) => {
                   </div>
                 </Card>
               </div>
+              <div>
+                <Card
+                  alignItems="center"
+                  justify="center"
+                  sx={{
+                    p: 1,
+                    pr: 2,
+                    pl: 2,
+                    ml: 1,
+                    mb: 1,
+                    backgroundColor: "#aed581",
+                    "&:hover": {
+                      backgroundColor: "#c5e1a5",
+                    },
+                  }}
+                >
+                  <Event text='Velg dato for arrangement' />
+                </Card>
+              </div>
+
             </Box>
+
           </div>
         </div>
 
