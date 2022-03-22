@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  getDocs,
-  collection,
-  query,
-} from "firebase/firestore";
+import { getDocs, collection, query } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { List } from "@mui/material";
 import { ListItemButton } from "@mui/material";
@@ -28,14 +24,11 @@ const ChatList = () => {
   const [user, loading, error] = useAuthState(auth);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading) return; // Only runs code if user is loaded, to make sure we have uid
 
-    console.log("notLoading:");
     const getChats = async () => {
       console.log(user.uid);
-      const q = query(
-        collection(db, "Group-conversations")
-      );
+      const q = query(collection(db, "Group-conversations"));
       const docSnap = await getDocs(q);
 
       const groupList = [];
@@ -45,6 +38,7 @@ const ChatList = () => {
       });
       setChats(groupList);
     };
+
     getChats();
   }, [user, loading]);
 
@@ -61,6 +55,7 @@ const ChatList = () => {
     p: 4,
   };
 
+  //Navigates to group chat page based on group information to see what group the user is member of
   function handleClick(
     group1ID,
     group2ID,
@@ -70,13 +65,14 @@ const ChatList = () => {
     group2Name
   ) {
     const nav = (myGroupID, otherGroupID) => {
-      console.log(myGroupID, otherGroupID);
       navigate("/chat", {
         state: { myGroupID, otherGroupID },
       });
     };
+
     const ingroup1 = group1Members.includes(user.uid);
     const ingroup2 = group2Members.includes(user.uid);
+
     if (ingroup1 && ingroup2) {
       setGroup1Name(group1Name);
       setGroup2Name(group2Name);
@@ -85,13 +81,9 @@ const ChatList = () => {
       handleOpen(true);
       console.log(open);
     } else if (ingroup1) {
-      const myGroupID = group1ID;
-      const otherGroupID = group2ID;
-      nav(myGroupID, otherGroupID);
+      nav(group1ID, group2ID);
     } else if (ingroup2) {
-      const myGroupID = group2ID;
-      const otherGroupID = group1ID;
-      nav(myGroupID, otherGroupID);
+      nav(group2ID, group1ID);
     }
   }
 
@@ -117,9 +109,7 @@ const ChatList = () => {
         }
         sx={{}}
       >
-        <ListItemText
-          primary={chat.chatName}
-        />
+        <ListItemText primary={chat.chatName} />
       </ListItemButton>
     );
   };
@@ -130,25 +120,25 @@ const ChatList = () => {
         <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
           <Sidebar />
         </Box>
-          <List
-            sx={{
-              overflow: "scroll",
-              overflowX: "hidden",
-            }}
-          >
-            {chats && (
-              <>
-                {" "}
-                {chats
-                  .filter(
-                    (chats) =>
-                      chats.membersgroup1.includes(user.uid) ||
-                      chats.membersgroup2.includes(user.uid)
-                  )
-                  .map((chat) => getChat(chat))}
-              </>
-            )}
-          </List>
+        <List
+          sx={{
+            overflow: "scroll",
+            overflowX: "hidden",
+          }}
+        >
+          {chats && (
+            <>
+              {" "}
+              {chats
+                .filter(
+                  (chats) =>
+                    chats.membersgroup1.includes(user.uid) ||
+                    chats.membersgroup2.includes(user.uid)
+                )
+                .map((chat) => getChat(chat))}
+            </>
+          )}
+        </List>
         <Modal
           open={open}
           onClose={handleClose}
@@ -169,7 +159,6 @@ const ChatList = () => {
                   {/* <ListItemIcon></ListItemIcon> */}
                   <ListItemText
                     primary={group2Name}
-                    // onClick={}
                     onClick={() => handleModalClick(group2ID, group1ID)}
                   />
                 </ListItemButton>
