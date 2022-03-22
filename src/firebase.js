@@ -62,4 +62,4 @@ export const useAuthState = () => {
   return { ...auth, isAuthenticated: auth.user != null };
 };
 
-export default db;
+export { auth, db };

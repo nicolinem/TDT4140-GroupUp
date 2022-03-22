@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useRef, useState } from "react";
-import { default as db, useAuth, storage } from "../firebase";
+import { db, useAuth, storage } from "../firebase";
 import "firebase/firestore";
 
 import {
@@ -63,7 +63,6 @@ export const ChatMessage = (props) => {
       : userMessage;
   const alignment =
     currentUserGroupID != userGroupID ? "flex-start" : "flex-end";
-  console.log(alignment);
   // uid === auth.currentUser.uid ? userMessage : externalUserMessage;
   return (
     <Box
@@ -77,7 +76,6 @@ export const ChatMessage = (props) => {
         <Typography
           sx={{ m: 0, p: 0, display: "inline-block" }}
           variant="caption"
-          gutterbottom
         >
           {displayName}
         </Typography>

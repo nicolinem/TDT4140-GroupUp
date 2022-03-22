@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, } from "react";
-import { useTheme } from '@mui/material/styles';
+import React, { useRef, useState, useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
 import {
   Card,
   Button,
@@ -16,11 +16,10 @@ import {
   FormControl,
   Select,
   Chip,
-
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
-import { default as db, auth, useAuth, storage } from "../firebase";
+import { db, auth, useAuth, storage } from "../firebase";
 import {
   addDoc,
   collection,
@@ -39,7 +38,6 @@ export const GroupRegistration = () => {
   const [, setChange] = useState();
   const [image, setImage] = useState("");
   const navigate = useNavigate();
-
 
   useEffect(
     () =>
@@ -68,17 +66,7 @@ export const GroupRegistration = () => {
     };
   }
 
-
-
-
-  const interests = [
-    "Løpe",
-    "Gå tur",
-    "Vorse",
-    "Spille brettspill",
-    "Progge",
-  ]
-
+  const interests = ["Løpe", "Gå tur", "Vorse", "Spille brettspill", "Progge"];
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
@@ -89,12 +77,9 @@ export const GroupRegistration = () => {
     } = event;
     setGroupInterests(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
-
-
-
 
   const groupNameRef = useRef();
   const groupDescriptionRef = useRef();
@@ -106,24 +91,27 @@ export const GroupRegistration = () => {
     console.log(typeof currentUser?.uid);
 
     const storageRef = ref(storage, `/images/${image.name}`);
-    console.log(storageRef);
 
     if (image == null) return;
     uploadBytes(storageRef, image).then((snapshot) => {
       console.log("Uploaded a blob or file!");
     });
     const groupCollRef = collection(db, "Teams-beta");
+    const creatingUser = users.find((user) => user.id === currentUser?.uid);
+    console.log(groupNameRef.current.value);
+    console.log([...groupInterests]);
+    console.log([...members, creatingUser]);
     const documentref = await addDoc(groupCollRef, {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
       interests: [...groupInterests],
-      members: [...members, currentUser?.uid],
+      members: [...members, creatingUser],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
-    setMembers([...members, currentUser]);
+    setMembers([...members, creatingUser]);
     const imageReference = `/images/${image.name}`;
     const id = documentref.id;
     navigate("/GroupPage", {
@@ -132,7 +120,7 @@ export const GroupRegistration = () => {
         id,
         description,
         interests,
-        members,
+        members: [...members, creatingUser],
         imageReference,
       },
     });
@@ -156,11 +144,7 @@ export const GroupRegistration = () => {
     );
   };
 
-
-
-
-
-  const upload = () => { };
+  const upload = () => {};
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -200,8 +184,6 @@ export const GroupRegistration = () => {
                 color="success"
                 inputRef={groupDescriptionRef}
               />
-
-
             </Box>
 
             <Typography marginBottom={2} marginTop={2} size={"h1"}>
@@ -238,12 +220,12 @@ export const GroupRegistration = () => {
         </Grid>
         <Grid item sm={3}>
           <div style={{ marginTop: "75px" }}>
-
             <Typography marginBottom={2} size={"h1"}>
               Add interests
             </Typography>
 
-            <FormControl sx={{ width: 190 }}
+            <FormControl
+              sx={{ width: 190 }}
               id="filled-basic"
               label="Gruppebeskrivelse"
               variant="outlined"
@@ -259,7 +241,7 @@ export const GroupRegistration = () => {
                 onChange={handleChange}
                 input={<OutlinedInput label="Interests" />}
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
                       <Chip key={value} label={value} />
                     ))}

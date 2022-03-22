@@ -9,7 +9,7 @@ import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
 import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
-import { default as db, storage } from "../firebase";
+import {  db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 

@@ -12,7 +12,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { default as db, storage } from "../firebase";
+import {  db, storage } from "../firebase";
 import PersonIcon from "@mui/icons-material/Person";
 
 export const GroupOverView = (props) => {
