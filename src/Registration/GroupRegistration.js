@@ -40,6 +40,7 @@ export const GroupRegistration = () => {
   const [image, setImage] = useState("");
   const navigate = useNavigate();
 
+
   useEffect(
     () =>
       onSnapshot(collection(db, "Users"), (snapshot) =>
@@ -66,6 +67,10 @@ export const GroupRegistration = () => {
           : theme.typography.fontWeightMedium,
     };
   }
+
+
+
+
   const interests = [
     "Løpe",
     "Gå tur",
@@ -73,6 +78,7 @@ export const GroupRegistration = () => {
     "Spille brettspill",
     "Progge",
   ]
+
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
