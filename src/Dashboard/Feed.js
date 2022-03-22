@@ -154,6 +154,12 @@ export const Feed = () => {
         groups.interests.some((v) => groupInterests.includes(v))
       );
     }
+
+    if (currentGroup) {
+      filteredGroups = filteredGroups.filter(
+        (group) => group.id !== currentGroup.id
+      );
+    }
     // The code below filters the groups on which are liked of the current group
     /* if (currentGroup) {
       filteredGroups = filteredGroups.filter((group) =>
@@ -171,6 +177,7 @@ export const Feed = () => {
     console.log(id);
     console.log(likedGroups);
     console.log(!currentGroup.likedGroups.includes(id));
+
     if (!currentGroup.likedGroups.includes(id)) {
       const updatedLikedGroups = [...currentGroup.likedGroups, id];
       console.log(updatedLikedGroups);
@@ -193,16 +200,16 @@ export const Feed = () => {
   console.log(value2);
 
   const getGroupCard = (groupObj) => {
+    const isLiked = currentGroup
+      ? currentGroup.likedGroups.includes(groupObj.id)
+      : false;
+    console.log(isLiked);
     return (
       <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
         <GroupCard
           {...groupObj}
-          likedByCurrentGroup={
-            currentGroup
-              ? currentGroup.likedGroups.includes(groupObj.id)
-              : false
-          }
+          isLiked={isLiked}
           handleLikeGroup={handleLikeGroup}
         />
       </Grid>

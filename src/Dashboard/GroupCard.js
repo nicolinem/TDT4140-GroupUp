@@ -39,13 +39,14 @@ const GroupCard = (props) => {
     members,
     imageReference,
     likedGroups,
+    isLiked,
   } = props;
 
   console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
-  console.log(props.likedByCurrentGroup);
-  const [liked, setLiked] = useState(props.likedByCurrentGroup);
+  console.log(props.isLiked);
+  const [liked, setLiked] = useState(props.isLiked);
   const handleIconClick = () => {
     /* if (liked) {
 
@@ -189,7 +190,7 @@ const GroupCard = (props) => {
       sx={{ display: "flex", padding: 0 }}
     >
       <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-        {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
       </IconButton>
       <Modal
         onClose={handleClose}
