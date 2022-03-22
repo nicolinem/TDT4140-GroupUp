@@ -8,6 +8,7 @@ export function Event(props) {
     const [popUp, setPopUp] = useState(false);
     const [dateExists, setDateExists] = useState(false);
     const [date, setDate] = useState();
+    const [datePicked, setDatePicked] = useState(false);
 
     function handlePopUp() {
         setPopUp(!popUp);
@@ -15,18 +16,25 @@ export function Event(props) {
     function handleDateExists() {
         setDateExists(true);
     }
+    function handleDatePicked() {
+        setDatePicked(true);
+    }
+
     return (
 
-        <div>
+        <div>{!datePicked &&
             <button onClick={handlePopUp}>
                 {props.text}
             </button>
+        }
+
             <div>
                 {popUp && <div>
                     <DatePick value={date} setValue={setDate} />
                     <button onClick={() => {
                         handleDateExists();
                         handlePopUp();
+                        handleDatePicked();
                     }}>
                         Opprett arrangement
             </button>
