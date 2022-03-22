@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import { default as db } from "../firebase";
+import { db } from "../firebase";
 import { firebase } from "@firebase/app";
 import "@firebase/firestore";
 import image from "../Dashboard/logo.png";

@@ -10,7 +10,7 @@ import { collection, getDocs, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Sidebar } from "../Dashboard/Sidebar";
-import db from "../firebase";
+import { db } from "../firebase";
 
 export const ChooseGroups = (props) => {
   const { otherGroupID } = props;
@@ -29,6 +29,7 @@ export const ChooseGroups = (props) => {
       querySnapshot.forEach((doc) => {
         groupList.push({ ...doc.data(), id: doc.id });
         console.log(doc.id, " => ", doc.data());
+        console.log("TEST");
       });
       setGroups(groupList);
     };
@@ -37,6 +38,7 @@ export const ChooseGroups = (props) => {
   }, []);
 
   function handleClick(myGroupID, otherGroupID) {
+    console.log("TEST", myGroupID, otherGroupID);
     navigate("/chat", {
       state: { myGroupID, otherGroupID },
     });
@@ -77,7 +79,9 @@ export const ChooseGroups = (props) => {
             }}
           >
             {groups
-              .filter((group) => group.members.includes(auth.currentUser.uid))
+              .filter((group) =>
+                group.members.find((c) => c.id === auth.currentUser.uid)
+              )
               .map((group) => getGroup(group))}
           </List>
         </Box>

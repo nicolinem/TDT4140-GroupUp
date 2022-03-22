@@ -1,20 +1,25 @@
 import {
-  Box, CircularProgress, Grid, Typography, FormControl, InputLabel,
-  Select, MenuItem, OutlinedInput, Chip
-
+  Box,
+  CircularProgress,
+  Grid,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  OutlinedInput,
+  Chip,
 } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
-import Slider from '@mui/material/Slider';
+import Slider from "@mui/material/Slider";
 
 import GroupCard from "./GroupCard";
 
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
-import { collection, doc, getDocs, query, where, } from "firebase/firestore";
-import { default as db } from "../firebase";
-
-
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
@@ -52,7 +57,6 @@ export const Feed = () => {
     },
   };
 
-
   function getStyles(name, personName, theme) {
     return {
       fontWeight:
@@ -68,11 +72,8 @@ export const Feed = () => {
     "Vorse",
     "Spille brettspill",
     "Progge",
-  ]
-  const dateNotUsing = [
-    "Denne uken",
-  ]
-
+  ];
+  const dateNotUsing = ["Denne uken"];
 
   console.log(allInterests);
 
@@ -82,7 +83,7 @@ export const Feed = () => {
     } = event;
     setGroupInterests(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -109,11 +110,7 @@ export const Feed = () => {
     } else {
       setValue1(newValue);
     }
-
-
   };
-
-
 
   const handleChange2 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -131,7 +128,6 @@ export const Feed = () => {
     } else {
       setValue2(newValue);
     }
-
   };
 
   function filterGroups() {
@@ -139,26 +135,23 @@ export const Feed = () => {
       return groups.map((groupsID) => getGroupCard(groupsID));
     } else {
       return groups
-        .filter((groups) => groups.interests.some(v => groupInterests.includes(v)))
+        .filter((groups) =>
+          groups.interests.some((v) => groupInterests.includes(v))
+        )
         .map((groupsID) => getGroupCard(groupsID));
     }
-
-  };
-
+  }
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
   const [numberPreference, setNumberPreference] = React.useState([]);
   const [agePreference, setAgePreference] = React.useState([]);
 
-
   //const chosenInterests = groupInterests.split(",");
   console.log(groupInterests);
 
   console.log(value1);
   console.log(value2);
-
-
 
   const getGroupCard = (groupObj) => {
     return (
@@ -191,15 +184,12 @@ export const Feed = () => {
         <Sidebar />
       </Box>
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
-
         <Grid container spacing={2} flexGrow={1}>
-
           {/*VELG INTERESSER*/}
           <Grid item sm={6}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-
-
-              <FormControl sx={{ width: 400 }}
+              <FormControl
+                sx={{ width: 400 }}
                 id="filled-basic"
                 label="Gruppebeskrivelse"
                 variant="outlined"
@@ -215,7 +205,7 @@ export const Feed = () => {
                   onChange={handleChange}
                   input={<OutlinedInput label="Interests" />}
                   renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
                         <Chip key={value} label={value} />
                       ))}
@@ -229,8 +219,6 @@ export const Feed = () => {
                       value={allInterests}
                       style={getStyles(allInterests, groupInterests, theme)}
                     >
-
-
                       {allInterests}
                     </MenuItem>
                   ))}
@@ -240,13 +228,11 @@ export const Feed = () => {
             {/*VELG ALDER*/}
 
             <div style={{ marginTop: "20px", marginBottom: "5px" }}>
-              <Typography >
-                Aldersspenn
-              </Typography>
+              <Typography>Aldersspenn</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={value1}
                   onChange={handleChange1}
                   valueLabelDisplay="on"
@@ -257,11 +243,11 @@ export const Feed = () => {
             </div>
           </Grid>
 
-
           {/*VELG DATO*/}
           <Grid item sm={3}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <FormControl sx={{ width: 400 }}
+              <FormControl
+                sx={{ width: 400 }}
                 id="filled-basic"
                 label="Gruppebeskrivelse"
                 variant="outlined"
@@ -272,10 +258,8 @@ export const Feed = () => {
                 <Select
                   labelId="demo-multiple-name-label"
                   id="demo-multiple-name"
-
                   //onChange={handleChange}
                   input={<OutlinedInput label="Interests" />}
-
                   MenuProps={MenuProps}
                 >
                   {allInterests.map((allInterests) => (
@@ -293,13 +277,11 @@ export const Feed = () => {
             {/*VELG ANTALL*/}
 
             <div style={{ marginTop: "20px", marginBottom: "5px" }}>
-              <Typography>
-                Antall
-              </Typography>
+              <Typography>Antall</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={value2}
                   onChange={handleChange2}
                   valueLabelDisplay="on"
@@ -311,8 +293,7 @@ export const Feed = () => {
           </Grid>
         </Grid>
 
-
-        <Grid container spacing={3} marginTop={1} >
+        <Grid container spacing={3} marginTop={1}>
           {filterGroups()}
           {/*groups.map((groupsID) => getGroupCard(groupsID))}
           {groups
@@ -323,4 +304,3 @@ export const Feed = () => {
     </Box>
   );
 };
-
