@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { DatePick } from "../Event/DatePick";
 import { format } from "date-fns";
+import { default as db } from "../firebase";
+import {
+    updateDoc,
+    doc,
+} from "firebase/firestore";
 
 
 export function Event(props) {
@@ -8,25 +13,32 @@ export function Event(props) {
     const [popUp, setPopUp] = useState(false);
     const [dateExists, setDateExists] = useState(false);
     const [date, setDate] = useState();
-    const [datePicked, setDatePicked] = useState(false);
+    const id = props.id;
+    const groupRef = doc(db, "Teams-beta", id);
+    const myGroup = false;
 
+
+    function handleStorage() {
+        updateDoc(groupRef, {
+            eventDate: format(date, 'yyyy-MM-dd')
+        });
+    }
     function handlePopUp() {
         setPopUp(!popUp);
     }
     function handleDateExists() {
         setDateExists(true);
     }
-    function handleDatePicked() {
-        setDatePicked(true);
-    }
+
 
     return (
 
-        <div>{!datePicked &&
+        <div>{myGroup &&
             <button onClick={handlePopUp}>
                 {props.text}
             </button>
         }
+
 
             <div>
                 {popUp && <div>
@@ -34,16 +46,16 @@ export function Event(props) {
                     <button onClick={() => {
                         handleDateExists();
                         handlePopUp();
-                        handleDatePicked();
+                        handleStorage();
                     }}>
-                        Opprett arrangement
+                        Create event
             </button>
 
                 </div>}
                 <div>
                     {dateExists &&
                         <p>
-                            Arrangementsdato {format(date, 'do MMMM Y')}
+                            Event date {format(date, 'do MMMM Y')}
                         </p>}
                 </div>
             </div>

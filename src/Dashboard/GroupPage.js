@@ -186,7 +186,7 @@ export const GroupPage = (props) => {
                     },
                   }}
                 >
-                  <Event text='Velg dato for arrangement' />
+                  <Event text='Select event date' id={id} />
                 </Card>
               </div>
 
