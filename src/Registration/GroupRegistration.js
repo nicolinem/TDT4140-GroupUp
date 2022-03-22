@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
-import {  db, auth, useAuth, storage } from "../firebase";
+import { db, auth, useAuth, storage } from "../firebase";
 import {
   addDoc,
   collection,
@@ -65,6 +65,7 @@ export const GroupRegistration = () => {
           : theme.typography.fontWeightMedium,
     };
   }
+
   const interests = ["Løpe", "Gå tur", "Vorse", "Spille brettspill", "Progge"];
 
   const theme = useTheme();
@@ -119,7 +120,7 @@ export const GroupRegistration = () => {
         id,
         description,
         interests,
-        members,
+        members: [...members, creatingUser],
         imageReference,
       },
     });
