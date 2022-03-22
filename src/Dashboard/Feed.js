@@ -1,24 +1,37 @@
 import {
-  Box, CircularProgress, Grid, Typography, FormControl, InputLabel,
-  Select, MenuItem, OutlinedInput, Chip
-
+  Box,
+  CircularProgress,
+  Grid,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  OutlinedInput,
+  Chip,
 } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+import { useAuth } from "../firebase";
+import { updateDoc } from "firebase/firestore";
 
-import Slider from '@mui/material/Slider';
+import Slider from "@mui/material/Slider";
 
 import GroupCard from "./GroupCard";
 
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
-import { collection, doc, getDocs, query, where, } from "firebase/firestore";
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { default as db } from "../firebase";
-
-
 
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = React.useState([]);
+  const [groups, setGroups] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState();
+  const currentUser = useAuth();
+  groups.forEach((group) => {
+    console.log(`${group.id}`);
+    console.log(group.likedGroups);
+  });
 
   // const getID = (idi) => {
   //   const { id } = idi;
@@ -30,11 +43,12 @@ export const Feed = () => {
       const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
+      const requestedGroups = [];
       querySnapshot.forEach((doc) => {
-        groups.push({ ...doc.data(), id: doc.id });
+        requestedGroups.push({ ...doc.data(), id: doc.id });
         console.log(doc.id, " => ", doc.data());
       });
-
+      setGroups(requestedGroups);
       setLoading(false);
     };
 
@@ -52,7 +66,6 @@ export const Feed = () => {
     },
   };
 
-
   function getStyles(name, personName, theme) {
     return {
       fontWeight:
@@ -68,21 +81,25 @@ export const Feed = () => {
     "Vorse",
     "Spille brettspill",
     "Progge",
-  ]
-  const dateNotUsing = [
-    "Denne uken",
-  ]
-
+  ];
+  const dateNotUsing = ["Denne uken"];
 
   console.log(allInterests);
 
-  const handleChange = (event) => {
+  const handleChangeGroup = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCurrentGroup(groups.find((group) => group.id == value));
+  };
+
+  const handleChangeInterests = (event) => {
     const {
       target: { value },
     } = event;
     setGroupInterests(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -109,11 +126,7 @@ export const Feed = () => {
     } else {
       setValue1(newValue);
     }
-
-
   };
-
-
 
   const handleChange2 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -131,26 +144,47 @@ export const Feed = () => {
     } else {
       setValue2(newValue);
     }
-
   };
 
   function filterGroups() {
-    if (groupInterests.length === 0) {
-      return groups.map((groupsID) => getGroupCard(groupsID));
-    } else {
-      return groups
-        .filter((groups) => groups.interests.some(v => groupInterests.includes(v)))
-        .map((groupsID) => getGroupCard(groupsID));
+    let filteredGroups = groups;
+
+    if (groupInterests.length !== 0) {
+      filteredGroups = filteredGroups.filter((groups) =>
+        groups.interests.some((v) => groupInterests.includes(v))
+      );
     }
+    // The code below filters the groups on which are liked of the current group
+    /* if (currentGroup) {
+      filteredGroups = filteredGroups.filter((group) =>
+        currentGroup.likedGroups.includes(group.id)
+      ); 
+    }
+    */
+    return filteredGroups.map((group) => getGroupCard(group));
+  }
 
+  const handleLikeGroup = async (id, likedGroups) => {
+    console.log(id);
+    const groupRef = doc(db, "Teams-beta", currentGroup.id);
+
+    console.log(id);
+    console.log(likedGroups);
+    console.log(!currentGroup.likedGroups.includes(id));
+    if (!currentGroup.likedGroups.includes(id)) {
+      const updatedLikedGroups = [...currentGroup.likedGroups, id];
+      console.log(updatedLikedGroups);
+
+      await updateDoc(groupRef, {
+        likedGroups: updatedLikedGroups,
+      });
+    }
   };
-
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
   const [numberPreference, setNumberPreference] = React.useState([]);
   const [agePreference, setAgePreference] = React.useState([]);
-
 
   //const chosenInterests = groupInterests.split(",");
   console.log(groupInterests);
@@ -158,13 +192,19 @@ export const Feed = () => {
   console.log(value1);
   console.log(value2);
 
-
-
   const getGroupCard = (groupObj) => {
     return (
       <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
-        <GroupCard {...groupObj} />
+        <GroupCard
+          {...groupObj}
+          likedByCurrentGroup={
+            currentGroup
+              ? currentGroup.likedGroups.includes(groupObj.id)
+              : false
+          }
+          handleLikeGroup={handleLikeGroup}
+        />
       </Grid>
     );
   };
@@ -191,53 +231,36 @@ export const Feed = () => {
         <Sidebar />
       </Box>
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
-
+        <FormControl sx={{ width: 600, marginBottom: 7 }}>
+          <InputLabel
+            id="demo-simple-select-label"
+            input={<OutlinedInput label="Group" />}
+          >
+            Group
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={currentGroup}
+            label="Group"
+            onChange={handleChangeGroup}
+          >
+            {groups.length > 0 &&
+              groups
+                .filter((group) =>
+                  group.members.some((member) => member.id == currentUser?.uid)
+                )
+                .map((group) => (
+                  <MenuItem value={group.id}>{group.name}</MenuItem>
+                ))}
+          </Select>
+        </FormControl>
         <Grid container spacing={2} flexGrow={1}>
-
-        <FormControl sx={{ width: 500 }}
-                id="filled-basic"
-                label="Gruppebeskrivelse"
-                variant="outlined"
-                autoFocus
-                color="success"
-              >
-                <InputLabel id="demo-multiple-name-label">Current group</InputLabel>
-                <Select
-                  labelId="demo-multiple-name-label"
-                  id="demo-multiple-name"
-                  multiple
-                  value={groupInterests}
-                  onChange={handleChange}
-                  input={<OutlinedInput label="Interests" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {allInterests.map((allInterests) => (
-                    <MenuItem
-                      key={allInterests}
-                      value={allInterests}
-                      style={getStyles(allInterests, groupInterests, theme)}
-                    >
-
-
-                      {allInterests}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
           {/*VELG INTERESSER*/}
           <Grid item sm={6}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-
-
-              <FormControl sx={{ width: 400 }}
+              <FormControl
+                sx={{ width: 400 }}
                 id="filled-basic"
                 label="Gruppebeskrivelse"
                 variant="outlined"
@@ -250,10 +273,10 @@ export const Feed = () => {
                   id="demo-multiple-name"
                   multiple
                   value={groupInterests}
-                  onChange={handleChange}
+                  onChange={handleChangeInterests}
                   input={<OutlinedInput label="Interests" />}
                   renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
                         <Chip key={value} label={value} />
                       ))}
@@ -267,8 +290,6 @@ export const Feed = () => {
                       value={allInterests}
                       style={getStyles(allInterests, groupInterests, theme)}
                     >
-
-
                       {allInterests}
                     </MenuItem>
                   ))}
@@ -278,13 +299,11 @@ export const Feed = () => {
             {/*VELG ALDER*/}
 
             <div style={{ marginTop: "20px", marginBottom: "5px" }}>
-              <Typography >
-                Aldersspenn
-              </Typography>
+              <Typography>Aldersspenn</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={value1}
                   onChange={handleChange1}
                   valueLabelDisplay="on"
@@ -295,11 +314,11 @@ export const Feed = () => {
             </div>
           </Grid>
 
-
           {/*VELG DATO*/}
           <Grid item sm={3}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <FormControl sx={{ width: 400 }}
+              <FormControl
+                sx={{ width: 400 }}
                 id="filled-basic"
                 label="Gruppebeskrivelse"
                 variant="outlined"
@@ -310,10 +329,8 @@ export const Feed = () => {
                 <Select
                   labelId="demo-multiple-name-label"
                   id="demo-multiple-name"
-
                   //onChange={handleChange}
                   input={<OutlinedInput label="Interests" />}
-
                   MenuProps={MenuProps}
                 >
                   {allInterests.map((allInterests) => (
@@ -331,13 +348,11 @@ export const Feed = () => {
             {/*VELG ANTALL*/}
 
             <div style={{ marginTop: "20px", marginBottom: "5px" }}>
-              <Typography>
-                Antall
-              </Typography>
+              <Typography>Antall</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={value2}
                   onChange={handleChange2}
                   valueLabelDisplay="on"
@@ -349,8 +364,7 @@ export const Feed = () => {
           </Grid>
         </Grid>
 
-
-        <Grid container spacing={3} marginTop={1} >
+        <Grid container spacing={3} marginTop={1}>
           {filterGroups()}
           {/*groups.map((groupsID) => getGroupCard(groupsID))}
           {groups
@@ -361,4 +375,3 @@ export const Feed = () => {
     </Box>
   );
 };
-
