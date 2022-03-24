@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DatePick } from "../Event/DatePick";
 import { format } from "date-fns";
-import { default as db } from "../firebase";
+import { db } from "../firebase";
 import {
     updateDoc,
     doc,
@@ -15,7 +15,6 @@ export function Event(props) {
     const [date, setDate] = useState();
     const id = props.id;
     const groupRef = doc(db, "Teams-beta", id);
-    const myGroup = false;
 
 
     function handleStorage() {
@@ -33,12 +32,10 @@ export function Event(props) {
 
     return (
 
-        <div>{myGroup &&
+        <div>
             <button onClick={handlePopUp}>
                 {props.text}
             </button>
-        }
-
 
             <div>
                 {popUp && <div>
