@@ -22,6 +22,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import EventIcon from "@mui/icons-material/Event";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -100,6 +101,17 @@ export const Sidebar = () => {
           <FavoriteIcon />
         </ListItemIcon>
         <ListItemText primary="Matches" />
+      </ListItemButton>
+
+      <ListItemButton
+        component="button"
+        href="/events"
+        sx={{ borderRadius: 8 }}
+      >
+        <ListItemIcon>
+          <EventIcon />
+        </ListItemIcon>
+        <ListItemText primary="Events" />
       </ListItemButton>
     </List>
   );
