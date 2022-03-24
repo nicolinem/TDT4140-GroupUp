@@ -2,7 +2,7 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { GroupInformation } from "./GroupInformation";
 import { GroupInterests } from "./GroupInterests";
-import { Box, Grid, Stack, TextField, Typography } from "@mui/material";
+import { Button, Box, Grid, Stack, TextField, Typography } from "@mui/material";
 import image from "./DSC06122-kopi.jpg";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
@@ -173,20 +173,37 @@ export const GroupPage = () => {
         </div>
 
         {/* Bunn */}
-
+            {/*}
         <button onClick={handleOpen}></button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          // BackdropComponent={Backdrop}
-        >
-          <Box sx={style}>
-            <ChooseGroups otherGroupID={id} />
-          </Box>
-        </Modal>
+        */}
       </Box>
+        <Grid container justify="center">
+          <Button
+          // Button for starting chat
+              onClick={handleOpen}
+              variant="contained"
+              //size="rg"
+              fullWidth
+              color="success"
+              sx={{ mt: 3, mb: 2 }}
+              onClose={handleClose}
+              //alignItems="center"
+            >
+              Start chat
+            </Button>
+          </Grid>
+            <Modal
+            // The popup that shows up when pressing chat button
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            // BackdropComponent={Backdrop}
+          >
+            <Box sx={style}>
+              <ChooseGroups otherGroupID={id} />
+            </Box>
+          </Modal>
     </Box>
   );
 };

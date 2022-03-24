@@ -9,7 +9,7 @@ import { GroupPage } from "./Dashboard/GroupPage";
 import { NewGroup } from "./NewGroup/NewGroup";
 import { ChatRoom } from "./Chat/ChatRoom";
 
-import db from "./firebase";
+import { db } from "./firebase";
 import React, { useEffect, useState } from "react";
 import { onSnapshot, collection } from "firebase/firestore";
 import { Box } from "@mui/material";

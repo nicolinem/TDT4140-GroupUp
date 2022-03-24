@@ -21,8 +21,8 @@ import GroupCard from "./GroupCard";
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { default as db } from "../firebase";
-
+//import { default as db } from "../firebase";
+import { db } from "../firebase";
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
@@ -83,7 +83,8 @@ export const Feed = () => {
   ];
   const dateNotUsing = ["Denne uken"];
 
-  console.log(allInterests);
+  const theme = useTheme();
+  const [groupInterests, setGroupInterests] = React.useState([]);
 
   const handleChangeGroup = (event) => {
     const {
@@ -103,12 +104,15 @@ export const Feed = () => {
   };
 
   const minDistance = 1;
-  const [value1, setValue1] = React.useState([20, 37]);
-  const [value2, setValue2] = React.useState([20, 37]);
 
   function valuetext(value) {
     return `${value}`;
   }
+
+  const [numberPreference, setNumberPreference] = React.useState([1, 5]);
+  const [agePreference, setAgePreference] = React.useState([1, 35]);
+
+  // ANTALL
 
   const handleChange1 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -117,15 +121,17 @@ export const Feed = () => {
     if (newValue[1] - newValue[0] < minDistance) {
       if (activeThumb === 0) {
         const clamped = Math.min(newValue[0], 100 - minDistance);
-        setValue1([clamped, clamped + minDistance]);
+        setNumberPreference([clamped, clamped + minDistance]);
       } else {
         const clamped = Math.max(newValue[1], minDistance);
-        setValue1([clamped - minDistance, clamped]);
+        setNumberPreference([clamped - minDistance, clamped]);
       }
     } else {
-      setValue1(newValue);
+      setNumberPreference(newValue);
     }
   };
+
+  // ALDER
 
   const handleChange2 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -134,14 +140,14 @@ export const Feed = () => {
 
     if (newValue[1] - newValue[0] < minDistance) {
       if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 100 - minDistance);
-        setValue2([clamped, clamped + minDistance]);
+        const clamped = Math.min(newValue[0], 30 - minDistance);
+        setAgePreference([clamped, clamped + minDistance]);
       } else {
         const clamped = Math.max(newValue[1], minDistance);
-        setValue2([clamped - minDistance, clamped]);
+        setAgePreference([clamped - minDistance, clamped]);
       }
     } else {
-      setValue2(newValue);
+      setAgePreference(newValue);
     }
   };
 
@@ -153,6 +159,12 @@ export const Feed = () => {
         groups.interests.some((v) => groupInterests.includes(v))
       );
     }
+
+    //AGE
+    //
+    //console.log(groups[0].members[0].dateOfBirth)
+
+    // formatterer dato til riktig format
 
     if (currentGroup) {
       filteredGroups = filteredGroups.filter(
@@ -167,6 +179,17 @@ export const Feed = () => {
     }
     */
     return filteredGroups.map((group) => getGroupCard(group));
+  }
+
+  function formatDateString(membersDateList) {
+    const correctFormatList = [];
+    let correctValue = "";
+    for (let i = 0; i < membersDateList.length; i++) {
+      const splitList = membersDateList[i].split("/");
+      correctValue = splitList[2] + "-" + splitList[1] + "-" + splitList[0];
+      correctFormatList.push(correctValue);
+    }
+    return correctFormatList;
   }
 
   const handleLikeGroup = async (id) => {
@@ -205,16 +228,80 @@ export const Feed = () => {
     }
   };
 
-  const theme = useTheme();
-  const [groupInterests, setGroupInterests] = React.useState([]);
-  const [numberPreference, setNumberPreference] = React.useState([]);
-  const [agePreference, setAgePreference] = React.useState([]);
+  // henter ut alder
+  function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
 
-  //const chosenInterests = groupInterests.split(",");
-  console.log(groupInterests);
+  // henter ut gjennomsnittsalder
+  function getAverageAge(listOfDateStrings) {
+    let sumAlder = 0;
+    for (let i = 0; i < listOfDateStrings.length; i++) {
+      sumAlder += getAge(listOfDateStrings[i]);
+    }
+    return sumAlder / listOfDateStrings.length;
+  }
 
-  console.log(value1);
-  console.log(value2);
+  function getAverageAgeOfGroup(medlemmer) {
+    let liste = [];
+    medlemmer.forEach((medlem) => liste.push(medlem.dateOfBirth));
+    liste = formatDateString(liste);
+    return getAverageAge(liste);
+  }
+
+  function filterByInterests(groups) {
+    return groups.filter(
+      (group) =>
+        group.interests.some((v) => groupInterests.includes(v)) ||
+        groupInterests.length === 0
+    );
+  }
+
+  function filterByNumber(groups, min, max) {
+    return groups.filter(
+      (group) => group.members.length >= min && group.members.length <= max
+    );
+  }
+
+  function filterByAge(groups, min, max) {
+    return groups.filter(
+      (group) =>
+        getAverageAgeOfGroup(group.members) >= min &&
+        getAverageAgeOfGroup(group.members) <= max
+    );
+  }
+
+  function filterByCurrentGroup(groups) {
+    return currentGroup
+      ? groups.filter((group) => group.id !== currentGroup.id)
+      : groups;
+  }
+
+  function makeCards(groups) {
+    return groups.map((groupsID) => getGroupCard(groupsID));
+  }
+
+  function makeCardsFilteredByAgeNumberInterest() {
+    const ageGroup = filterByAge(groups, agePreference[0], agePreference[1]);
+    const ageNumberGroup = filterByNumber(
+      ageGroup,
+      numberPreference[0],
+      numberPreference[1]
+    );
+    const ageNumberInterestGroup = filterByInterests(ageNumberGroup);
+    const currentGroupAgeNumberInterestGroup = filterByCurrentGroup(
+      ageNumberInterestGroup
+    );
+
+    return makeCards(currentGroupAgeNumberInterestGroup);
+  }
 
   const getGroupCard = (groupObj) => {
     const isLiked = currentGroup
@@ -229,6 +316,7 @@ export const Feed = () => {
           isLiked={isLiked}
           handleLikeGroup={handleLikeGroup}
           handleDislikeGroup={handleDislikeGroup}
+          key={groupObj.id}
         />
       </Grid>
     );
@@ -323,14 +411,14 @@ export const Feed = () => {
             </div>
             {/*VELG ALDER*/}
 
-            <div style={{ marginTop: "20px", marginBottom: "5px" }}>
+            <div style={{ marginTop: "10px", marginBottom: "5px" }}>
               <Typography>Aldersspenn</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
-                  sx={{ color: "#558b2f" }}
+                  sx={{ color: "#558b2f", marginTop: "35px" }}
                   getAriaLabel={() => "Minimum distance shift"}
-                  value={value1}
-                  onChange={handleChange1}
+                  value={agePreference}
+                  onChange={handleChange2}
                   valueLabelDisplay="on"
                   getAriaValueText={valuetext}
                   disableSwap
@@ -341,56 +429,32 @@ export const Feed = () => {
 
           {/*VELG DATO*/}
           <Grid item sm={3}>
-            <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <FormControl
-                sx={{ width: 400 }}
-                id="filled-basic"
-                label="Gruppebeskrivelse"
-                variant="outlined"
-                autoFocus
-                color="success"
-              >
-                <InputLabel id="demo-multiple-name-label">Datetime</InputLabel>
-                <Select
-                  labelId="demo-multiple-name-label"
-                  id="demo-multiple-name"
-                  //onChange={handleChange}
-                  input={<OutlinedInput label="Interests" />}
-                  MenuProps={MenuProps}
-                >
-                  {allInterests.map((allInterests) => (
-                    <MenuItem
-                      key={allInterests}
-                      value={allInterests}
-                      style={getStyles(allInterests, [], theme)}
-                    >
-                      {allInterests}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
             {/*VELG ANTALL*/}
 
-            <div style={{ marginTop: "20px", marginBottom: "5px" }}>
+            <div style={{ marginTop: "5px", marginBottom: "5px" }}>
               <Typography>Antall</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
-                  sx={{ color: "#558b2f" }}
+                  sx={{ color: "#558b2f", marginTop: "35px" }}
                   getAriaLabel={() => "Minimum distance shift"}
-                  value={value2}
-                  onChange={handleChange2}
+                  value={numberPreference}
+                  onChange={handleChange1}
                   valueLabelDisplay="on"
                   getAriaValueText={valuetext}
                   disableSwap
+                  max={30}
+                  min={1}
                 />
               </Box>
             </div>
           </Grid>
         </Grid>
 
-        <Grid container spacing={3} marginTop={1}>
-          {filterGroups()}
+        <Grid container spacing={3}>
+          {makeCardsFilteredByAgeNumberInterest()}
+          {/*filterGroupsByInterests()*/}
+          {/*filterGroupsByNumber()*/}
+          {/*filterGroupsByAge()*/}
           {/*groups.map((groupsID) => getGroupCard(groupsID))}
           {groups
             .filter((groups) => groups.interests.some(v => groupInterests.includes(v)))

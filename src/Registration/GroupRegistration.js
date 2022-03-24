@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
-import { default as db, auth, useAuth, storage } from "../firebase";
+import { db, auth, useAuth, storage } from "../firebase";
 import {
   addDoc,
   collection,
@@ -91,13 +91,16 @@ export const GroupRegistration = () => {
     console.log(typeof currentUser?.uid);
 
     const storageRef = ref(storage, `/images/${image.name}`);
-    console.log(storageRef);
 
     if (image == null) return;
     uploadBytes(storageRef, image).then((snapshot) => {
       console.log("Uploaded a blob or file!");
     });
     const groupCollRef = collection(db, "Teams-beta");
+    const creatingUser = users.find((user) => user.id === currentUser?.uid);
+    console.log(groupNameRef.current.value);
+    console.log([...groupInterests]);
+    console.log([...members, creatingUser]);
     const documentref = await addDoc(groupCollRef, {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
@@ -109,7 +112,7 @@ export const GroupRegistration = () => {
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
-    setMembers([...members, currentUser]);
+    setMembers([...members, creatingUser]);
     const imageReference = `/images/${image.name}`;
     const id = documentref.id;
     navigate("/GroupPage", {

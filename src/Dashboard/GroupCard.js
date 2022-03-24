@@ -26,7 +26,8 @@ import {
   collection,
   updateDoc,
 } from "firebase/firestore";
-import { default as db, storage } from "../firebase";
+import { db, storage } from "../firebase";
+//import { default as db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
