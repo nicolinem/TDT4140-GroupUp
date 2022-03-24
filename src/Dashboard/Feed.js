@@ -51,7 +51,6 @@ export const Feed = () => {
       setGroups(requestedGroups);
       setLoading(false);
     };
-
     getgroups();
   }, []);
 
@@ -170,18 +169,36 @@ export const Feed = () => {
     return filteredGroups.map((group) => getGroupCard(group));
   }
 
-  const handleLikeGroup = async (id, likedGroups) => {
-    console.log(id);
+  const handleLikeGroup = async (id) => {
     const groupRef = doc(db, "Teams-beta", currentGroup.id);
-
-    console.log(id);
-    console.log(likedGroups);
-    console.log(!currentGroup.likedGroups.includes(id));
 
     if (!currentGroup.likedGroups.includes(id)) {
       const updatedLikedGroups = [...currentGroup.likedGroups, id];
-      console.log(updatedLikedGroups);
+      setCurrentGroup((prevCurrentGroup) => ({
+        ...prevCurrentGroup,
+        likedGroups: [...prevCurrentGroup.likedGroups, id],
+      }));
+      await updateDoc(groupRef, {
+        likedGroups: updatedLikedGroups,
+      });
 
+      console.log(currentGroup);
+    }
+  };
+
+  const handleDislikeGroup = async (id) => {
+    const groupRef = doc(db, "Teams-beta", currentGroup.id);
+
+    if (currentGroup.likedGroups.includes(id)) {
+      const updatedLikedGroups = currentGroup.likedGroups.filter(
+        (groupID) => groupID !== id
+      );
+      setCurrentGroup((prevCurrentGroup) => ({
+        ...prevCurrentGroup,
+        likedGroups: prevCurrentGroup.likedGroups.filter(
+          (groupID) => groupID !== id
+        ),
+      }));
       await updateDoc(groupRef, {
         likedGroups: updatedLikedGroups,
       });
@@ -211,6 +228,7 @@ export const Feed = () => {
           {...groupObj}
           isLiked={isLiked}
           handleLikeGroup={handleLikeGroup}
+          handleDislikeGroup={handleDislikeGroup}
         />
       </Grid>
     );

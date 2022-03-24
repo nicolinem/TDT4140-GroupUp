@@ -39,22 +39,19 @@ const GroupCard = (props) => {
     members,
     imageReference,
     likedGroups,
-    isLiked,
   } = props;
 
   console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
-  console.log(props.isLiked);
-  const [liked, setLiked] = useState(props.isLiked);
+  console.log(props.likedByCurrentGroup);
+
   const handleIconClick = () => {
-    /* if (liked) {
-
-          } else  */
-
-    props.handleLikeGroup(id, likedGroups);
-
-    setLiked((prev) => !prev);
+    if (!props.isLiked) {
+      props.handleLikeGroup(id);
+    } else if (props.isLiked) {
+      props.handleDislikeGroup(id);
+    }
   };
 
   const [url, setUrl] = useState(null);

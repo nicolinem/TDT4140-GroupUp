@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 
 const Matches = () => {
+  const [groups, setGroups] = useState([]);
+
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
