@@ -9,12 +9,12 @@ import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
 import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
-import {  db, storage } from "../firebase";
+import { db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const GroupCard = (props) => {
-  const { name, id, description, interests, members, imageReference } = props;
+  const { name, id, description, interests, members, imageReference, eventDate } = props;
 
   console.log("test: ", name, id, description, interests);
 
@@ -66,7 +66,7 @@ const GroupCard = (props) => {
 
   function handleClick() {
     navigate("/GroupPage", {
-      state: { name, id, description, interests, members, imageReference },
+      state: { name, id, description, interests, members, imageReference, eventDate },
     });
     console.log("hello");
   }
@@ -145,80 +145,80 @@ const GroupCard = (props) => {
       </CardActionArea>
     </Card>
   ) : (
-    <Card
-      alignItems="center"
-      justify="center"
-      sx={{ display: "flex", padding: 0 }}
-    >
-      <CardActionArea
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          flexgrow: 1,
-          maxHeight: 350,
-          padding: 0,
-          flexDirection: "column",
-        }}
+      <Card
+        alignItems="center"
+        justify="center"
+        sx={{ display: "flex", padding: 0 }}
       >
-        <Box
+        <CardActionArea
+          onClick={handleClick}
           sx={{
-            width: 1,
             display: "flex",
             flexgrow: 1,
             maxHeight: 350,
             padding: 0,
-            // bgcolor: "#e3f0d3",
-            "&:hover": {
-              // backgroundColor: "#e3f0d3",
-              opacity: [0.9, 0.8, 0.7],
-            },
+            flexDirection: "column",
           }}
         >
-          <CardContent
+          <Box
             sx={{
-              display: "flex",
-              width: "90%",
-              padding: 0,
-              flexDirection: "column",
               width: 1,
-              borderRadius: 10,
-              bgcolor: "white",
+              display: "flex",
+              flexgrow: 1,
+              maxHeight: 350,
+              padding: 0,
+              // bgcolor: "#e3f0d3",
+              "&:hover": {
+                // backgroundColor: "#e3f0d3",
+                opacity: [0.9, 0.8, 0.7],
+              },
             }}
           >
-            <Box
-              alignItems="center"
-              justify="center"
+            <CardContent
               sx={{
                 display: "flex",
+                width: "90%",
+                padding: 0,
                 flexDirection: "column",
+                width: 1,
+                borderRadius: 10,
+                bgcolor: "white",
               }}
             >
               <Box
-                flexrgrow="1"
-                padding="0"
-                overflow="hidden"
-                maxHeight="220px"
+                alignItems="center"
+                justify="center"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
-                <img src={url} width="100%" />
+                <Box
+                  flexrgrow="1"
+                  padding="0"
+                  overflow="hidden"
+                  maxHeight="220px"
+                >
+                  <img src={url} width="100%" />
+                </Box>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{ fontFamily: "Avenir" }}
+                >
+                  {name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {description}
+                </Typography>
               </Box>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                sx={{ fontFamily: "Avenir" }}
-              >
-                {name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {description}
-              </Typography>
-            </Box>
-          </CardContent>
-          
-        </Box>
-      </CardActionArea>
-    </Card>
-  );
+            </CardContent>
+
+          </Box>
+        </CardActionArea>
+      </Card>
+    );
 };
 
 export default GroupCard;

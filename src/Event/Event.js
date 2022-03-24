@@ -17,6 +17,7 @@ export function Event(props) {
     const groupRef = doc(db, "Teams-beta", id);
 
 
+
     function handleStorage() {
         updateDoc(groupRef, {
             eventDate: format(date, 'yyyy-MM-dd')
@@ -49,12 +50,6 @@ export function Event(props) {
             </button>
 
                 </div>}
-                <div>
-                    {dateExists &&
-                        <p>
-                            Event date {format(date, 'do MMMM Y')}
-                        </p>}
-                </div>
             </div>
         </div >
 

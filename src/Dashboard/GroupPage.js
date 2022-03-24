@@ -1,12 +1,10 @@
-import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
-import { GroupInformation } from "./GroupInformation";
 import { GroupInterests } from "./GroupInterests";
 import { Button, Box, Grid, Stack, TextField, Typography } from "@mui/material";
-import image from "./DSC06122-kopi.jpg";
-import { img, CardHeader, IconButton, Card } from "@mui/material";
+import { Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
 import { Event } from "../Event/Event";
+import { format } from "date-fns";
 import {
   Demo,
   List,
@@ -17,30 +15,25 @@ import {
   Item,
   FolderIcon,
 } from "@mui/material";
-
 import React, { useEffect, useState } from "react";
-
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import { height } from "@mui/system";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
 import { db, useAuth, storage } from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore"
 import { Modal } from "@mui/material";
 import { ChooseGroups } from "../Chat/ChooseGroup";
 import { getAuth } from "firebase/auth";
 
 export const GroupPage = (props) => {
   const { state } = useLocation();
-  const { name, id, members, imageReference } = state;
+  const { name, id, members, imageReference, eventDate } = state;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isMember, setIsMember] = useState(false);
   const auth = getAuth();
-
-
+  const [date, setDate] = useState(eventDate);
 
   const antallMedlemmer = members.length;
 
@@ -66,6 +59,12 @@ export const GroupPage = (props) => {
     };
     getImage();
   }, []);
+
+  useEffect(() => {
+    onSnapshot(doc(db, "Teams-beta", id), (doc) => {
+      setDate(doc.data().eventDate);
+    })
+  });
 
   useEffect(() => {
     if (members.some(member => member.id == auth.currentUser?.uid)) {
@@ -196,7 +195,11 @@ export const GroupPage = (props) => {
                       backgroundColor: "#c5e1a5",
                     },
                   }}
-                >{isMember && <Event text='Select event date' id={id} />}
+                >{isMember &&
+                  <Event text='Select event date' id={id} />}
+                  <p>
+                    Event Date: {date}
+                  </p>
 
                 </Card>
               </div>
