@@ -122,6 +122,9 @@ const GroupCard = (props) => {
       justify="center"
       sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
     >
+      <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+      </IconButton>
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -188,7 +191,6 @@ const GroupCard = (props) => {
           </CardContent>
         </Box>
       </CardActionArea>
-      ¨
     </Card>
   ) : (
     <Card
@@ -196,25 +198,6 @@ const GroupCard = (props) => {
       justify="center"
       sx={{ display: "flex", padding: 0 }}
     >
-      <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-      </IconButton>
-      <Modal
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        // BackdropComponent={Backdrop}
-      ></Modal>
-      <CardActionArea
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          flexgrow: 1,
-          maxHeight: 350,
-          padding: 0,
-          flexDirection: "column",
-        }}
-      />
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -279,6 +262,11 @@ const GroupCard = (props) => {
               </Typography>
             </Box>
           </CardContent>
+        </Box>
+        <Box sx={{ marginBottom: 7 }}>
+          <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+            {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+          </IconButton>
         </Box>
       </CardActionArea>
     </Card>
