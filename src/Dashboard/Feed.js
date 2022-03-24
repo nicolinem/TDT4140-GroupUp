@@ -11,6 +11,8 @@ import {
   Chip,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useAuth } from "../firebase";
+import { updateDoc } from "firebase/firestore";
 
 import Slider from "@mui/material/Slider";
 
@@ -19,11 +21,17 @@ import GroupCard from "./GroupCard";
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
+//import { default as db } from "../firebase";
 import { db } from "../firebase";
-
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = React.useState([]);
+  const [groups, setGroups] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState();
+  const currentUser = useAuth();
+  groups.forEach((group) => {
+    console.log(`${group.id}`);
+    console.log(group.likedGroups);
+  });
 
   // const getID = (idi) => {
   //   const { id } = idi;
@@ -35,14 +43,14 @@ export const Feed = () => {
       const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
+      const requestedGroups = [];
       querySnapshot.forEach((doc) => {
-        groups.push({ ...doc.data(), id: doc.id });
-        //console.log(doc.id, " => ", doc.data());
+        requestedGroups.push({ ...doc.data(), id: doc.id });
+        console.log(doc.id, " => ", doc.data());
       });
-
+      setGroups(requestedGroups);
       setLoading(false);
     };
-
     getgroups();
   }, []);
 
@@ -72,15 +80,20 @@ export const Feed = () => {
     "Vorse",
     "Spille brettspill",
     "Progge",
-  ]
-
+  ];
+  const dateNotUsing = ["Denne uken"];
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
 
+  const handleChangeGroup = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCurrentGroup(groups.find((group) => group.id == value));
+  };
 
-
-  const handleChange = (event) => {
+  const handleChangeInterests = (event) => {
     const {
       target: { value },
     } = event;
@@ -90,11 +103,7 @@ export const Feed = () => {
     );
   };
 
-
-
-
   const minDistance = 1;
-
 
   function valuetext(value) {
     return `${value}`;
@@ -116,14 +125,13 @@ export const Feed = () => {
       } else {
         const clamped = Math.max(newValue[1], minDistance);
         setNumberPreference([clamped - minDistance, clamped]);
-
       }
     } else {
       setNumberPreference(newValue);
     }
   };
 
-  // ALDER 
+  // ALDER
 
   const handleChange2 = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
@@ -143,29 +151,82 @@ export const Feed = () => {
     }
   };
 
+  function filterGroups() {
+    let filteredGroups = groups;
 
+    if (groupInterests.length !== 0) {
+      filteredGroups = filteredGroups.filter((groups) =>
+        groups.interests.some((v) => groupInterests.includes(v))
+      );
+    }
 
+    //AGE
+    //
+    //console.log(groups[0].members[0].dateOfBirth)
 
+    // formatterer dato til riktig format
 
-  //AGE
-  //
-  //console.log(groups[0].members[0].dateOfBirth)
-
-
-  // formatterer dato til riktig format
+    if (currentGroup) {
+      filteredGroups = filteredGroups.filter(
+        (group) => group.id !== currentGroup.id
+      );
+    }
+    // The code below filters the groups on which are liked of the current group
+    /* if (currentGroup) {
+      filteredGroups = filteredGroups.filter((group) =>
+        currentGroup.likedGroups.includes(group.id)
+      ); 
+    }
+    */
+    return filteredGroups.map((group) => getGroupCard(group));
+  }
 
   function formatDateString(membersDateList) {
     const correctFormatList = [];
     let correctValue = "";
     for (let i = 0; i < membersDateList.length; i++) {
       const splitList = membersDateList[i].split("/");
-      correctValue = (splitList[2] + "-" + splitList[1] + "-" + splitList[0]);
+      correctValue = splitList[2] + "-" + splitList[1] + "-" + splitList[0];
       correctFormatList.push(correctValue);
     }
     return correctFormatList;
   }
 
+  const handleLikeGroup = async (id) => {
+    const groupRef = doc(db, "Teams-beta", currentGroup.id);
 
+    if (!currentGroup.likedGroups.includes(id)) {
+      const updatedLikedGroups = [...currentGroup.likedGroups, id];
+      setCurrentGroup((prevCurrentGroup) => ({
+        ...prevCurrentGroup,
+        likedGroups: [...prevCurrentGroup.likedGroups, id],
+      }));
+      await updateDoc(groupRef, {
+        likedGroups: updatedLikedGroups,
+      });
+
+      console.log(currentGroup);
+    }
+  };
+
+  const handleDislikeGroup = async (id) => {
+    const groupRef = doc(db, "Teams-beta", currentGroup.id);
+
+    if (currentGroup.likedGroups.includes(id)) {
+      const updatedLikedGroups = currentGroup.likedGroups.filter(
+        (groupID) => groupID !== id
+      );
+      setCurrentGroup((prevCurrentGroup) => ({
+        ...prevCurrentGroup,
+        likedGroups: prevCurrentGroup.likedGroups.filter(
+          (groupID) => groupID !== id
+        ),
+      }));
+      await updateDoc(groupRef, {
+        likedGroups: updatedLikedGroups,
+      });
+    }
+  };
 
   // henter ut alder
   function getAge(dateString) {
@@ -190,21 +251,37 @@ export const Feed = () => {
 
   function getAverageAgeOfGroup(medlemmer) {
     let liste = [];
-    medlemmer.forEach(medlem => liste.push(medlem.dateOfBirth));
+    medlemmer.forEach((medlem) => liste.push(medlem.dateOfBirth));
     liste = formatDateString(liste);
     return getAverageAge(liste);
   }
 
   function filterByInterests(groups) {
-    return groups.filter(group => group.interests.some(v => groupInterests.includes(v)) || groupInterests.length === 0);
+    return groups.filter(
+      (group) =>
+        group.interests.some((v) => groupInterests.includes(v)) ||
+        groupInterests.length === 0
+    );
   }
 
   function filterByNumber(groups, min, max) {
-    return groups.filter(group => group.members.length >= min && group.members.length <= max);
+    return groups.filter(
+      (group) => group.members.length >= min && group.members.length <= max
+    );
   }
 
   function filterByAge(groups, min, max) {
-    return groups.filter(group => getAverageAgeOfGroup(group.members) >= min && getAverageAgeOfGroup(group.members) <= max);
+    return groups.filter(
+      (group) =>
+        getAverageAgeOfGroup(group.members) >= min &&
+        getAverageAgeOfGroup(group.members) <= max
+    );
+  }
+
+  function filterByCurrentGroup(groups) {
+    return currentGroup
+      ? groups.filter((group) => group.id !== currentGroup.id)
+      : groups;
   }
 
   function makeCards(groups) {
@@ -213,16 +290,34 @@ export const Feed = () => {
 
   function makeCardsFilteredByAgeNumberInterest() {
     const ageGroup = filterByAge(groups, agePreference[0], agePreference[1]);
-    const ageNumberGroup = filterByNumber(ageGroup, numberPreference[0], numberPreference[1]);
+    const ageNumberGroup = filterByNumber(
+      ageGroup,
+      numberPreference[0],
+      numberPreference[1]
+    );
     const ageNumberInterestGroup = filterByInterests(ageNumberGroup);
-    return makeCards(ageNumberInterestGroup);
+    const currentGroupAgeNumberInterestGroup = filterByCurrentGroup(
+      ageNumberInterestGroup
+    );
+
+    return makeCards(currentGroupAgeNumberInterestGroup);
   }
 
   const getGroupCard = (groupObj) => {
+    const isLiked = currentGroup
+      ? currentGroup.likedGroups.includes(groupObj.id)
+      : false;
+    console.log(isLiked);
     return (
       <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
-        <GroupCard {...groupObj} />
+        <GroupCard
+          {...groupObj}
+          isLiked={isLiked}
+          handleLikeGroup={handleLikeGroup}
+          handleDislikeGroup={handleDislikeGroup}
+          key={groupObj.id}
+        />
       </Grid>
     );
   };
@@ -249,11 +344,36 @@ export const Feed = () => {
         <Sidebar />
       </Box>
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
+        <FormControl sx={{ width: 600, marginBottom: 7 }}>
+          <InputLabel
+            id="demo-simple-select-label"
+            input={<OutlinedInput label="Group" />}
+          >
+            Group
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={currentGroup}
+            label="Group"
+            onChange={handleChangeGroup}
+          >
+            {groups.length > 0 &&
+              groups
+                .filter((group) =>
+                  group.members.some((member) => member.id == currentUser?.uid)
+                )
+                .map((group) => (
+                  <MenuItem value={group.id}>{group.name}</MenuItem>
+                ))}
+          </Select>
+        </FormControl>
         <Grid container spacing={2} flexGrow={1}>
           {/*VELG INTERESSER*/}
           <Grid item sm={6}>
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <FormControl sx={{ width: 200 }}
+              <FormControl
+                sx={{ width: 400 }}
                 id="filled-basic"
                 label="Gruppebeskrivelse"
                 variant="outlined"
@@ -266,7 +386,7 @@ export const Feed = () => {
                   id="demo-multiple-name"
                   multiple
                   value={groupInterests}
-                  onChange={handleChange}
+                  onChange={handleChangeInterests}
                   input={<OutlinedInput label="Interests" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -292,13 +412,11 @@ export const Feed = () => {
             {/*VELG ALDER*/}
 
             <div style={{ marginTop: "10px", marginBottom: "5px" }}>
-              <Typography >
-                Aldersspenn
-              </Typography>
+              <Typography>Aldersspenn</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f", marginTop: "35px" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={agePreference}
                   onChange={handleChange2}
                   valueLabelDisplay="on"
@@ -311,17 +429,14 @@ export const Feed = () => {
 
           {/*VELG DATO*/}
           <Grid item sm={3}>
-
             {/*VELG ANTALL*/}
 
             <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <Typography>
-                Antall
-              </Typography>
+              <Typography>Antall</Typography>
               <Box sx={{ width: 300 }}>
                 <Slider
                   sx={{ color: "#558b2f", marginTop: "35px" }}
-                  getAriaLabel={() => 'Minimum distance shift'}
+                  getAriaLabel={() => "Minimum distance shift"}
                   value={numberPreference}
                   onChange={handleChange1}
                   valueLabelDisplay="on"
@@ -335,8 +450,7 @@ export const Feed = () => {
           </Grid>
         </Grid>
 
-
-        <Grid container spacing={3} >
+        <Grid container spacing={3}>
           {makeCardsFilteredByAgeNumberInterest()}
           {/*filterGroupsByInterests()*/}
           {/*filterGroupsByNumber()*/}

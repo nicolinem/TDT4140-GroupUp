@@ -2,23 +2,58 @@ import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import image from "./DSC06122-kopi.jpg";
-import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  CardActionArea,
+  CircularProgress,
+  Modal,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
-import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
-import {  db, storage } from "../firebase";
+import {
+  doc,
+  getDoc,
+  onSnapshot,
+  collection,
+  updateDoc,
+} from "firebase/firestore";
+import { db, storage } from "../firebase";
+//import { default as db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const GroupCard = (props) => {
-  const { name, id, description, interests, members, imageReference } = props;
+  const {
+    name,
+    id,
+    description,
+    interests,
+    members,
+    imageReference,
+    likedGroups,
+  } = props;
 
   console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
+  console.log(props.likedByCurrentGroup);
+
+  const handleIconClick = () => {
+    if (!props.isLiked) {
+      props.handleLikeGroup(id);
+    } else if (props.isLiked) {
+      props.handleDislikeGroup(id);
+    }
+  };
 
   const [url, setUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +77,6 @@ const GroupCard = (props) => {
     });
     navigate("/MyGroups");
   };
-
 
   useEffect(() => {
     const getImage = async () => {
@@ -70,6 +104,8 @@ const GroupCard = (props) => {
     });
     console.log("hello");
   }
+
+  function handleClose() {}
 
   return loading ? (
     <Card
@@ -143,6 +179,7 @@ const GroupCard = (props) => {
           </CardContent>
         </Box>
       </CardActionArea>
+      ¨
     </Card>
   ) : (
     <Card
@@ -150,6 +187,15 @@ const GroupCard = (props) => {
       justify="center"
       sx={{ display: "flex", padding: 0 }}
     >
+      <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+      </IconButton>
+      <Modal
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        // BackdropComponent={Backdrop}
+      ></Modal>
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -214,7 +260,6 @@ const GroupCard = (props) => {
               </Typography>
             </Box>
           </CardContent>
-          
         </Box>
       </CardActionArea>
     </Card>
