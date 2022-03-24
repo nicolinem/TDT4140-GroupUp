@@ -109,6 +109,7 @@ export const GroupRegistration = () => {
       members: [...members, users.find((user) => user.id == currentUser?.uid)],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
+      eventDate: [],
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
