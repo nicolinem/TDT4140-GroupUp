@@ -19,7 +19,8 @@ import { MyGroups } from "./Dashboard/MyGroups";
 import { GroupRegistration } from "./Registration/GroupRegistration";
 import { AddMembers } from "./Dashboard/AddMembers";
 import { ChooseGroups } from "./Chat/ChooseGroup";
-import ChatList from "./Chat/ChatList";
+import Matches from "./Matches/Matches";
+import Events from "./Events/Events";
 
 function App() {
   useEffect(
@@ -41,7 +42,8 @@ function App() {
           <Route path="AddMembers" element={<AddMembers />} />
           <Route path="chat" element={<ChatRoom />} />
           <Route path="choosegroup" element={<ChooseGroups />} />
-          <Route path="chatlist" element={<ChatList />} />
+          <Route path="matches" element={<Matches />} />
+          <Route path="events" element={<Events />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route exact path="registration" element={<RegistrationPage />} />

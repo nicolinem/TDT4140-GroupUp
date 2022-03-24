@@ -105,7 +105,8 @@ export const GroupRegistration = () => {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
       interests: [...groupInterests],
-      members: [...members, creatingUser],
+      likedGroups: [],
+      members: [...members, users.find((user) => user.id == currentUser?.uid)],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
       eventDate: [],
@@ -121,7 +122,10 @@ export const GroupRegistration = () => {
         id,
         description,
         interests,
-        members: [...members, creatingUser],
+        members: [
+          ...members,
+          users.find((user) => user.id == currentUser?.uid),
+        ],
         imageReference,
       },
     });
