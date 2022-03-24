@@ -1,20 +1,25 @@
 import {
-  Box, CircularProgress, Grid, Typography, FormControl, InputLabel,
-  Select, MenuItem, OutlinedInput, Chip
-
+  Box,
+  CircularProgress,
+  Grid,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  OutlinedInput,
+  Chip,
 } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
-import Slider from '@mui/material/Slider';
+import Slider from "@mui/material/Slider";
 
 import GroupCard from "./GroupCard";
 
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
-import { collection, doc, getDocs, query, where, } from "firebase/firestore";
-import { default as db } from "../firebase";
-
-
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const Feed = () => {
   const [loading, setLoading] = useState(true);
@@ -52,7 +57,6 @@ export const Feed = () => {
     },
   };
 
-
   function getStyles(name, personName, theme) {
     return {
       fontWeight:
@@ -82,7 +86,7 @@ export const Feed = () => {
     } = event;
     setGroupInterests(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
@@ -137,7 +141,6 @@ export const Feed = () => {
     } else {
       setAgePreference(newValue);
     }
-
   };
 
 
@@ -246,7 +249,6 @@ export const Feed = () => {
         <Sidebar />
       </Box>
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
-
         <Grid container spacing={2} flexGrow={1}>
           {/*VELG INTERESSER*/}
           <Grid item sm={6}>
@@ -267,7 +269,7 @@ export const Feed = () => {
                   onChange={handleChange}
                   input={<OutlinedInput label="Interests" />}
                   renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
                         <Chip key={value} label={value} />
                       ))}
@@ -306,7 +308,6 @@ export const Feed = () => {
               </Box>
             </div>
           </Grid>
-
 
           {/*VELG DATO*/}
           <Grid item sm={3}>
@@ -349,4 +350,3 @@ export const Feed = () => {
     </Box>
   );
 };
-

@@ -1,4 +1,4 @@
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 import {
   Button,
   List,
@@ -21,6 +21,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import GroupIcon from "@mui/icons-material/Group";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -88,6 +89,17 @@ export const Sidebar = () => {
           <GroupAddIcon />
         </ListItemIcon>
         <ListItemText primary="Add a group" />
+      </ListItemButton>
+
+      <ListItemButton
+        component="button"
+        href="/chatlist"
+        sx={{ borderRadius: 8 }}
+      >
+        <ListItemIcon>
+          <MailOutlineIcon />
+        </ListItemIcon>
+        <ListItemText primary="Chats" />
       </ListItemButton>
     </List>
   );

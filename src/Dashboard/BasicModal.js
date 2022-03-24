@@ -7,7 +7,7 @@ import Modal from '@mui/material/Modal';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import { default as db, storage } from "../firebase";
+import {  db, storage } from "../firebase";
 import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
 import {useState, useEffect, useRef } from 'react';
 import styles from "./BasicModal.module.css";
