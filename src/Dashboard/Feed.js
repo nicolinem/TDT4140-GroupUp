@@ -306,10 +306,11 @@ export const Feed = (props) => {
       : groups;
 
     if (currentGroupID && props.showMatches) {
+      console.log(filteredGroups);
       filteredGroups = filteredGroups.filter(
         (group) =>
           group.likedGroups.includes(currentGroupID) &&
-          currentGroupID.likedGroups.includes(group.id)
+          currentGroup.likedGroups.includes(group.id)
       );
     }
     return filteredGroups;
