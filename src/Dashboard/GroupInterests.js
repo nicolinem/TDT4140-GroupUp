@@ -9,7 +9,7 @@ import { Avatar, Box, CardActionArea } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
 import { doc, getDoc } from "firebase/firestore";
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 import { useLocation } from "react-router-dom";
 
 

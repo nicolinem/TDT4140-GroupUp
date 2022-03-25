@@ -1,4 +1,4 @@
-import { default as db } from "../firebase";
+import {  db } from "../firebase";
 import React, { useEffect, useState } from "react";
 import {
   onSnapshot,
@@ -44,13 +44,15 @@ export const MyGroups = () => {
       setLoading(false);
     };
     getgroups();
-  });
+  }, []);
 
   const leaveGroup = async (group) => {
     const groupRef = doc(db, "Teams", group.id);
 
     await updateDoc(groupRef, {
-      members: group.members.filter((member) => member != auth.currentUser.uid),
+      members: group.members.filter(
+        (member) => member.id != auth.currentUser.uid
+      ),
     });
   };
 
@@ -64,9 +66,11 @@ export const MyGroups = () => {
   };
 
   const checkGroup = () => {
+    console.log("GRPOUPS: ", groups);
     const mygroups = groups.filter((group) =>
-      group.members.includes(auth.currentUser.uid)
+      group.members.find((c) => c.id === auth.currentUser.uid)
     );
+    console.log(mygroups);
     if (mygroups.length) {
       setHasGroups(true);
     }

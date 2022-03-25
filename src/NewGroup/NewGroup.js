@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Box, Container, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useRef } from "react";
-import { default as db, auth, useAuth } from "../firebase";
+import {  db, auth, useAuth } from "../firebase";
 import {
   addDoc,
   collection,

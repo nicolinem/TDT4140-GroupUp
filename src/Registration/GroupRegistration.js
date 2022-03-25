@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, } from "react";
-import { useTheme } from '@mui/material/styles';
+import React, { useRef, useState, useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
 import {
   Card,
   Button,
@@ -16,11 +16,10 @@ import {
   FormControl,
   Select,
   Chip,
-
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Sidebar } from "../Dashboard/Sidebar";
-import { default as db, auth, useAuth, storage } from "../firebase";
+import { db, auth, useAuth, storage } from "../firebase";
 import {
   addDoc,
   collection,
@@ -53,11 +52,10 @@ export const GroupRegistration = () => {
   );
 
   useEffect(() => {
-      members = users.filter(user => user.id == currentUser?.uid);
-  },
-  [currentUser, users]);
+    members = users.filter((user) => user.id == currentUser?.uid);
+  }, [currentUser, users]);
 
-  members = users.filter(user => user.id == currentUser?.uid);
+  members = users.filter((user) => user.id == currentUser?.uid);
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -77,13 +75,8 @@ export const GroupRegistration = () => {
           : theme.typography.fontWeightMedium,
     };
   }
-  const interests = [
-    "Løpe",
-    "Gå tur",
-    "Vorse",
-    "Spille brettspill",
-    "Progge",
-  ]
+
+  const interests = ["Løpe", "Gå tur", "Vorse", "Spille brettspill", "Progge"];
 
   const theme = useTheme();
   const [groupInterests, setGroupInterests] = React.useState([]);
@@ -94,20 +87,21 @@ export const GroupRegistration = () => {
     } = event;
     setGroupInterests(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
   const groupNameRef = useRef();
   const groupDescriptionRef = useRef();
 
-
   const handleClick = async () => {
     console.log(currentUser?.uid);
     console.log(typeof currentUser?.uid);
 
     const storageRef = ref(storage, `/images/${image.name}`);
-    console.log(`Current user: ${users.filter(user => user.id == currentUser?.uid)}`);
+    console.log(
+      `Current user: ${users.filter((user) => user.id == currentUser?.uid)}`
+    );
 
     if (image == null) return;
     uploadBytes(storageRef, image).then((snapshot) => {
@@ -115,18 +109,19 @@ export const GroupRegistration = () => {
     });
     const groupCollRef = collection(db, "Teams");
 
-    const groupCreator = users.find(user => user.id == currentUser?.uid);
+    const groupCreator = users.find((user) => user.id == currentUser?.uid);
     const documentref = await addDoc(groupCollRef, {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
       interests: [...groupInterests],
       events: [],
-      locations:[],
+      locations: [],
       invitedUsers: invitedUsers,
       members: [groupCreator],
       groupsLiked: [],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
+      eventDate: [],
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
@@ -135,12 +130,12 @@ export const GroupRegistration = () => {
     console.log("ID: " + id);
 
     // adding invites to all users inside of invitedUsers
-    invitedUsers.forEach(user => {
+    invitedUsers.forEach((user) => {
       const userRef = doc(db, "Users", user.id);
       console.log(user.invites);
       updateDoc(userRef, {
         invites: [...user.invites, id],
-        });
+      });
     });
     navigate("/GroupPage", {
       state: {
@@ -162,18 +157,23 @@ export const GroupRegistration = () => {
   const inviteUser = (user) => {
     console.log("hey");
     console.log(user.id + ": " + user.firstName);
-    setInvitedUsers((prevUsers) => [...prevUsers, {...user, isMember: false}]);
+    setInvitedUsers((prevUsers) => [
+      ...prevUsers,
+      { ...user, isMember: false },
+    ]);
     console.log(members);
   };
 
   const uninviteUser = (user) => {
     console.log(user);
     setInvitedUsers((prevInvitedUsers) =>
-      prevInvitedUsers.filter((prevInvitedUser) => prevInvitedUser.id !== user.id)
+      prevInvitedUsers.filter(
+        (prevInvitedUser) => prevInvitedUser.id !== user.id
+      )
     );
   };
 
-  const upload = () => { };
+  const upload = () => {};
 
   return (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
@@ -213,8 +213,6 @@ export const GroupRegistration = () => {
                 color="success"
                 inputRef={groupDescriptionRef}
               />
-
-
             </Box>
 
             <Typography marginBottom={2} marginTop={2} size={"h1"}>
@@ -251,12 +249,12 @@ export const GroupRegistration = () => {
         </Grid>
         <Grid item sm={3}>
           <div style={{ marginTop: "75px" }}>
-
             <Typography marginBottom={2} size={"h1"}>
               Add interests
             </Typography>
 
-            <FormControl sx={{ width: 190 }}
+            <FormControl
+              sx={{ width: 190 }}
               id="filled-basic"
               label="Gruppebeskrivelse"
               variant="outlined"
@@ -272,7 +270,7 @@ export const GroupRegistration = () => {
                 onChange={handleChange}
                 input={<OutlinedInput label="Interests" />}
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
                       <Chip key={value} label={value} />
                     ))}
@@ -318,8 +316,11 @@ export const GroupRegistration = () => {
               {users
                 .filter(
                   (user) =>
-                    user.id !== currentUser?.uid && user.firstName &&
-                    user.firstName.toLowerCase().includes(userSearchRef.current.value.toLowerCase())
+                    user.id !== currentUser?.uid &&
+                    user.firstName &&
+                    user.firstName
+                      .toLowerCase()
+                      .includes(userSearchRef.current.value.toLowerCase())
                 )
                 .map((user) => (
                   <li style={{ marginBottom: "10px" }}>
@@ -357,15 +358,14 @@ export const GroupRegistration = () => {
             <Typography marginBottom={2} size={"h1"}>
               Current Members
             </Typography>
-            {invitedUsers
-              .map((member) => (
-                <Button
-                  endIcon={<CloseIcon></CloseIcon>}
-                  onClick={() => uninviteUser(member)}
-                >
-                  {member.firstName}
-                </Button>
-              ))}
+            {invitedUsers.map((member) => (
+              <Button
+                endIcon={<CloseIcon></CloseIcon>}
+                onClick={() => uninviteUser(member)}
+              >
+                {member.firstName}
+              </Button>
+            ))}
           </div>
         </Grid>
 

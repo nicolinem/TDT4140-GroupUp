@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import { default as db } from "../firebase";
+import { db } from "../firebase";
 import { firebase } from "@firebase/app";
 import "@firebase/firestore";
 import image from "../Dashboard/logo.png";
@@ -23,7 +23,7 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 export const RegistrationPage = () => {
@@ -55,6 +55,9 @@ export const RegistrationPage = () => {
         dateOfBirth: dateOfBirth.current.value,
         password: passwordRef.current.value,
         invites: [],
+      });
+      updateProfile(currentUser.currentUser, {
+        displayName: firstName.current.value,
       });
       navigate("/");
     } else {
