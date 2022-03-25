@@ -23,20 +23,20 @@ import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 //import { default as db } from "../firebase";
 import { db } from "../firebase";
-export const Feed = () => {
+export const Feed = (props) => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
-  const [currentGroup, setCurrentGroup] = useState();
+  const [currentGroupID, setCurrentGroupID] = useState();
   const currentUser = useAuth();
-  groups.forEach((group) => {
-    console.log(`${group.id}`);
-    console.log(group.likedGroups);
-  });
-
+  const currentGroup = currentGroupID
+    ? groups.find((group) => group.id == currentGroupID)
+    : undefined;
   // const getID = (idi) => {
   //   const { id } = idi;
   //   return id;
   // };
+
+  console.log(groups);
 
   useEffect(() => {
     const getgroups = async () => {
@@ -90,7 +90,8 @@ export const Feed = () => {
     const {
       target: { value },
     } = event;
-    setCurrentGroup(groups.find((group) => group.id == value));
+    console.log(value);
+    setCurrentGroupID(value);
   };
 
   const handleChangeInterests = (event) => {
@@ -166,9 +167,9 @@ export const Feed = () => {
 
     // formatterer dato til riktig format
 
-    if (currentGroup) {
+    if (currentGroupID) {
       filteredGroups = filteredGroups.filter(
-        (group) => group.id !== currentGroup.id
+        (group) => group.id !== currentGroupID
       );
     }
     // The code below filters the groups on which are liked of the current group
@@ -193,35 +194,55 @@ export const Feed = () => {
   }
 
   const handleLikeGroup = async (id) => {
-    const groupRef = doc(db, "Teams-beta", currentGroup.id);
+    const groupRef = doc(db, "Teams-beta", currentGroupID);
 
-    if (!currentGroup.likedGroups.includes(id)) {
+    if (
+      groups.some((group) => group.id == currentGroupID) &&
+      !currentGroup.likedGroups.includes(id)
+    ) {
       const updatedLikedGroups = [...currentGroup.likedGroups, id];
-      setCurrentGroup((prevCurrentGroup) => ({
-        ...prevCurrentGroup,
-        likedGroups: [...prevCurrentGroup.likedGroups, id],
-      }));
+      console.log(updatedLikedGroups);
+
+      const updatedCurrentGroup = {
+        ...currentGroup,
+        likedGroups: [...currentGroup.likedGroups, id],
+      };
+      console.log(updatedCurrentGroup);
+      const updatedGroups = groups.filter(
+        (group) => group.id !== currentGroupID
+      );
+      updatedGroups.push(updatedCurrentGroup);
+      console.log(updatedGroups);
+
+      setGroups(updatedGroups);
+
       await updateDoc(groupRef, {
         likedGroups: updatedLikedGroups,
       });
-
-      console.log(currentGroup);
     }
   };
 
   const handleDislikeGroup = async (id) => {
-    const groupRef = doc(db, "Teams-beta", currentGroup.id);
+    const groupRef = doc(db, "Teams-beta", currentGroupID);
 
     if (currentGroup.likedGroups.includes(id)) {
       const updatedLikedGroups = currentGroup.likedGroups.filter(
         (groupID) => groupID !== id
       );
-      setCurrentGroup((prevCurrentGroup) => ({
-        ...prevCurrentGroup,
-        likedGroups: prevCurrentGroup.likedGroups.filter(
+
+      const updatedCurrentGroup = {
+        ...currentGroup,
+        likedGroups: currentGroup.likedGroups.filter(
           (groupID) => groupID !== id
         ),
-      }));
+      };
+      const updatedGroups = groups.filter(
+        (group) => group.id !== currentGroupID
+      );
+      updatedGroups.push(updatedCurrentGroup);
+
+      setGroups(updatedGroups);
+
       await updateDoc(groupRef, {
         likedGroups: updatedLikedGroups,
       });
@@ -279,9 +300,20 @@ export const Feed = () => {
   }
 
   function filterByCurrentGroup(groups) {
-    return currentGroup
-      ? groups.filter((group) => group.id !== currentGroup.id)
+    let filteredGroups;
+    filteredGroups = currentGroupID
+      ? groups.filter((group) => group.id !== currentGroupID)
       : groups;
+
+    if (currentGroupID && props.showMatches) {
+      console.log(filteredGroups);
+      filteredGroups = filteredGroups.filter(
+        (group) =>
+          group.likedGroups.includes(currentGroupID) &&
+          currentGroup.likedGroups.includes(group.id)
+      );
+    }
+    return filteredGroups;
   }
 
   function makeCards(groups) {
@@ -304,7 +336,7 @@ export const Feed = () => {
   }
 
   const getGroupCard = (groupObj) => {
-    const isLiked = currentGroup
+    const isLiked = currentGroupID
       ? currentGroup.likedGroups.includes(groupObj.id)
       : false;
     console.log(isLiked);
@@ -354,7 +386,7 @@ export const Feed = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={currentGroup}
+            value={currentGroupID}
             label="Group"
             onChange={handleChangeGroup}
           >

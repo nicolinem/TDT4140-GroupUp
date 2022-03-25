@@ -17,18 +17,12 @@ import {
   Select,
   Chip,
 } from "@mui/material";
+import { Feed } from "../Dashboard/Feed";
 
 const Matches = () => {
   const [groups, setGroups] = useState([]);
 
-  return (
-    <Box sx={{ display: "flex", flexGrow: 1 }}>
-      <Box sx={{ minWidth: 250, mt: 6, ml: 3 }}>
-        <Sidebar />
-      </Box>
-      <Grid></Grid>
-    </Box>
-  );
+  return <Feed showMatches={true} />;
 };
 
 export default Matches;
