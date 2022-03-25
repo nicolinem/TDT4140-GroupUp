@@ -32,6 +32,9 @@ import { db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+/* import MatchIcon from "../Matches/MatchIcon/isMatch.svg"; */
+import MatchIcon from "../Matches/MatchIcon/isMatch.png";
+
 const GroupCard = (props) => {
   const {
     name,
