@@ -107,7 +107,7 @@ export const GroupRegistration = () => {
     uploadBytes(storageRef, image).then((snapshot) => {
       console.log("Uploaded a blob or file!");
     });
-    const groupCollRef = collection(db, "Teams");
+    const groupCollRef = collection(db, "Teams-beta");
 
     const groupCreator = users.find((user) => user.id == currentUser?.uid);
     const documentref = await addDoc(groupCollRef, {

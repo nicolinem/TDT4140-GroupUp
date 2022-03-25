@@ -33,7 +33,7 @@ export const MyGroups = () => {
 
   useEffect(() => {
     const getgroups = async () => {
-      const q = query(collection(db, "Teams"));
+      const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -47,7 +47,7 @@ export const MyGroups = () => {
   }, []);
 
   const leaveGroup = async (group) => {
-    const groupRef = doc(db, "Teams", group.id);
+    const groupRef = doc(db, "Teams-beta", group.id);
 
     await updateDoc(groupRef, {
       members: group.members.filter(

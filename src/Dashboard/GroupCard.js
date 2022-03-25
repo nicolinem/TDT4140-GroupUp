@@ -72,7 +72,7 @@ const GroupCard = (props) => {
   console.log(users);
 
   const leaveGroup = async () => {
-    const groupRef = doc(db, "Teams", id);
+    const groupRef = doc(db, "Teams-beta", id);
     await updateDoc(groupRef, {
       members: members.filter((member) => member != auth.currentUser.uid),
     });

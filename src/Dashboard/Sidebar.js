@@ -32,7 +32,7 @@ export const Sidebar = () => {
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "Teams"), (snapshot) =>
+      onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
         setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       ),
     []

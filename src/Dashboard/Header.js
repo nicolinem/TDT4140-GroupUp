@@ -1,4 +1,12 @@
-import { Avatar, Box, InputBase, Menu, MenuItem, Tooltip, Button } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  InputBase,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Button,
+} from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 import { AppBar, Toolbar, Typography } from "@mui/material";
@@ -7,12 +15,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useState, useEffect } from "react";
 import image from "./logo.png";
 import avatar from "./356-3562377_personal-user.png";
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
-import { default as db, useAuth } from "../firebase";
-import { onSnapshot, collection, arrayUnion, arrayRemove } from "firebase/firestore";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
+import { db, useAuth } from "../firebase";
+import {
+  onSnapshot,
+  collection,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-
 
 export const Header = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -21,34 +33,26 @@ export const Header = () => {
   const currentUser = useAuth();
   const [user, setUser] = useState();
 
-  
-
-  useEffect(
-    () =>
-      {onSnapshot(collection(db, "Teams"), (snapshot) =>
-        setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      )
-      },
-    []
-  );
+  useEffect(() => {
+    onSnapshot(collection(db, "Teams-beta"), (snapshot) =>
+      setGroups(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+  }, []);
 
   const getUserData = async () => {
-
     const docRef = doc(db, "Users", currentUser?.uid);
     const docSnap = await getDoc(docRef);
-    setUser({...docSnap.data()});
+    setUser({ ...docSnap.data() });
+  };
 
-  }
-    
   useEffect(() => {
     getUserData();
-  },
-  [currentUser]);
+  }, [currentUser]);
 
   const acceptInvitation = async (groupThatInvites) => {
     console.log(groupThatInvites);
 
-    const groupRef = doc(db, "Teams", groupThatInvites.id);
+    const groupRef = doc(db, "Teams-beta", groupThatInvites.id);
     /* const currentInvitedUsers = groups.find(group => group.id == groupThatInvites.id).invitedUsers;
     console.log(currentInvitedUsers); */
 
@@ -60,22 +64,26 @@ export const Header = () => {
     const updatedInvitedUsers = groupThatInvites.invitedUsers.filter(user => user.id !== currentUser?.uid);
     updatedInvitedUsers.push(memberConvertion); */
 
-    const updatedInvitedUsers = groupThatInvites.invitedUsers.filter(user => user == currentUser?.uid);
-    const updatedMembers =  groupThatInvites.members.push(user);
+    const updatedInvitedUsers = groupThatInvites.invitedUsers.filter(
+      (user) => user == currentUser?.uid
+    );
+    const updatedMembers = groupThatInvites.members.push(user);
 
-    const userToAdd = groupThatInvites.invitedUsers.find(user => user.id == currentUser?.uid);
+    const userToAdd = groupThatInvites.invitedUsers.find(
+      (user) => user.id == currentUser?.uid
+    );
 
-  await updateDoc(groupRef, {
-    invitedUsers: arrayRemove(userToAdd),
-    members: arrayUnion(userToAdd),
+    await updateDoc(groupRef, {
+      invitedUsers: arrayRemove(userToAdd),
+      members: arrayUnion(userToAdd),
     });
-    
+
     const userRef = doc(db, "Users", currentUser?.uid);
-  await updateDoc(userRef, {
-    invites: user.invites.filter(invite => invite !== groupThatInvites.id),
+    await updateDoc(userRef, {
+      invites: user.invites.filter((invite) => invite !== groupThatInvites.id),
     });
-  }
-  
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -141,7 +149,7 @@ export const Header = () => {
     },
   }));
 
-  console.log(user ? user.invites : "user undefined") ;
+  console.log(user ? user.invites : "user undefined");
   console.log(groups);
 
   return (
@@ -182,12 +190,12 @@ export const Header = () => {
             </Search>
           </Box> */}
 
-            <Box sx={{ flexGrow: 0, mr: 3 }}>
+          <Box sx={{ flexGrow: 0, mr: 3 }}>
             <Tooltip title="Open notifications">
               <IconButton onClick={handleOpenNotificationMenu} sx={{ p: 0 }}>
-              <Badge badgeContent={4} color="primary">
+                <Badge badgeContent={4} color="primary">
                   <MailIcon color="action" />
-              </Badge>
+                </Badge>
               </IconButton>
             </Tooltip>
             <Menu
@@ -209,9 +217,24 @@ export const Header = () => {
               {/* <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem> */}
 
-              {user ? groups.filter(group => user.invites.some(groupInvitation => groupInvitation == group.id)).map(group =>
-                  <MenuItem sx={{display: 'flex'}} onClick={() => {}}>Invitation from {group.name} <Button onClick={() => acceptInvitation(group)}>Accept</Button></MenuItem>
-              ) : <MenuItem>No invites </MenuItem>}
+              {user ? (
+                groups
+                  .filter((group) =>
+                    user.invites.some(
+                      (groupInvitation) => groupInvitation == group.id
+                    )
+                  )
+                  .map((group) => (
+                    <MenuItem sx={{ display: "flex" }} onClick={() => {}}>
+                      Invitation from {group.name}{" "}
+                      <Button onClick={() => acceptInvitation(group)}>
+                        Accept
+                      </Button>
+                    </MenuItem>
+                  ))
+              ) : (
+                <MenuItem>No invites </MenuItem>
+              )}
             </Menu>
           </Box>
 
