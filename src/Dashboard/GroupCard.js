@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
@@ -120,7 +121,13 @@ const GroupCard = (props) => {
     <Card
       alignItems="center"
       justify="center"
-      sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
+      sx={{
+        display: "flex",
+        padding: 0,
+        width: "100%",
+        flexgrow: 1,
+        flexDirection: "column",
+      }}
     >
       <IconButton aria-label="add to favorites" onClick={handleIconClick}>
         {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
@@ -198,77 +205,87 @@ const GroupCard = (props) => {
       justify="center"
       sx={{ display: "flex", padding: 0 }}
     >
-      <CardActionArea
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          flexgrow: 1,
-          maxHeight: 350,
-          padding: 0,
-          flexDirection: "column",
-        }}
-      >
-        <Box
-          sx={{
-            width: 1,
-            display: "flex",
-            flexgrow: 1,
-            maxHeight: 350,
-            padding: 0,
-            // bgcolor: "#e3f0d3",
-            "&:hover": {
-              // backgroundColor: "#e3f0d3",
-              opacity: [0.9, 0.8, 0.7],
-            },
-          }}
-        >
-          <CardContent
+      <Grid>
+        <Grid>
+          <CardActionArea
+            onClick={handleClick}
             sx={{
               display: "flex",
-              width: "90%",
+              flexgrow: 1,
+              maxHeight: 350,
               padding: 0,
               flexDirection: "column",
-              width: 1,
-              borderRadius: 10,
-              bgcolor: "white",
             }}
           >
             <Box
-              alignItems="center"
-              justify="center"
               sx={{
+                width: 1,
                 display: "flex",
-                flexDirection: "column",
+                flexgrow: 1,
+                maxHeight: 350,
+                padding: 0,
+                // bgcolor: "#e3f0d3",
+                "&:hover": {
+                  // backgroundColor: "#e3f0d3",
+                  opacity: [0.9, 0.8, 0.7],
+                },
               }}
             >
-              <Box
-                flexrgrow="1"
-                padding="0"
-                overflow="hidden"
-                maxHeight="220px"
+              <CardContent
+                sx={{
+                  display: "flex",
+                  width: "90%",
+                  padding: 0,
+                  flexDirection: "column",
+                  width: 1,
+                  borderRadius: 10,
+                  bgcolor: "white",
+                }}
               >
-                <img src={url} width="100%" />
-              </Box>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                sx={{ fontFamily: "Avenir" }}
-              >
-                {name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {description}
-              </Typography>
+                <Box
+                  alignItems="center"
+                  justify="center"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Box
+                    flexrgrow="1"
+                    padding="0"
+                    overflow="hidden"
+                    maxHeight="220px"
+                  >
+                    <img src={url} width="100%" />
+                  </Box>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ fontFamily: "Avenir" }}
+                  >
+                    {name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {description}
+                  </Typography>
+                </Box>
+              </CardContent>
             </Box>
-          </CardContent>
-        </Box>
-        <Box sx={{ marginBottom: 7 }}>
-          <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-            {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-          </IconButton>
-        </Box>
-      </CardActionArea>
+          </CardActionArea>
+        </Grid>
+        <Grid>
+          <Box sx={{ marginBottom: 4 }} alignItems="center" textAlign="center">
+            <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+              {props.isLiked ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </IconButton>
+          </Box>
+        </Grid>
+      </Grid>
     </Card>
   );
 };

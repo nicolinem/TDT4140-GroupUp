@@ -35,7 +35,7 @@ function App() {
     <Box sx={{ maxWidth: "100%" }}>
       <Routes>
         <Route path="/" element={<MainPage />}>
-          <Route index element={<Feed />} />
+          <Route index element={<Feed showMatches={false} />} />
           <Route path="GroupPage" element={<GroupPage />} />
           <Route path="newgroup" element={<GroupRegistration />} />
           <Route path="MyGroups" element={<MyGroups />} />

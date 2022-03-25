@@ -23,7 +23,7 @@ import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 //import { default as db } from "../firebase";
 import { db } from "../firebase";
-export const Feed = () => {
+export const Feed = (props) => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
   const [currentGroup, setCurrentGroup] = useState();
@@ -279,9 +279,19 @@ export const Feed = () => {
   }
 
   function filterByCurrentGroup(groups) {
-    return currentGroup
+    let filteredGroups;
+    filteredGroups = currentGroup
       ? groups.filter((group) => group.id !== currentGroup.id)
       : groups;
+
+    if (currentGroup && props.showMatches) {
+      filteredGroups = filteredGroups.filter(
+        (group) =>
+          group.likedGroups.includes(currentGroup.id) &&
+          currentGroup.likedGroups.includes(group.id)
+      );
+    }
+    return filteredGroups;
   }
 
   function makeCards(groups) {
