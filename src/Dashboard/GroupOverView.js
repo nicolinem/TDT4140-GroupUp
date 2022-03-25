@@ -35,6 +35,8 @@ export const GroupOverView = (props) => {
     }
   };
 
+  console.log(users);
+
   return (
     <div style={{ marginTop: "1em", width: "100%", maxHeight: "19em" }}>
       <List

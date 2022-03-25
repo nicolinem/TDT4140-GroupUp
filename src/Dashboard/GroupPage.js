@@ -31,7 +31,7 @@ import { ChooseGroups } from "../Chat/ChooseGroup";
 
 export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members, imageReference, eventDate } = state;
+  const { name, id, members, imageReference, eventDate, invitedUsers } = state;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
