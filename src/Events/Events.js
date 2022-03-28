@@ -40,13 +40,16 @@ const Events = () => {
       const q = query(collection(db, "Teams-beta"));
 
       const querySnapshot = await getDocs(q);
-      const requestedGroups = [];
+      let requestedGroups = [];
       querySnapshot.forEach((doc) => {
         requestedGroups.push({ ...doc.data(), id: doc.id });
         console.log(doc.id, " => ", doc.data());
       });
       setGroups(requestedGroups);
       console.log(requestedGroups);
+      requestedGroups = requestedGroups.filter((group) =>
+        group.members.some((member) => member.id == currentUser?.uid)
+      );
       const id = requestedGroups.length ? requestedGroups[0].id : undefined;
       setCurrentGroupID(id);
       setLoading(false);
