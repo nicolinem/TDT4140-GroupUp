@@ -168,6 +168,41 @@ export const GroupPage = () => {
                   </div>
                 </Card>
               </div>
+              <div>
+                <Card
+                  alignItems="center"
+                  justify="center"
+                  sx={{
+                    p: 1,
+                    pr: 2,
+                    pl: 2,
+                    ml: 1,
+                    mb: 1,
+                    backgroundColor: "#aed581",
+                    "&:hover": {
+                      backgroundColor: "#c5e1a5",
+                    },
+                  }}
+                >{isMember &&
+                  <Event text='Select event date' id={id} />}
+                  <p>
+                    Eventdate: {date}
+                  </p>
+
+                </Card>
+              </div>
+              <Button
+                // Button for starting chat
+                onClick={handleOpen}
+                variant="contained"
+                //size="rg"
+                color="success"
+                sx={{ mt: 3, mb: 2 }}
+                onClose={handleClose}
+              //alignItems="center"
+              >
+                Start chat
+              </Button>
             </Box>
           </div>
         </div>
