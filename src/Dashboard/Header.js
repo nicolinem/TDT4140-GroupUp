@@ -17,6 +17,7 @@ import image from "./logo.png";
 import avatar from "./356-3562377_personal-user.png";
 import Badge from "@mui/material/Badge";
 import MailIcon from "@mui/icons-material/Mail";
+import PersonIcon from "@mui/icons-material/Person";
 import { db, useAuth } from "../firebase";
 import {
   onSnapshot,
@@ -246,7 +247,7 @@ export const Header = () => {
           <Box sx={{ flexGrow: 0, mr: 3 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={avatar} />o
+                <PersonIcon></PersonIcon>
               </IconButton>
             </Tooltip>
             <Menu

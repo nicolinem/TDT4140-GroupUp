@@ -23,6 +23,7 @@ import { Sidebar } from "./Sidebar";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 //import { default as db } from "../firebase";
 import { db } from "../firebase";
+
 export const Feed = (props) => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
@@ -351,7 +352,8 @@ export const Feed = (props) => {
           handleLikeGroup={handleLikeGroup}
           handleDislikeGroup={handleDislikeGroup}
           key={groupObj.id}
-          showMatches={props.showMatches}
+          matchesPage={props.showMatches}
+          myGroupID={currentGroupID}
         />
       </Grid>
     );
@@ -379,111 +381,127 @@ export const Feed = (props) => {
         <Sidebar />
       </Box>
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
-        <FormControl sx={{ width: 600, marginBottom: 7 }}>
-          <InputLabel
-            id="demo-simple-select-label"
-            input={<OutlinedInput label="Group" />}
-          >
-            Group
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={currentGroupID}
-            label="Group"
-            onChange={handleChangeGroup}
-          >
-            {groups.length > 0 &&
-              groups
-                .filter((group) =>
-                  group.members.some((member) => member.id == currentUser?.uid)
-                )
-                .map((group) => (
-                  <MenuItem value={group.id}>{group.name}</MenuItem>
-                ))}
-          </Select>
-        </FormControl>
-        <Grid container spacing={2} flexGrow={1}>
-          {/*VELG INTERESSER*/}
-          <Grid item sm={6}>
-            <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <FormControl
-                sx={{ width: 400 }}
-                id="filled-basic"
-                label="Gruppebeskrivelse"
-                variant="outlined"
-                autoFocus
-                color="success"
-              >
-                <InputLabel id="demo-multiple-name-label">Interests</InputLabel>
-                <Select
-                  labelId="demo-multiple-name-label"
-                  id="demo-multiple-name"
-                  multiple
-                  value={groupInterests}
-                  onChange={handleChangeInterests}
-                  input={<OutlinedInput label="Interests" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {allInterests.map((allInterests) => (
-                    <MenuItem
-                      key={allInterests}
-                      value={allInterests}
-                      style={getStyles(allInterests, groupInterests, theme)}
-                    >
-                      {allInterests}
-                    </MenuItem>
+        <Box sx={{ mb: 2 }}>
+          <FormControl sx={{ width: "100%" }}>
+            <InputLabel
+              id="demo-simple-select-label"
+              input={<OutlinedInput label="Group" />}
+            >
+              Group
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={currentGroupID}
+              label="Group"
+              onChange={handleChangeGroup}
+            >
+              {groups.length > 0 &&
+                groups
+                  .filter((group) =>
+                    group.members.some(
+                      (member) => member.id == currentUser?.uid
+                    )
+                  )
+                  .map((group) => (
+                    <MenuItem value={group.id}>{group.name}</MenuItem>
                   ))}
-                </Select>
-              </FormControl>
-            </div>
-            {/*VELG ALDER*/}
-
-            <div style={{ marginTop: "10px", marginBottom: "5px" }}>
-              <Typography>Aldersspenn</Typography>
-              <Box sx={{ width: 300 }}>
-                <Slider
-                  sx={{ color: "#558b2f", marginTop: "35px" }}
-                  getAriaLabel={() => "Minimum distance shift"}
-                  value={agePreference}
-                  onChange={handleChange2}
-                  valueLabelDisplay="on"
-                  getAriaValueText={valuetext}
-                  disableSwap
-                />
+            </Select>
+          </FormControl>
+        </Box>
+        <Box sx={{ flexgrow: 1 }}>
+          <Grid container spacing={2} sx={{ mb: 4 }}>
+            {/*VELG INTERESSER*/}
+            <Grid
+              item
+              sm={4}
+              // sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
+            >
+              <Box
+                sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
+              >
+                <FormControl
+                  sx={{ width: "100%" }}
+                  id="filled-basic"
+                  label="Gruppebeskrivelse"
+                  variant="outlined"
+                  autoFocus
+                  color="success"
+                >
+                  <InputLabel id="demo-multiple-name-label">
+                    Interests
+                  </InputLabel>
+                  <Select
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    multiple
+                    value={groupInterests}
+                    onChange={handleChangeInterests}
+                    input={<OutlinedInput label="Interests" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {allInterests.map((allInterests) => (
+                      <MenuItem
+                        key={allInterests}
+                        value={allInterests}
+                        style={getStyles(allInterests, groupInterests, theme)}
+                      >
+                        {allInterests}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
-            </div>
-          </Grid>
+            </Grid>
 
-          {/*VELG DATO*/}
-          <Grid item sm={3}>
-            {/*VELG ANTALL*/}
+            <Grid item sm={4}>
+              {/* VELG ANTALL */}
 
-            <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-              <Typography>Antall</Typography>
-              <Box sx={{ width: 300 }}>
-                <Slider
-                  sx={{ color: "#558b2f", marginTop: "35px" }}
-                  getAriaLabel={() => "Minimum distance shift"}
-                  value={numberPreference}
-                  onChange={handleChange1}
-                  valueLabelDisplay="on"
-                  getAriaValueText={valuetext}
-                  disableSwap
-                  max={30}
-                  min={1}
-                />
-              </Box>
-            </div>
+              <div style={{ marginTop: "5px", marginBottom: "2px" }}>
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    sx={{ color: "#558b2f" }}
+                    getAriaLabel={() => "Minimum distance shift"}
+                    value={numberPreference}
+                    onChange={handleChange1}
+                    valueLabelDisplay="auto"
+                    getAriaValueText={valuetext}
+                    disableSwap
+                    max={30}
+                    min={1}
+                  />
+                </Box>
+                <Typography>Antall</Typography>
+              </div>
+            </Grid>
+            <Grid item sm={4}>
+              <div style={{ marginTop: "10px", marginBottom: "5px" }}>
+                <Box sx={{ width: 300 }}>
+                  <Slider
+                    sx={{ color: "#558b2f" }}
+                    getAriaLabel={() => "Minimum distance shift"}
+                    value={agePreference}
+                    onChange={handleChange2}
+                    valueLabelDisplay="auto"
+                    getAriaValueText={valuetext}
+                    disableSwap
+                  />
+                </Box>
+                <Typography>Aldersspenn</Typography>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
+        {/*VELG DATO*/}
+
+        {/*VELG ALDER*/}
 
         <Grid container spacing={3}>
           {makeCardsFilteredByAgeNumberInterest()}

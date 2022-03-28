@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
+import EmailIcon from "@mui/icons-material/Email";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShareIcon from "@mui/icons-material/Share";
@@ -47,6 +48,8 @@ const GroupCard = (props) => {
     imageReference,
     likedGroups,
     eventDate,
+    matchesPage,
+    myGroupID,
   } = props;
 
   console.log("test: ", name, id, description, interests);
@@ -121,13 +124,33 @@ const GroupCard = (props) => {
   }
 
   let likeButton = (
-    <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-      {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-    </IconButton>
+    <>
+      {!matchesPage ? (
+        <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+          {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+        </IconButton>
+      ) : (
+        <IconButton aria-label="add to favorites" onClick={handleMessageClick}>
+          <EmailIcon />
+        </IconButton>
+      )}
+    </>
+    // <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+    //   {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+    // </IconButton>
   );
   if (props.isMyGroup) {
     likeButton = <></>;
   }
+
+  function handleMessageClick() {
+    // otherGroupID =
+    navigate("/chat", {
+      state: { myGroupID, otherGroupID: id },
+    });
+  }
+
+  function handleClose() {}
 
   return loading ? (
     <Card
@@ -141,6 +164,15 @@ const GroupCard = (props) => {
         flexDirection: "column",
       }}
     >
+      {!matchesPage ? (
+        <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+          {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+        </IconButton>
+      ) : (
+        <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+          <EmailIcon />
+        </IconButton>
+      )}
       <CardActionArea
         onClick={handleClick}
         sx={{

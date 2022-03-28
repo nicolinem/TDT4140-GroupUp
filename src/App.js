@@ -8,6 +8,7 @@ import { MainPage } from "./Dashboard/MainPage";
 import { GroupPage } from "./Dashboard/GroupPage";
 import { NewGroup } from "./NewGroup/NewGroup";
 import { ChatRoom } from "./Chat/ChatRoom";
+import ChatList from "./Chat/ChatList";
 
 import { db } from "./firebase";
 import React, { useEffect, useState } from "react";
@@ -46,6 +47,7 @@ function App() {
           <Route path="matches" element={<Matches />} />
           <Route path="events" element={<Events />} />
           <Route path="profile" element={<UserProfile />} />
+          <Route path="chatlist" element={<ChatList />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route exact path="registration" element={<RegistrationPage />} />
