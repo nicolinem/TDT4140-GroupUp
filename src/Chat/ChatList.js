@@ -6,9 +6,11 @@ import { ListItemButton } from "@mui/material";
 import { ListItemText } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "@mui/material";
-import { Box } from "@mui/system";
+import { Modal, Box } from "@mui/material";
 import { Sidebar } from "../Dashboard/Sidebar";
+import { Typography } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import { ListItemIcon } from "@mui/material";
 
 const ChatList = () => {
   const [open, setOpen] = React.useState(false);
@@ -27,14 +29,12 @@ const ChatList = () => {
     if (loading) return; // Only runs code if user is loaded, to make sure we have uid
 
     const getChats = async () => {
-      console.log(user.uid);
       const q = query(collection(db, "Group-conversations"));
       const docSnap = await getDocs(q);
 
       const groupList = [];
       docSnap.forEach((doc) => {
         groupList.push({ ...doc.data(), id: doc.id });
-        console.log(doc.id, " => ", doc.data());
       });
       setChats(groupList);
     };
@@ -107,8 +107,10 @@ const ChatList = () => {
             chat.group2Name
           )
         }
-        sx={{}}
       >
+        <ListItemIcon>
+          <MailOutlineIcon />
+        </ListItemIcon>
         <ListItemText primary={chat.chatName} />
       </ListItemButton>
     );
@@ -120,52 +122,59 @@ const ChatList = () => {
         <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
           <Sidebar />
         </Box>
-        <List
-          sx={{
-            overflow: "scroll",
-            overflowX: "hidden",
-          }}
-        >
-          {chats && (
-            <>
-              {" "}
-              {chats
-                .filter(
-                  (chats) =>
-                    chats.membersgroup1.includes(user.uid) ||
-                    chats.membersgroup2.includes(user.uid)
-                )
-                .map((chat) => getChat(chat))}
-            </>
-          )}
-        </List>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Box>
-              <List>
-                <ListItemButton>
-                  {/* <ListItemIcon></ListItemIcon> */}
-                  <ListItemText
-                    primary={group1Name}
-                    onClick={() => handleModalClick(group1ID, group2ID)}
-                  />
-                </ListItemButton>
-                <ListItemButton>
-                  {/* <ListItemIcon></ListItemIcon> */}
-                  <ListItemText
-                    primary={group2Name}
-                    onClick={() => handleModalClick(group2ID, group1ID)}
-                  />
-                </ListItemButton>
-              </List>
+        <div>
+          <Typography variant="h5">Your groupchats</Typography>
+
+          <List
+            sx={
+              {
+                // overflow: "scroll",
+                // overflowX: "hidden",
+              }
+            }
+          >
+            {chats && (
+              <>
+                {" "}
+                {chats
+                  .filter(
+                    (chats) =>
+                      chats.membersgroup1.includes(user.uid) ||
+                      chats.membersgroup2.includes(user.uid)
+                  )
+                  .map((chat) => getChat(chat))}
+              </>
+            )}
+          </List>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div>
+                <Typography>Choose group to chat from:</Typography>
+              </div>
+              <nav aria-label="secondary mailbox folders">
+                <List>
+                  <ListItemButton>
+                    <ListItemText
+                      primary={group1Name}
+                      onClick={() => handleModalClick(group1ID, group2ID)}
+                    />
+                  </ListItemButton>
+                  <ListItemButton>
+                    <ListItemText
+                      primary={group2Name}
+                      onClick={() => handleModalClick(group2ID, group1ID)}
+                    />
+                  </ListItemButton>
+                </List>
+              </nav>
             </Box>
-          </Box>
-        </Modal>
+          </Modal>
+        </div>
       </Box>
     </div>
   );
