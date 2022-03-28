@@ -177,8 +177,8 @@ export const GroupPage = () => {
         <button onClick={handleOpen}></button>
         */}
       </Box>
-      <Grid container justify="center">
-        <Button
+      {/* <Grid container justify="center"> */}
+      {/* <Button
           // Button for starting chat
           onClick={handleOpen}
           variant="contained"
@@ -203,7 +203,7 @@ export const GroupPage = () => {
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />
         </Box>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 };
