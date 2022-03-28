@@ -1,31 +1,19 @@
-import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
-import { GroupInformation } from "./GroupInformation";
 import { GroupInterests } from "./GroupInterests";
-import { Button, Box, Grid, Stack, TextField, Typography } from "@mui/material";
-import image from "./DSC06122-kopi.jpg";
+import { Button, Box, Grid, Typography } from "@mui/material";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
-import BasicModal from "./BasicModal";
-import {
-  Demo,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Item,
-  FolderIcon,
-} from "@mui/material";
+import { Event } from "../Event/Event";
+import { Avatar } from "@mui/material";
+import { getAuth } from "firebase/auth";
+import { doc, onSnapshot } from "firebase/firestore"
+
 
 import React, { useEffect, useState } from "react";
 
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import { height } from "@mui/system";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../firebase";
+import { db, useAuth, storage } from "../firebase";
 import { Modal } from "@mui/material";
 import { ChooseGroups } from "../Chat/ChooseGroup";
 
@@ -36,6 +24,9 @@ export const GroupPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [isMember, setIsMember] = useState(false);
+  const auth = getAuth();
+  const [date, setDate] = useState(eventDate);
 
   const antallMedlemmer = members.length;
 
@@ -61,6 +52,20 @@ export const GroupPage = () => {
     };
     getImage();
   }, []);
+
+  useEffect(() => {
+    onSnapshot(doc(db, "Teams-beta", id), (doc) => {
+      setDate(doc.data().eventDate);
+    })
+  });
+
+
+  useEffect(() => {
+    if (members.some(member => member.id == auth.currentUser?.uid)) {
+      setIsMember(true);
+    }
+  }, [auth.currentUser]);
+
 
   function handleClick() {
     const otherGroupID = id;
@@ -212,28 +217,13 @@ export const GroupPage = () => {
         <button onClick={handleOpen}></button>
         */}
       </Box>
-      <Grid container justify="center">
-        <Button
-          // Button for starting chat
-          onClick={handleOpen}
-          variant="contained"
-          //size="rg"
-          fullWidth
-          color="success"
-          sx={{ mt: 3, mb: 2 }}
-          onClose={handleClose}
-          //alignItems="center"
-        >
-          Start chat
-        </Button>
-      </Grid>
       <Modal
         // The popup that shows up when pressing chat button
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        // BackdropComponent={Backdrop}
+      // BackdropComponent={Backdrop}
       >
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />
