@@ -6,8 +6,7 @@ import { GroupOverView } from "./GroupOverView";
 import { Event } from "../Event/Event";
 import { Avatar } from "@mui/material";
 import { getAuth } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore"
-
+import { doc, onSnapshot } from "firebase/firestore";
 
 import React, { useEffect, useState } from "react";
 
@@ -56,16 +55,14 @@ export const GroupPage = () => {
   useEffect(() => {
     onSnapshot(doc(db, "Teams-beta", id), (doc) => {
       setDate(doc.data().eventDate);
-    })
+    });
   });
 
-
   useEffect(() => {
-    if (members.some(member => member.id == auth.currentUser?.uid)) {
+    if (members.some((member) => member.id == auth.currentUser?.uid)) {
       setIsMember(true);
     }
   }, [auth.currentUser]);
-
 
   function handleClick() {
     const otherGroupID = id;
@@ -188,15 +185,12 @@ export const GroupPage = () => {
                       backgroundColor: "#c5e1a5",
                     },
                   }}
-                >{isMember &&
-                  <Event text='Select event date' id={id} />}
-                  <p>
-                    Eventdate: {date}
-                  </p>
-
+                >
+                  {isMember && <Event text="Select event date" id={id} />}
+                  <p>Eventdate: {date}</p>
                 </Card>
               </div>
-              <Button
+              {/* <Button
                 // Button for starting chat
                 onClick={handleOpen}
                 variant="contained"
@@ -204,10 +198,10 @@ export const GroupPage = () => {
                 color="success"
                 sx={{ mt: 3, mb: 2 }}
                 onClose={handleClose}
-              //alignItems="center"
+                //alignItems="center"
               >
                 Start chat
-              </Button>
+              </Button> */}
             </Box>
           </div>
         </div>
@@ -223,12 +217,12 @@ export const GroupPage = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-      // BackdropComponent={Backdrop}
+        // BackdropComponent={Backdrop}
       >
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />
         </Box>
-      </Modal>
+      </Modal>{" "}
     </Box>
   );
 };

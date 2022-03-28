@@ -83,7 +83,6 @@ export const ChatRoom = () => {
 
   const updateDocument = async (reference) => {
     console.log(reference);
-    console.log(chatReference);
     // const groupList = [];
     const group1 = await getDoc(doc(db, "Teams-beta", currentUserGroupID));
 
