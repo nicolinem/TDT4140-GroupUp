@@ -1,10 +1,12 @@
+import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
+import { GroupInformation } from "./GroupInformation";
 import { GroupInterests } from "./GroupInterests";
 import { Button, Box, Grid, Stack, TextField, Typography } from "@mui/material";
-import { Card } from "@mui/material";
+import image from "./DSC06122-kopi.jpg";
+import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
-import { Event } from "../Event/Event";
-import { format } from "date-fns";
+import BasicModal from "./BasicModal";
 import {
   Demo,
   List,
@@ -15,25 +17,25 @@ import {
   Item,
   FolderIcon,
 } from "@mui/material";
+
 import React, { useEffect, useState } from "react";
+
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import { height } from "@mui/system";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { getDownloadURL, ref } from "firebase/storage";
-import { db, useAuth, storage } from "../firebase";
-import { doc, onSnapshot } from "firebase/firestore"
+import { storage } from "../firebase";
 import { Modal } from "@mui/material";
 import { ChooseGroups } from "../Chat/ChooseGroup";
-import { getAuth } from "firebase/auth";
 
-export const GroupPage = (props) => {
+export const GroupPage = () => {
   const { state } = useLocation();
-  const { name, id, members, imageReference, eventDate } = state;
+  const { name, id, members, imageReference, eventDate, invitedUsers } = state;
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [isMember, setIsMember] = useState(false);
-  const auth = getAuth();
-  const [date, setDate] = useState(eventDate);
 
   const antallMedlemmer = members.length;
 
@@ -59,18 +61,6 @@ export const GroupPage = (props) => {
     };
     getImage();
   }, []);
-
-  useEffect(() => {
-    onSnapshot(doc(db, "Teams-beta", id), (doc) => {
-      setDate(doc.data().eventDate);
-    })
-  });
-
-  useEffect(() => {
-    if (members.some(member => member.id == auth.currentUser?.uid)) {
-      setIsMember(true);
-    }
-  }, [auth.currentUser]);
 
   function handleClick() {
     const otherGroupID = id;
@@ -157,8 +147,6 @@ export const GroupPage = (props) => {
               {/*<div style={{ display: "flex", flexDirection: "column" }}>*/}
               <GroupOverView users={members} />
 
-
-
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
                 <Card
                   alignItems="center"
@@ -216,29 +204,36 @@ export const GroupPage = (props) => {
                 Start chat
               </Button>
             </Box>
-
           </div>
         </div>
+
+        {/* Bunn */}
+        {/*}
         <button onClick={handleOpen}></button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        // BackdropComponent={Backdrop}
-        >
-          <Box sx={style}>
-            <ChooseGroups otherGroupID={id} />
-          </Box>
-        </Modal>
+        */}
       </Box>
+      <Grid container justify="center">
+        <Button
+          // Button for starting chat
+          onClick={handleOpen}
+          variant="contained"
+          //size="rg"
+          fullWidth
+          color="success"
+          sx={{ mt: 3, mb: 2 }}
+          onClose={handleClose}
+          //alignItems="center"
+        >
+          Start chat
+        </Button>
+      </Grid>
       <Modal
         // The popup that shows up when pressing chat button
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-      // BackdropComponent={Backdrop}
+        // BackdropComponent={Backdrop}
       >
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />

@@ -76,9 +76,6 @@ export const MyGroups = () => {
     }
   };
 
-  console.log(groups);
-  console.log(hasGroups);
-
   return loading ? (
     <Box sx={{ display: "flex", flexGrow: 1 }}>
       <Box sx={{ display: "flex", minWidth: 250, mt: 6, ml: 3 }}>
@@ -103,9 +100,7 @@ export const MyGroups = () => {
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups
-            .filter((group) =>
-              group.members.find((c) => c.id === auth.currentUser.uid)
-            )
+            .filter((group) => group.members.some(user => user.id == auth.currentUser.uid))
             .map((groupsID) => getGroupCard(groupsID))}
         </Grid>
       </Box>

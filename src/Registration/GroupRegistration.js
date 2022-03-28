@@ -25,6 +25,8 @@ import {
   collection,
   serverTimestamp,
   onSnapshot,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import styles from "./GroupRegistration.module.css";
 import CloseIcon from "@mui/icons-material/Close";
@@ -33,11 +35,13 @@ import { useNavigate } from "react-router-dom";
 
 export const GroupRegistration = () => {
   const [users, setUsers] = useState([]);
-  const [members, setMembers] = useState([]);
   const userSearchRef = useRef();
   const [, setChange] = useState();
   const [image, setImage] = useState("");
   const navigate = useNavigate();
+  const [invitedUsers, setInvitedUsers] = useState([]);
+  const currentUser = useAuth();
+  let members;
 
   useEffect(
     () =>
@@ -46,6 +50,12 @@ export const GroupRegistration = () => {
       ),
     []
   );
+
+  useEffect(() => {
+    members = users.filter((user) => user.id == currentUser?.uid);
+  }, [currentUser, users]);
+
+  members = users.filter((user) => user.id == currentUser?.uid);
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -84,44 +94,57 @@ export const GroupRegistration = () => {
   const groupNameRef = useRef();
   const groupDescriptionRef = useRef();
 
-  const currentUser = useAuth();
-
   const handleClick = async () => {
     console.log(currentUser?.uid);
     console.log(typeof currentUser?.uid);
 
     const storageRef = ref(storage, `/images/${image.name}`);
+    console.log(
+      `Current user: ${users.filter((user) => user.id == currentUser?.uid)}`
+    );
 
     if (image == null) return;
     uploadBytes(storageRef, image).then((snapshot) => {
       console.log("Uploaded a blob or file!");
     });
     const groupCollRef = collection(db, "Teams-beta");
-    const creatingUser = users.find((user) => user.id === currentUser?.uid);
-    console.log(groupNameRef.current.value);
-    console.log([...groupInterests]);
-    console.log([...members, creatingUser]);
+
+    const groupCreator = users.find((user) => user.id == currentUser?.uid);
     const documentref = await addDoc(groupCollRef, {
       name: groupNameRef.current.value,
       description: groupDescriptionRef.current.value,
       interests: [...groupInterests],
-      members: [...members, creatingUser],
+      events: [],
+      locations: [],
+      invitedUsers: invitedUsers,
+      members: [groupCreator],
+      groupsLiked: [],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
       eventDate: [],
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
-    setMembers([...members, creatingUser]);
     const imageReference = `/images/${image.name}`;
     const id = documentref.id;
+    console.log("ID: " + id);
+
+    // adding invites to all users inside of invitedUsers
+    invitedUsers.forEach((user) => {
+      const userRef = doc(db, "Users", user.id);
+      console.log(user.invites);
+      updateDoc(userRef, {
+        invites: [...user.invites, id],
+      });
+    });
     navigate("/GroupPage", {
       state: {
         name,
         id,
         description,
         interests,
-        members: [...members, creatingUser],
+        invitedUsers: invitedUsers,
+        members: [groupCreator],
         imageReference,
       },
     });
@@ -134,14 +157,19 @@ export const GroupRegistration = () => {
   const inviteUser = (user) => {
     console.log("hey");
     console.log(user.id + ": " + user.firstName);
-    setMembers((prevMembers) => [...prevMembers, user]);
+    setInvitedUsers((prevUsers) => [
+      ...prevUsers,
+      { ...user, isMember: false },
+    ]);
     console.log(members);
   };
 
   const uninviteUser = (user) => {
     console.log(user);
-    setMembers((prevMembers) =>
-      prevMembers.filter((member) => member.id !== user.id)
+    setInvitedUsers((prevInvitedUsers) =>
+      prevInvitedUsers.filter(
+        (prevInvitedUser) => prevInvitedUser.id !== user.id
+      )
     );
   };
 
@@ -288,8 +316,11 @@ export const GroupRegistration = () => {
               {users
                 .filter(
                   (user) =>
+                    user.id !== currentUser?.uid &&
                     user.firstName &&
-                    user.firstName.includes(userSearchRef.current.value)
+                    user.firstName
+                      .toLowerCase()
+                      .includes(userSearchRef.current.value.toLowerCase())
                 )
                 .map((user) => (
                   <li style={{ marginBottom: "10px" }}>
@@ -327,16 +358,14 @@ export const GroupRegistration = () => {
             <Typography marginBottom={2} size={"h1"}>
               Current Members
             </Typography>
-            {users
-              .filter((user) => members.includes(user))
-              .map((member) => (
-                <Button
-                  endIcon={<CloseIcon></CloseIcon>}
-                  onClick={() => uninviteUser(member)}
-                >
-                  {member.firstName}
-                </Button>
-              ))}
+            {invitedUsers.map((member) => (
+              <Button
+                endIcon={<CloseIcon></CloseIcon>}
+                onClick={() => uninviteUser(member)}
+              >
+                {member.firstName}
+              </Button>
+            ))}
           </div>
         </Grid>
 

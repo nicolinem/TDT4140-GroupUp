@@ -1,24 +1,64 @@
 import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
+import Grid from "@mui/material/Grid";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import ShareIcon from "@mui/icons-material/Share";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import image from "./DSC06122-kopi.jpg";
-import { Avatar, Box, CardActionArea, CircularProgress } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  CardActionArea,
+  CircularProgress,
+  Modal,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ButtonBase } from "@mui/material";
-import { doc, getDoc, onSnapshot, collection, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  onSnapshot,
+  collection,
+  updateDoc,
+} from "firebase/firestore";
 import { db, storage } from "../firebase";
+//import { default as db, storage } from "../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+/* import MatchIcon from "../Matches/MatchIcon/isMatch.svg"; */
+import MatchIcon from "../Matches/MatchIcon/isMatch.png";
+
 const GroupCard = (props) => {
-  const { name, id, description, interests, members, imageReference, eventDate } = props;
+  const {
+    name,
+    id,
+    description,
+    interests,
+    members,
+    imageReference,
+    likedGroups,
+    eventDate,
+  } = props;
 
   console.log("test: ", name, id, description, interests);
 
   const navigate = useNavigate();
+  console.log(props.likedByCurrentGroup);
+
+  const handleIconClick = () => {
+    if (!props.isLiked) {
+      props.handleLikeGroup(id);
+    } else if (props.isLiked) {
+      props.handleDislikeGroup(id);
+    }
+  };
 
   const [url, setUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +83,6 @@ const GroupCard = (props) => {
     navigate("/MyGroups");
   };
 
-
   useEffect(() => {
     const getImage = async () => {
       console.log(imageReference);
@@ -66,17 +105,36 @@ const GroupCard = (props) => {
 
   function handleClick() {
     navigate("/GroupPage", {
-      state: { name, id, description, interests, members, imageReference, eventDate },
+      state: {
+        name,
+        id,
+        description,
+        interests,
+        members,
+        imageReference,
+        eventDate,
+      },
     });
     console.log("hello");
   }
+
+  function handleClose() {}
 
   return loading ? (
     <Card
       alignItems="center"
       justify="center"
-      sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
+      sx={{
+        display: "flex",
+        padding: 0,
+        width: "100%",
+        flexgrow: 1,
+        flexDirection: "column",
+      }}
     >
+      <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+      </IconButton>
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -145,80 +203,94 @@ const GroupCard = (props) => {
       </CardActionArea>
     </Card>
   ) : (
-      <Card
-        alignItems="center"
-        justify="center"
-        sx={{ display: "flex", padding: 0 }}
-      >
-        <CardActionArea
-          onClick={handleClick}
-          sx={{
-            display: "flex",
-            flexgrow: 1,
-            maxHeight: 350,
-            padding: 0,
-            flexDirection: "column",
-          }}
-        >
-          <Box
+    <Card
+      alignItems="center"
+      justify="center"
+      sx={{ display: "flex", padding: 0 }}
+    >
+      <Grid>
+        <Grid>
+          <CardActionArea
+            onClick={handleClick}
             sx={{
-              width: 1,
               display: "flex",
               flexgrow: 1,
               maxHeight: 350,
               padding: 0,
-              // bgcolor: "#e3f0d3",
-              "&:hover": {
-                // backgroundColor: "#e3f0d3",
-                opacity: [0.9, 0.8, 0.7],
-              },
+              flexDirection: "column",
             }}
           >
-            <CardContent
+            <Box
               sx={{
-                display: "flex",
-                width: "90%",
-                padding: 0,
-                flexDirection: "column",
                 width: 1,
-                borderRadius: 10,
-                bgcolor: "white",
+                display: "flex",
+                flexgrow: 1,
+                maxHeight: 350,
+                padding: 0,
+                // bgcolor: "#e3f0d3",
+                "&:hover": {
+                  // backgroundColor: "#e3f0d3",
+                  opacity: [0.9, 0.8, 0.7],
+                },
               }}
             >
-              <Box
-                alignItems="center"
-                justify="center"
+              <CardContent
                 sx={{
                   display: "flex",
+                  width: "90%",
+                  padding: 0,
                   flexDirection: "column",
+                  width: 1,
+                  borderRadius: 10,
+                  bgcolor: "white",
                 }}
               >
                 <Box
-                  flexrgrow="1"
-                  padding="0"
-                  overflow="hidden"
-                  maxHeight="220px"
+                  alignItems="center"
+                  justify="center"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
                 >
-                  <img src={url} width="100%" />
+                  <Box
+                    flexrgrow="1"
+                    padding="0"
+                    overflow="hidden"
+                    maxHeight="220px"
+                  >
+                    <img src={url} width="100%" />
+                  </Box>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ fontFamily: "Avenir" }}
+                  >
+                    {name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {description}
+                  </Typography>
                 </Box>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  sx={{ fontFamily: "Avenir" }}
-                >
-                  {name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {description}
-                </Typography>
-              </Box>
-            </CardContent>
-
+              </CardContent>
+            </Box>
+          </CardActionArea>
+        </Grid>
+        <Grid>
+          <Box sx={{ marginBottom: 4 }} alignItems="center" textAlign="center">
+            <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+              {props.isLiked ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </IconButton>
           </Box>
-        </CardActionArea>
-      </Card>
-    );
+        </Grid>
+      </Grid>
+    </Card>
+  );
 };
 
 export default GroupCard;
