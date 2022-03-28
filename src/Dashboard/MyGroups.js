@@ -1,4 +1,4 @@
-import {  db } from "../firebase";
+import { db } from "../firebase";
 import React, { useEffect, useState } from "react";
 import {
   onSnapshot,
@@ -60,7 +60,7 @@ export const MyGroups = () => {
     return (
       <Grid item sm={4} key={groupObj.name}>
         {/* {new GroupCard(groupObj, id)} */}
-        <GroupCard {...groupObj} />
+        <GroupCard {...groupObj} isMyGroup={true} />
       </Grid>
     );
   };
@@ -100,7 +100,9 @@ export const MyGroups = () => {
       <Box sx={{ px: 5, py: 4, flexGrow: 1 }}>
         <Grid container spacing={1}>
           {groups
-            .filter((group) => group.members.some(user => user.id == auth.currentUser.uid))
+            .filter((group) =>
+              group.members.some((user) => user.id == auth.currentUser.uid)
+            )
             .map((groupsID) => getGroupCard(groupsID))}
         </Grid>
       </Box>

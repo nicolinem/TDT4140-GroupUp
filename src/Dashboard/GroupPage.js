@@ -17,6 +17,7 @@ import {
   Item,
   FolderIcon,
 } from "@mui/material";
+import { NewEvent } from "../Events/Event/NewEvent";
 
 import React, { useEffect, useState } from "react";
 
@@ -167,6 +168,7 @@ export const GroupPage = () => {
                     {antallMedlemmer}
                   </div>
                 </Card>
+                <NewEvent id={id} />
               </div>
             </Box>
           </div>
@@ -178,7 +180,7 @@ export const GroupPage = () => {
         */}
       </Box>
       <Grid container justify="center">
-        <Button
+        {/*         <Button
           // Button for starting chat
           onClick={handleOpen}
           variant="contained"
@@ -190,7 +192,7 @@ export const GroupPage = () => {
           //alignItems="center"
         >
           Start chat
-        </Button>
+        </Button> */}
       </Grid>
       <Modal
         // The popup that shows up when pressing chat button

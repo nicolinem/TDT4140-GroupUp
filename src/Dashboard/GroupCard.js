@@ -11,6 +11,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import image from "./DSC06122-kopi.jpg";
+import matchIcon from "../Matches/MatchIcon/liked-bg.png";
+
 import {
   Avatar,
   Box,
@@ -118,7 +120,14 @@ const GroupCard = (props) => {
     console.log("hello");
   }
 
-  function handleClose() {}
+  let likeButton = (
+    <IconButton aria-label="add to favorites" onClick={handleIconClick}>
+      {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+    </IconButton>
+  );
+  if (props.isMyGroup) {
+    likeButton = <></>;
+  }
 
   return loading ? (
     <Card
@@ -132,9 +141,6 @@ const GroupCard = (props) => {
         flexDirection: "column",
       }}
     >
-      <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-        {props.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-      </IconButton>
       <CardActionArea
         onClick={handleClick}
         sx={{
@@ -279,13 +285,13 @@ const GroupCard = (props) => {
         </Grid>
         <Grid>
           <Box sx={{ marginBottom: 4 }} alignItems="center" textAlign="center">
-            <IconButton aria-label="add to favorites" onClick={handleIconClick}>
-              {props.isLiked ? (
-                <FavoriteIcon />
-              ) : (
-                <FavoriteBorderOutlinedIcon />
-              )}
-            </IconButton>
+            {props.showMatches ? (
+              <Box maxHeight="xs" margin="normal">
+                <img src={matchIcon} width="40" />
+              </Box>
+            ) : (
+              likeButton
+            )}
           </Box>
         </Grid>
       </Grid>

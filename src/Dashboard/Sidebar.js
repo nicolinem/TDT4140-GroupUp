@@ -11,7 +11,12 @@ import { Stack } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import Collapse from "@mui/material/Collapse";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import {
+  AccountCircle,
+  ExpandLess,
+  ExpandMore,
+  StarBorder,
+} from "@mui/icons-material";
 import BlenderIcon from "@mui/icons-material/Blender";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -24,6 +29,7 @@ import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EventIcon from "@mui/icons-material/Event";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -124,6 +130,17 @@ export const Sidebar = () => {
           <MailOutlineIcon />
         </ListItemIcon>
         <ListItemText primary="Chats" />
+      </ListItemButton>
+
+      <ListItemButton
+        component="button"
+        href="/profile"
+        sx={{ borderRadius: 8 }}
+      >
+        <ListItemIcon>
+          <AccountCircle Icon />
+        </ListItemIcon>
+        <ListItemText primary="User profile" />
       </ListItemButton>
     </List>
   );
