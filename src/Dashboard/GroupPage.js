@@ -198,7 +198,7 @@ export const GroupPage = (props) => {
                 >{isMember &&
                   <Event text='Select event date' id={id} />}
                   <p>
-                    Event Date: {date}
+                    Eventdate: {date}
                   </p>
 
                 </Card>
