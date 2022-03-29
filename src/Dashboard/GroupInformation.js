@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+import { Typography, Card } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -15,40 +15,26 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const MaikenSinBoks = (props) => {
-  return (<Box
+  return (<Card display="flex" alignItems="center" justify="center" jusstifyContent="center"
     sx={{
       width: 400,
-      height: 200,
-      mt: 3,
+      height: 50,
+      p: 1, pr: 2, pl: 2, ml: 1, mb: 1,
+
       backgroundColor: "#dcedc8",
-      border: 6,
-      borderColor: "#9aca7c",
     }}
   >
-    <Typography
-      variant="h8"
-      component="h2"
-      sx={{
-        padding: 1,
-        backgroundColor: "#9aca7c",
-        color: "#fafafa",
-      }}
-    >
-      {props.title}
-    </Typography>
 
-    <Typography
-      variant="h10"
-      component="h10"
-      sx={{
-        padding: 1,
-        paddingTop: 3,
-      }}
-    >
-      {(props.description)}
+    <div style={{ display: "flex", alignItems: "center", marginTop: 12, marginLeft: "32%" }}>
+      <Typography sx={{}}
+        fontStyle='italic'
+      >
+        {(props.description)}
+      </Typography>
+    </div>
+    {/*(props.description)*/}
 
-    </Typography>
-  </Box>);
+  </Card>);
 }
 
 export function GroupInformation() {
@@ -58,89 +44,7 @@ export function GroupInformation() {
   return (
     <div style={{ display: "flex", justifyContent: "space-evenly" }}>
       <MaikenSinBoks title="Beskrivelse" description={description} />
-      <MaikenSinBoks title="Tidspunkt" description="12. mars" />
 
-      {/*
-    <Box sx={{}}>
-      <Grid container spacing={55}>
-        <Grid item xs={1}>
-        </Grid>
-        <Grid item xs={1}>
-          <Box
-            sx={{
-              width: 400,
-              height: 200,
-              mt: 3,
-              ml: 10,
-              backgroundColor: "#dcedc8",
-              border: 6,
-              borderColor: "#9aca7c",
-            }}
-          >
-            <Typography
-              variant="h8"
-              component="h2"
-              sx={{
-                padding: 1,
-                backgroundColor: "#9aca7c",
-                color: "#fafafa",
-              }}
-            >
-              Beskrivelse
-            </Typography>
-
-            <Typography
-              variant="h10"
-              component="h10"
-              sx={{
-                padding: 1,
-                paddingTop: 3,
-              }}
-            >
-              {(description)}
-
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={1}>
-          <Box
-            sx={{
-              width: 400,
-              height: 200,
-              mt: 3,
-              ml: 10,
-              backgroundColor: "#dcedc8",
-              border: 6,
-              borderColor: "#9aca7c",
-            }}
-          >
-            <Typography
-              variant="h8"
-              component="h2"
-              sx={{
-                padding: 1,
-                backgroundColor: "#9aca7c",
-                color: "#fafafa",
-              }}
-            >
-              Tidspunkt
-            </Typography>
-
-            <Typography
-              variant="h10"
-              component="h10"
-              sx={{
-                padding: 1,
-                paddingTop: 3,
-              }}
-            >
-
-
-            </Typography>
-          </Box>
-        </Grid>
-      </Grid>
-    </Box>*/}
     </div>
   );
 }
