@@ -1,5 +1,6 @@
 import { Sidebar } from "./Sidebar";
 import { GroupInterests } from "./GroupInterests";
+import { GroupInformation } from "./GroupInformation";
 import { Button, Box, Grid, Typography } from "@mui/material";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
@@ -38,7 +39,6 @@ export const GroupPage = () => {
   const [date, setDate] = useState(eventDate);
 
   const antallMedlemmer = members.length;
-  
 
   console.log(antallMedlemmer);
 
@@ -137,6 +137,12 @@ export const GroupPage = () => {
               <div style={{ marginTop: "1em", maxWidth: 400 }}>
                 <GroupInterests />
               </div>
+
+              <div style={{ marginTop: "3em", maxWidth: 400 }}>
+                <GroupInformation />
+              </div>
+
+              <div></div>
             </div>
 
             <Box
@@ -229,7 +235,7 @@ export const GroupPage = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        // BackdropComponent={Backdrop}
+      // BackdropComponent={Backdrop}
       >
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />

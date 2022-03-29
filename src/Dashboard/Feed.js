@@ -113,7 +113,7 @@ export const Feed = (props) => {
     return `${value}`;
   }
 
-  const [numberPreference, setNumberPreference] = React.useState([1, 5]);
+  const [numberPreference, setNumberPreference] = React.useState([1, 15]);
   const [agePreference, setAgePreference] = React.useState([1, 35]);
 
   // ANTALL
@@ -486,7 +486,7 @@ export const Feed = (props) => {
             <Grid
               item
               sm={4}
-              // sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
+            // sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
             >
               <Box
                 sx={{ display: "flex", padding: 0, width: "100%", flexgrow: 1 }}
@@ -538,7 +538,7 @@ export const Feed = (props) => {
               <div style={{ marginTop: "5px", marginBottom: "2px" }}>
                 <Box sx={{ width: 300 }}>
                   <Slider
-                    sx={{ color: "#558b2f" }}
+                    sx={{ color: "#558b2f", maxWidth: 180 }}
                     getAriaLabel={() => "Minimum distance shift"}
                     value={numberPreference}
                     onChange={handleChange1}
@@ -553,10 +553,10 @@ export const Feed = (props) => {
               </div>
             </Grid>
             <Grid item sm={4}>
-              <div style={{ marginTop: "10px", marginBottom: "5px" }}>
+              <div style={{ marginTop: "5px", marginBottom: "2px" }}>
                 <Box sx={{ width: 300 }}>
                   <Slider
-                    sx={{ color: "#558b2f" }}
+                    sx={{ color: "#558b2f", maxWidth: 180 }}
                     getAriaLabel={() => "Minimum distance shift"}
                     value={agePreference}
                     onChange={handleChange2}
