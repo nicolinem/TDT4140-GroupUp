@@ -3,8 +3,18 @@ import { GroupInterests } from "./GroupInterests";
 import { Button, Box, Grid, Typography } from "@mui/material";
 import { img, CardHeader, IconButton, Card } from "@mui/material";
 import { GroupOverView } from "./GroupOverView";
-import { Event } from "../Event/Event";
-import { Avatar } from "@mui/material";
+import BasicModal from "./BasicModal";
+import {
+  Demo,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  Item,
+  FolderIcon,
+} from "@mui/material";
+import { NewEvent } from "../Events/Event/NewEvent";
 import { getAuth } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 
@@ -169,9 +179,10 @@ export const GroupPage = () => {
                     {antallMedlemmer}
                   </div>
                 </Card>
+                <NewEvent id={id} />
               </div>
-              <div>
-                <Card
+              {/* <div> */}
+                {/* <Card
                   alignItems="center"
                   justify="center"
                   sx={{
@@ -188,8 +199,8 @@ export const GroupPage = () => {
                 >
                   {isMember && <Event text="Select event date" id={id} />}
                   <p>Eventdate: {date}</p>
-                </Card>
-              </div>
+                </Card> */}
+              {/* </div> */}
               {/* <Button
                 // Button for starting chat
                 onClick={handleOpen}
@@ -211,7 +222,7 @@ export const GroupPage = () => {
         <button onClick={handleOpen}></button>
         */}
       </Box>
-      <Modal
+      {/* <Modal
         // The popup that shows up when pressing chat button
         open={open}
         onClose={handleClose}
@@ -222,7 +233,7 @@ export const GroupPage = () => {
         <Box sx={style}>
           <ChooseGroups otherGroupID={id} />
         </Box>
-      </Modal>{" "}
+      </Modal>{" "} */}
     </Box>
   );
 };

@@ -50,6 +50,8 @@ export const Feed = (props) => {
         console.log(doc.id, " => ", doc.data());
       });
       setGroups(requestedGroups);
+      const id = requestedGroups.length ? requestedGroups[0].id : undefined;
+      setCurrentGroupID(id);
       setLoading(false);
     };
     getgroups();
