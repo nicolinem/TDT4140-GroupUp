@@ -32,6 +32,8 @@ import styles from "./GroupRegistration.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { ref, uploadBytes } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import { Checkbox } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
 
 export const GroupRegistration = () => {
   const [users, setUsers] = useState([]);
@@ -42,6 +44,12 @@ export const GroupRegistration = () => {
   const [invitedUsers, setInvitedUsers] = useState([]);
   const currentUser = useAuth();
   let members;
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  const [checked, setChecked] = React.useState(false);
+
+  const handleCheckChange = (event) => {
+    setChecked(event.target.checked);
+  };
 
   useEffect(
     () =>
@@ -118,10 +126,11 @@ export const GroupRegistration = () => {
       locations: [],
       invitedUsers: invitedUsers,
       members: [groupCreator],
-      groupsLiked: [],
+      likedGroups: [],
       created: serverTimestamp(),
       imageReference: `/images/${image.name}`,
       eventDate: [],
+      goldMembership: checked,
     });
     const name = groupNameRef.current.value;
     const description = groupDescriptionRef.current.value;
@@ -214,6 +223,17 @@ export const GroupRegistration = () => {
                 inputRef={groupDescriptionRef}
               />
             </Box>
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...label}
+                  checked={checked}
+                  onChange={handleCheckChange}
+                />
+              }
+              label="Gold-membership?"
+            />
 
             <Typography marginBottom={2} marginTop={2} size={"h1"}>
               Add image

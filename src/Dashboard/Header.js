@@ -194,7 +194,7 @@ export const Header = () => {
           <Box sx={{ flexGrow: 0, mr: 3 }}>
             <Tooltip title="Open notifications">
               <IconButton onClick={handleOpenNotificationMenu} sx={{ p: 0 }}>
-                <Badge badgeContent={4} color="primary">
+                <Badge badgeContent={1} color="primary">
                   <MailIcon color="action" />
                 </Badge>
               </IconButton>
@@ -218,7 +218,12 @@ export const Header = () => {
               {/* <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
               <MenuItem onClick={handleCloseUserMenu}>My account</MenuItem> */}
 
-              {user ? (
+              {user &&
+              groups.some((group) =>
+                user.invites.some(
+                  (groupInvitation) => groupInvitation == group.id
+                )
+              ) ? (
                 groups
                   .filter((group) =>
                     user.invites.some(
@@ -234,7 +239,7 @@ export const Header = () => {
                     </MenuItem>
                   ))
               ) : (
-                <MenuItem>No invites </MenuItem>
+                <MenuItem>No current invites </MenuItem>
               )}
             </Menu>
           </Box>

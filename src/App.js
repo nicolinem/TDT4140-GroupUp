@@ -22,6 +22,7 @@ import { AddMembers } from "./Dashboard/AddMembers";
 import { ChooseGroups } from "./Chat/ChooseGroup";
 import Matches from "./Matches/Matches";
 import Events from "./Events/Events";
+import { UserProfile } from "./User/UserProfile";
 
 function App() {
   useEffect(
@@ -45,6 +46,7 @@ function App() {
           <Route path="choosegroup" element={<ChooseGroups />} />
           <Route path="matches" element={<Matches />} />
           <Route path="events" element={<Events />} />
+          <Route path="profile" element={<UserProfile />} />
           <Route path="chatlist" element={<ChatList />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
