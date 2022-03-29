@@ -194,7 +194,7 @@ export const Header = () => {
           <Box sx={{ flexGrow: 0, mr: 3 }}>
             <Tooltip title="Open notifications">
               <IconButton onClick={handleOpenNotificationMenu} sx={{ p: 0 }}>
-                <Badge badgeContent={1} color="primary">
+                <Badge color="primary">
                   <MailIcon color="action" />
                 </Badge>
               </IconButton>
