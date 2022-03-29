@@ -27,7 +27,7 @@ import { db } from "../firebase";
 export const Feed = (props) => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
-  const [currentGroupID, setCurrentGroupID] = useState();
+  const [currentGroupID, setCurrentGroupID] = useState(false);
   const currentUser = useAuth();
   const currentGroup = currentGroupID
     ? groups.find((group) => group.id == currentGroupID)
@@ -37,7 +37,7 @@ export const Feed = (props) => {
   //   return id;
   // };
 
-  console.log(groups);
+  console.log("ID:", currentGroupID);
 
   useEffect(() => {
     const getgroups = async () => {
@@ -50,8 +50,8 @@ export const Feed = (props) => {
         console.log(doc.id, " => ", doc.data());
       });
       setGroups(requestedGroups);
-      const id = requestedGroups.length ? requestedGroups[0].id : undefined;
-      setCurrentGroupID(id);
+      // const id = requestedGroups.length ? requestedGroups[0].id : undefined;
+      // setCurrentGroupID(id);
       setLoading(false);
     };
     getgroups();
@@ -309,13 +309,31 @@ export const Feed = (props) => {
       : groups;
 
     if (currentGroupID && props.showMatches) {
-      console.log(filteredGroups);
+      console.log("FILTEREDGROUPS1: ", filteredGroups);
       filteredGroups = filteredGroups.filter(
         (group) =>
           group.likedGroups.includes(currentGroupID) &&
           currentGroup.likedGroups.includes(group.id)
       );
     }
+    return filteredGroups;
+  }
+
+  function filterGroupsWhoLikeMyGroup(groups) {
+    let filteredGroups;
+    filteredGroups = currentGroupID
+      ? groups.filter((group) => group.id !== currentGroupID)
+      : groups;
+
+    if (currentGroupID && props.showMatches) {
+      console.log(filteredGroups);
+      filteredGroups = filteredGroups.filter(
+        (group) =>
+          group.likedGroups.includes(currentGroupID) &&
+          !currentGroup.likedGroups.includes(group.id)
+      );
+    }
+    console.log("FILTEREDGROUPS2: ", filteredGroups);
     return filteredGroups;
   }
 
@@ -338,6 +356,39 @@ export const Feed = (props) => {
     return makeCards(currentGroupAgeNumberInterestGroup);
   }
 
+  function makeCardsFilteredByAgeNumberInterestButOnlyLikeMe() {
+    const ageGroup = filterByAge(groups, agePreference[0], agePreference[1]);
+    const ageNumberGroup = filterByNumber(
+      ageGroup,
+      numberPreference[0],
+      numberPreference[1]
+    );
+    const ageNumberInterestGroup = filterByInterests(ageNumberGroup);
+    console.log(ageNumberInterestGroup);
+    const currentGroupAgeNumberInterestGroup = filterGroupsWhoLikeMyGroup(
+      ageNumberInterestGroup
+    );
+
+    return currentGroupAgeNumberInterestGroup.map((groupsID) =>
+      getGroupCardGold(groupsID)
+    );
+  }
+
+  const showGoldMemberCards = () => {
+    if (props.showMatches && props.goldMembership) {
+      return (
+        <>
+          <Typography sx={{ mb: 3, mt: 3 }}>
+            Gold-membership, groups who like you!
+          </Typography>
+          <Grid container spacing={3}>
+            {makeCardsFilteredByAgeNumberInterestButOnlyLikeMe()}
+          </Grid>
+        </>
+      );
+    }
+  };
+
   const getGroupCard = (groupObj) => {
     const isLiked = currentGroupID
       ? currentGroup.likedGroups.includes(groupObj.id)
@@ -353,6 +404,26 @@ export const Feed = (props) => {
           handleDislikeGroup={handleDislikeGroup}
           key={groupObj.id}
           matchesPage={props.showMatches}
+          myGroupID={currentGroupID}
+        />
+      </Grid>
+    );
+  };
+
+  const getGroupCardGold = (groupObj) => {
+    const isLiked = currentGroupID
+      ? currentGroup.likedGroups.includes(groupObj.id)
+      : false;
+    console.log(isLiked);
+    return (
+      <Grid item sm={4} key={groupObj.name}>
+        {/* {new GroupCard(groupObj, id)} */}
+        <GroupCard
+          {...groupObj}
+          isLiked={isLiked}
+          handleLikeGroup={handleLikeGroup}
+          handleDislikeGroup={handleDislikeGroup}
+          key={groupObj.id}
           myGroupID={currentGroupID}
         />
       </Grid>
@@ -500,19 +571,27 @@ export const Feed = (props) => {
           </Grid>
         </Box>
         {/*VELG DATO*/}
-
         {/*VELG ALDER*/}
-
-        <Grid container spacing={3}>
-          {makeCardsFilteredByAgeNumberInterest()}
-          {/*filterGroupsByInterests()*/}
-          {/*filterGroupsByNumber()*/}
-          {/*filterGroupsByAge()*/}
-          {/*groups.map((groupsID) => getGroupCard(groupsID))}
+        {currentGroupID ? (
+          <>
+            <Grid container spacing={3}>
+              {makeCardsFilteredByAgeNumberInterest()}
+              {/*filterGroupsByInterests()*/}
+              {/*filterGroupsByNumber()*/}
+              {/*filterGroupsByAge()*/}
+              {/*groups.map((groupsID) => getGroupCard(groupsID))}
           {groups
             .filter((groups) => groups.interests.some(v => groupInterests.includes(v)))
             .map((groupsID) => getGroupCard(groupsID))*/}
-        </Grid>
+            </Grid>
+
+            {showGoldMemberCards()}
+          </>
+        ) : (
+          <>
+            <Typography sx={{ mb: 3, mt: 3 }}>Please choose a group</Typography>
+          </>
+        )}
       </Box>
     </Box>
   );

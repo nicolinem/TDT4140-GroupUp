@@ -38,6 +38,7 @@ export const GroupPage = () => {
   const [date, setDate] = useState(eventDate);
 
   const antallMedlemmer = members.length;
+  
 
   console.log(antallMedlemmer);
 
@@ -182,7 +183,7 @@ export const GroupPage = () => {
                 <NewEvent id={id} />
               </div>
               {/* <div> */}
-                {/* <Card
+              {/* <Card
                   alignItems="center"
                   justify="center"
                   sx={{
